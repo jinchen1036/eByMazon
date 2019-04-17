@@ -11,7 +11,8 @@ ScreenManagement:
     transition: FadeTransition()
     HomePage:
     LoginScreen:
-    NewUser:
+    signUp:
+    OUHomePage:
     OSprofile:
     FriendList:
     History:
@@ -95,10 +96,10 @@ ScreenManagement:
             Button:
                 size_hint_x: 0.1
                 background_color: 0, 100, 255, 0.5
-                text: "New User"
+                text: "Sign Up"
                 color: 0, 0, 0, 1
                 on_press:
-                    root.manager.current = "newUser"
+                    root.manager.current = "signUp"
 
             Button:
                 size_hint_x: 0.1
@@ -120,55 +121,258 @@ ScreenManagement:
 <LoginScreen>:
     name: "login"
     title: 'Login'
-    size: (200,200)
 
-    FloatLayout:
-        canvas:
-            Color:
-                rgb: 1, 1, 3
-            Rectangle:
-                size: self.size
-                pos: self.pos
-        GridLayout:
-            rows: 3
-            cols: 2
-            padding: 10
-            spacing: 10
-
-            CustLabel:
-                text: 'User Name'
-
-            TextInput:
-                id: username
-                multiline: False
-            CustLabel:
-                text: 'Password'
-            TextInput:
-                id: password
-                multiline: False
-
-            Button:
-                text: 'Login'
-                on_press:
-                    root.checkLogin(username.text,password.text)
-                    root.manager.current = "homepage"
-            Button:
-                text: 'Clear Entry'
-                on_press: username.text =""
-                on_press: password.text =""
-
-
-
-<NewUser>:
-    name: "newUser"
-    title: "The New User"
     BoxLayout:
-        size_hint_y: 0.7
-        orientation: "horizontal"
-        height: 30
-        Button:
-            text: "Close"
-            on_press: root.manager.current = "homepage"
+        orientation: "vertical"
+        spacing:10
+        padding:10
+
+        BoxLayout:
+            size_hint_y: 0.5
+            orientation: "vertical"
+            padding: [0, 150, 0, 0]
+            BoxLayout:
+                CustLabel:
+                    text: "User Name"
+            BoxLayout:
+                size_hint_x: 0.3
+                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
+                TextInput:
+                    id: username
+
+        BoxLayout:
+            size_hint_y: 0.27
+            orientation: "vertical"
+            BoxLayout:
+                CustLabel:
+                    text: "Password"
+            BoxLayout:
+                size_hint_x: 0.3
+                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
+                TextInput:
+                    id: password
+
+        BoxLayout:
+            padding: [350, 100, 350, 450]
+            GridLayout:
+                rows: 1
+                cols: 3
+                Button:
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.55, 2.04, 2.55, 0.7]
+                    text: "Login"
+                    on_press:
+                        root.checkLogin(username.text,password.text)
+                        root.manager.current = "OU homepage"
+
+                Button:
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.17, 2.17, 2.17, 0.7]
+                    text: "Cancel"
+                    on_press:
+                        root.manager.current = "homepage"
+
+                Button:
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+                    text_color:
+                    text: "Clear"
+                    on_press: username.text =""
+                    on_press: password.text =""
+
+
+
+<signUp>:
+    name: "signUp"
+    title: "Sign Up"
+    BoxLayout:
+        orientation: "vertical"
+        spacing:10
+        padding:10
+
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: "vertical"
+            BoxLayout:
+                CustLabel:
+                    text: "First Name"
+            BoxLayout:
+                size_hint_x: 0.3
+                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
+                TextInput:
+                    id: firstName
+
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: "vertical"
+            BoxLayout:
+                CustLabel:
+                    text: "Last Name"
+            BoxLayout:
+                size_hint_x: 0.3
+                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
+                TextInput:
+                    id: lastName
+
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: "vertical"
+            BoxLayout:
+                CustLabel:
+                    text: "Email"
+            BoxLayout:
+                size_hint_x: 0.3
+                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
+                TextInput:
+                    id: email
+
+        BoxLayout:
+            size_hint_y: 0.3
+            orientation: "vertical"
+            BoxLayout:
+                CustLabel:
+                    text: "User Name"
+            BoxLayout:
+                size_hint_x: 0.3
+                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
+                TextInput:
+                    id: username
+
+        BoxLayout:
+            padding: [0, 150, 0, 0]
+            GridLayout:
+                rows: 1
+                cols: 3
+
+                Button:
+                    text: "Sign Up"
+                    font_size: 45
+                    on_press:root.checkSignUp(firstName.text, lastName.text, email.text, username.text)
+                    on_press: root.manager.current = "homepage"
+
+                Button:
+                    color: [0, 0, 0, 1]
+                    font_size: 45
+                    background_color: [2.17, 2.17, 2.17, 0.7]
+                    text: "Cancel"
+                    on_press:
+                        root.manager.current = "homepage"
+                Button:
+                    text: "Clear"
+                    font_size: 45
+                    on_press: firstName.text =""
+                    on_press: lastName.text =""
+                    on_press: email.text =""
+                    on_press: username.text =""
+
+
+
+<OUHomePage>:
+    name: "OU homepage"
+    title: "OU homepage"
+    BoxLayout:
+        orientation: "vertical"
+
+        BoxLayout:
+            size_hint_y: 0.4
+            Label:
+                size_hint_x: 0.9
+            Button:
+                text:"Sign Out"
+                size_hint_x: 0.1
+                size: 150, 100
+                on_press: root.manager.current = "homepage"
+
+        BoxLayout:
+            size_hint_y: 1.3
+            BoxLayout:
+                CustLabel:
+                    text: "Welcome Manager!!!"
+                    font_size: 100
+
+
+
+        BoxLayout:
+            orientation: "horizontal"
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "GU Application"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "View Transactions"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+
+        BoxLayout:
+            orientation: "horizontal"
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "OU Info"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "View Item Blacklist"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+
+        BoxLayout:
+            orientation: "horizontal"
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "Process Complaint"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "View OU BlackList"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+
+        BoxLayout:
+            orientation: "horizontal"
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "Item Post Request"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+            BoxLayout:
+                padding: 30
+                Button:
+                    text: "Maintain Taboo List"
+                    color: [0, 0, 0, 1]
+                    font_size: 33
+                    background_color: [2.04, 2.30, 2.55, 1]
+    #                on_press: root.manager.current = ""
+
+
+
 
 <OSprofile>:
     name: "osProfile"
@@ -353,14 +557,3 @@ ScreenManagement:
             Button:
                 text: "Save"
                 on_press: root.manager.current = "osProfile"
-
-    
-        
-
-
-
-
-        
-
-
-
