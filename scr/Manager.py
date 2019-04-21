@@ -10,11 +10,18 @@ from kivy.lang import Builder
 from kivy.core.window import Window
 
 # self define classes
-from scr.GeneralFunctions import General
-from scr.GU import GU
-from scr.SU import SU
-from scr.OU import OU
-from scr.otherClass import *
+try:
+    from scr.GeneralFunctions import General
+    from scr.GU import GU
+    from scr.SU import SU
+    from scr.OU import OU
+    from scr.otherClass import *
+except ModuleNotFoundError:
+    from GeneralFunctions import General
+    from GU import GU
+    from SU import SU
+    from OU import OU
+    from otherClass import *
 
 class item(BoxLayout):
     # the item frame in homepage, implemented in feature.kv

@@ -1,7 +1,10 @@
 import mysql.connector
 from kivy.core.image import Image as CoreImage
 from io import BytesIO
-from scr.GU import GU
+try:
+    from scr.GU import GU
+except ModuleNotFoundError:
+    from GU import GU
 class General():
     def __init__(self,cursor,cnx):
         self.cnx = cnx
@@ -59,8 +62,8 @@ class General():
             print(err)
 
     def popularItem(self):
-        self.cursor.execute("SELECT itemID, image, title, description, priceType, usedStatus "
-                            "FROM ItemInfo WHERE saleStatus = True;")
+        qry = "SELECT itemID, image, title, description, priceType, usedStatus FROM ItemInfo WHERE saleStatus = True;"
+        self.cursor.execute(qry)
         allItem = []
         for info in self.cursor:
             # print(type(info[1]))
