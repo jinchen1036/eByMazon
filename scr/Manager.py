@@ -443,9 +443,18 @@ class editPassword(FloatLayout):
 
 
 class transactionHistory(Screen):
+
+    # data1 = {'title': str(1), 'price': 1000, 'date': 2019,
+    # 'seller': str(1), 'cancel': True}
+    # data1 = { 'cancel': True}
+    # data2 = { 'accept': True}
     def backProfile(self):
         root.toProfile()
-
+    def OTransactions(self,id):
+        self.ids['bought'].data = su.viewTransactionHistory1(self,id) #data selection to be fixed
+        self.ids['sold'].data = su.viewTransactionHistory2(self,id) #data selection to be fixed
+        # self.ids['bought'].data = self.data1
+        # self.ids['bought'].data = self.data2
 class fixedItem(Screen):
     itemIndex = NumericProperty()
     user = BooleanProperty()
@@ -841,6 +850,7 @@ class Manager(Screen):
         self.ids['screenmanager'].current = "signupPage"
     def history(self):
         print('history')
+        # self.ids['history'].OTransactions(root.ouID)
         self.ids['screenmanager'].current = "historyPage"
 
 

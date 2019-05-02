@@ -265,8 +265,24 @@ class OU():
         # Else: remove from transaction, deduct moneyspend from buyer status
         # Add warning to OU
         pass
-
-    def viewTransactionHistory(self,ouID):
+        
+##_____to be filled____#
+    def viewTransactionHistory1(self,ouID):
+        # bought
+        # get transaction History from DB
+        # Separate for sell and purchase, return dict{'sell','buy'}
+        # each is list of transaction in form[itemID, buyerID, priceDeal, dealTime]
+        # self.cursor.execute("SELECT * FROM Transaction;")
+        # self.transactions = []
+        # for transaction in self.cursor:
+        #     self.transactions.append({'numb': str(transaction[1]), 'itemID': str(transaction[1]),
+        #     'seller':str(transaction[1]), 'buyer':str(transaction[1]),'price':str(transaction[1]),
+        #     'date': str(transaction[1]) }) #to be fixed(query)
+        #     print(transaction)
+        # return self.transactions
+        pass
+    def viewTransactionHistory2(self,ouID):
+        # sold
         # get transaction History from DB
         # Separate for sell and purchase, return dict{'sell','buy'}
         # each is list of transaction in form[itemID, buyerID, priceDeal, dealTime]

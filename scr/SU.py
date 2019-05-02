@@ -113,8 +113,8 @@ class SU():
 
         for transaction in self.cursor:
             self.transactions.append({'numb': str(transaction[1]), 'itemID': str(transaction[1]),
-            'seller':str(transaction[1]), 'buyer':str(transaction[1]),'price':str(transaction[1]),
-            'date': str(transaction[1]) }) #to be fixed(query)
+            'seller':str(transaction[1]), 'buyer':str(transaction[1]),'price':'$'+str(transaction[3]),
+            'date': str(transaction[6]) }) #to be fixed(query)
             print(transaction)
         return self.transactions
 
