@@ -268,6 +268,7 @@ class guApplications(BoxLayout):
 class ouInformation(BoxLayout):
     def removeOU(self,ouID):
         su.removeOU(ouID)
+        root.ids['ouInfo'].getOUInformation()
 
 class ouInfo(Screen):
     def tohome(self):
@@ -379,6 +380,22 @@ class itemFixed(Screen):
 class processCompliant(Screen):
     def tohome(self):
         root.ids['screenmanager'].current = "suHomepage"
+
+    def displayComplain(self):
+        complains = [{'userID': 'userID1', 'itemID': 'itemID1', 'complain': 'shipping too slow', 'time': '3:00'},
+                     {'userID': 'userID2', 'itemID': 'itemID2', 'complain': 'too expensive', 'time': '3:00'}]
+
+        self.ids['complains'].data = complains
+
+
+    def approveComplain(self):
+        print("Approve")
+        pass
+
+    def rejectComplain(self):
+        print("Reject")
+        pass
+
 class ouWarning(Screen):
     def tohome(self):
         root.ids['screenmanager'].current = "profilePage"
@@ -420,6 +437,7 @@ class blackTaboo(Screen):
         else:
             su.addTaboo(self.ids['tabooWord'].text)
             self.ids['tabooWord'].text = ""
+            self.warnShow = False
             root.ids['blackTaboo'].blackListData()
 
     def blackListData(self):
@@ -895,8 +913,8 @@ class eByMazonApp(App):
 
 if __name__ == "__main__":
     config = {
-        "user": 'eby',                 # Enter your own username
-        "password": 'ebypw',             # Enter your own password
+        "user": '',                 # Enter your own username
+        "password": '',             # Enter your own password
         "host": '127.0.0.1',
         "database": 'eByMazon'
     }

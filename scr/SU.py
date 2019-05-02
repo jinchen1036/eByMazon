@@ -132,7 +132,7 @@ class SU():
         self.itemBlackList = []
 
         for item in self.cursor:
-            self.itemBlackList.append({'item': item[0]})
+            self.itemBlackList.append({'item': str(item[0])})
 
         return self.itemBlackList
 
