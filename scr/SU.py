@@ -12,6 +12,7 @@ class SU():
         self.cnx = cnx
         self.cursor = cursor
         self.ID = suID
+
     def getGU(self):
         self.cursor.execute("SELECT * FROM GUapplications;")
         self.guApplication =[]
@@ -99,13 +100,8 @@ class SU():
         #                  check for two justified compliant that will cause warning
         pass
 
-    def getTabooList(self):
-        self.cursor.execute("SELECT * FROM Taboo;")
-        self.tabooList = []
 
-        for taboo in self.cursor:
-            self.tabooList.append({'taboo': taboo[0]})
-        return self.tabooList
+
 
     def getTransaction(self):
         self.cursor.execute("SELECT * FROM Transaction NATURAL JOIN ItemOwner ORDER BY dealTime DESC;")
@@ -119,6 +115,7 @@ class SU():
         return self.OUtransactions
 
     def getUserBlackList(self):
+        # Return list of dict{'username'} in ouBlacklist
         self.cursor.execute("SELECT * FROM ouBlacklist;")
         self.userBlackList = []
 
@@ -128,6 +125,7 @@ class SU():
         return self.userBlackList
 
     def getItemBlackList(self):
+        # Return list of dict{'ownerID', 'itemID', 'itemTitle'} in the itemBlackList
         self.cursor.execute("SELECT * FROM itemBlackList NATURAL JOIN ItemOwner;")
         self.itemBlackList = []
 
@@ -136,7 +134,21 @@ class SU():
 
         return self.itemBlackList
 
+
+    def getTabooList(self):
+        # Return list of dict{'taboo'} in the taboo DB
+        self.cursor.execute("SELECT * FROM Taboo;")
+        self.tabooList = []
+
+        for taboo in self.cursor:
+            self.tabooList.append({'taboo': taboo[0]})
+        return self.tabooList
+
     def addTaboo(self, taboo):
+        '''
+        :param taboo: a string of taboo word
+        :return: True if insert sucessfully, False if insert false
+        '''
         qry = ("INSERT INTO Taboo(word) VALUES ('%s');" %taboo)
         try:
             self.cursor.execute(qry)

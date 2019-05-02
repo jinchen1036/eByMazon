@@ -307,7 +307,10 @@ class friendInfo(GridLayout):
 
 class friendList(Screen):
     def backProfile(self):
+        self.selectedFriend = " Unselected "
         root.toProfile()
+
+
     def displayFriend(self):
         friends = ou.getFriend()
         self.ids['friends'].data = friends
@@ -343,12 +346,48 @@ class friendList(Screen):
     def addFriends(self,friendID,discount):
         ou.addFriend(friendID,discount)
     def sentMessage(self,message):
-        print(message)
-        ou.sendFriendMessage(root.friendID,message)
-        root.getMessage(root.friendID)
-        self.ids['chat'].text =""
+        if self.selectedFriend == " Unselected ":
+            self.ids['send'].disable = True
+            self.ids['warn'].text = "Please Select a Friend"
+        elif self.ids['chat'].text =="":
+            self.ids['send'].disable = True
+            self.ids['warn'].text = "Can't send empty message"
+        else:
+            self.ids['send'].disable = False
+            print(message)
+            ou.sendFriendMessage(root.friendID,message)
+            root.getMessage(root.friendID)
+            self.ids['chat'].text = ""
+            self.ids['warn'].text = ""
 
+############################################## OU Warning Page #################################################
+class ouWarning(Screen):
+    def tohome(self):
+        root.ids['screenmanager'].current = "profilePage"
 
+    def warningData(self):
+        warningTimes = ou.getWarnings()
+        for time in warningTimes:
+            if (time['warningID'] == 0):
+                time['warningID'] = "low rating"
+            elif (time['warningID'] == 1):
+                time['warningID'] = "complaints"
+            elif (time['warningID'] == 2):
+                time['warningID'] = "decline deal"
+            else:
+                time['warningID'] = "decline deal"
+
+            time['warnTime'] = time['warnTime'].strftime("%m/%d/%Y, %H:%M:%S")
+        # self.ids['complaint'].data = ou.getComplaints()
+        self.ids['warning'].data = warningTimes
+
+        complaintTimes = ou.getComplaints()
+        # for warningtype in complaintTimes:
+        #     warningtype['warningID']
+        for times in complaintTimes:
+            times['compliantTime'] = times['compliantTime'].strftime("%m/%d/%Y, %H:%M:%S")
+        self.ids['complaint'].data = complaintTimes
+        print("Refresh")
 
 ##################################################### SU Pages #################################################
 class suItemPost(Screen):
@@ -367,6 +406,33 @@ class suItemSale(Screen):
         su.removeItem(self.itemID)
         root.getSUitem()
 
+########################################### Blacklist and Taboo Pages ################################################
+class blackTaboo(Screen):
+    def tohome(self):
+        root.ids['screenmanager'].current = "suHomepage"
+
+    def addTabooWord(self):
+        # check input is not empty
+        if guest.checkInput(self.ids['tabooWord'].text):
+            self.warnShow = True
+        else:
+            su.addTaboo(self.ids['tabooWord'].text)
+            self.ids['tabooWord'].text = ""
+            self.warnShow = False
+            root.ids['blackTaboo'].blackListData()
+
+    def blackListData(self):
+        self.ids['tabooList'].data = su.getTabooList()
+        self.ids['userBlackList'].data = su.getUserBlackList()
+        self.ids['itemBlackList'].data = su.getItemBlackList()
+
+
+class suTransaction(Screen):
+    def tohome(self):
+        root.ids['screenmanager'].current = "suHomepage"
+    def Transactions(self):
+        self.ids['transactions'].data = su.getTransaction() #data selection to be fixed
+                                                            #connections done
 
 ################################### Others ################################
 
@@ -396,63 +462,10 @@ class processCompliant(Screen):
         print("Reject")
         pass
 
-class ouWarning(Screen):
-    def tohome(self):
-        root.ids['screenmanager'].current = "profilePage"
-
-    def warningData(self):
-        warningTimes = ou.getWarnings()
-        for time in warningTimes:
-            if (time['warningID'] == 0):
-                time['warningID'] = "low rating"
-            elif (time['warningID'] == 1):
-                time['warningID'] = "complaints"
-            elif (time['warningID'] == 2):
-                time['warningID'] = "decline deal"
-            else:
-                time['warningID'] = "decline deal"
-
-            time['warnTime'] = time['warnTime'].strftime("%m/%d/%Y, %H:%M:%S")
-        # self.ids['complaint'].data = ou.getComplaints()
-        self.ids['warning'].data = warningTimes
-
-        complaintTimes = ou.getComplaints()
-        # for warningtype in complaintTimes:
-        #     warningtype['warningID']
-        for times in complaintTimes:
-            times['compliantTime'] = times['compliantTime'].strftime("%m/%d/%Y, %H:%M:%S")
-        self.ids['complaint'].data = complaintTimes
-        print("Refresh")
 
 
-class blackTaboo(Screen):
-    def tohome(self):
-        root.ids['screenmanager'].current = "suHomepage"
 
-    def addTabooWord(self):
-        # check input is not empty
-        if guest.checkInput(self.ids['tabooWord'].text):
-            print("Empty")
-            self.warnShow = True
-        else:
-            su.addTaboo(self.ids['tabooWord'].text)
-            self.ids['tabooWord'].text = ""
-            self.warnShow = False
-            root.ids['blackTaboo'].blackListData()
 
-    def blackListData(self):
-        self.ids['tabooList'].data = su.getTabooList()
-        self.ids['userBlackList'].data = su.getUserBlackList()
-        self.ids['itemBlackList'].data = su.getItemBlackList()
-
-        print("Refresh")
-
-class suTransaction(Screen):
-    def tohome(self):
-        root.ids['screenmanager'].current = "suHomepage"
-    def Transactions(self):
-        self.ids['transactions'].data = su.getTransaction() #data selection to be fixed
-                                                            #connections done
         
 ####################### TO BE FILLED #################
 class editPassword(FloatLayout):
@@ -814,8 +827,11 @@ class Manager(Screen):
     def friendList(self):
         print('friendlist')
         root.ids["friendPage"].selectedFriend = " Unselected "
+        self.ids["friendPage"].ids['warn'].text = ""
         self.ids["friendPage"].ids['friends'].data = ou.getFriend()
         self.ids["friendPage"].ids['messages'].data = []
+
+
         self.ids['screenmanager'].current = "friendPage"
 
     def getMessage(self,friendID):
