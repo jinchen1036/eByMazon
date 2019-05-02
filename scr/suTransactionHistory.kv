@@ -34,6 +34,12 @@
                     # background_color: [2.37, 1.13, .68, 0.7]
                     text: 'Transactions'
                     color: 2.37, 1.13, .68, 0.7
+                    canvas.before:
+                        Color:
+                            rgb: (0, 255, 255,1)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
             BoxLayout:
                 orientation: 'horizontal'
                 BoldLabel: 
