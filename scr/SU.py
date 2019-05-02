@@ -108,19 +108,11 @@ class SU():
         self.OUtransactions = []
 
         for transaction in self.cursor:
-<<<<<<< HEAD
-            self.transactions.append({'itemID': str(transaction[0]), 'buyerID': str(transaction[1]),
-            'price':'$'+str(transaction[3]), 'numDeal':str(transaction[4]),'shipping_status':str(transaction[5]),
-            'date': str(transaction[6])[:10] }) #to be fixed(query)
-            print(transaction)
-        return self.transactions
-=======
             self.OUtransactions.append({'sellerID': transaction[7], 'itemID': transaction[0],
             'buyerID':transaction[1],'price':round(transaction[3],2),'shipping': transaction[5],
             'date': transaction[6].strftime("%m/%d/%Y") }) #to be fixed(query)
             # print(transaction)
         return self.OUtransactions
->>>>>>> upstream/master
 
     def getUserBlackList(self):
         # Return list of dict{'username'} in ouBlacklist
