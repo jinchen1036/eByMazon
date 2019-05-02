@@ -168,26 +168,31 @@ class OU():
                 iID = number[0]
             # itemID = self.cursor.fetclone()
 
-            qry = "INSERT INTO ItemView(itemID) VALUE (%s);" % int(iID)
-            self.cursor.execute(qry)
-            self.cnx.commit()
             return iID
         except mysql.connector.errors as ERR:
             print(ERR)
             return False
+
+    def insertView(self, itemID):
+        qry = "INSERT INTO ItemView(itemID) VALUE (%s);" % int(itemID)
+        self.cursor.execute(qry)
+        self.cnx.commit()
 
     def submitBiddingItem(self,image, title, description, usedStatus, startPrice, endDay):
         try:
             itemID = self.submitItem()
             qry = ("INSERT INTO ItemInfo(itemID, image, title, description, priceType) "
                    "VALUE (%s,%s,%s,%s,%s);")
-            self.cursor.execute(qry,(itemID,image,title,description,True))
+            self.cursor.execute(qry,(int(itemID),image,title,description,True))
             self.cnx.commit()
+
+
+            self.insertView(itemID)
 
             endDay = datetime.datetime.combine(datetime.date.today() + datetime.timedelta(days=endDay),
                                                      datetime.time(23, 59,59))
             qry = "INSERT INTO ItemBid(itemID, startPrice,usedStatus,endDay) VALUE (%s,%s,%s,%s);"
-            self.cursor.execute(qry, (itemID, float(startPrice), usedStatus, endDay))
+            self.cursor.execute(qry, (int(itemID), float(startPrice), usedStatus, endDay))
             self.cnx.commit()
         except mysql.connector.errors as ERR:
             print(ERR)
@@ -198,11 +203,13 @@ class OU():
             itemID = self.submitItem()
             qry = ("INSERT INTO ItemInfo(itemID, image, title, description, priceType) "
                    "VALUE (%s,%s,%s,%s,%s);")
-            self.cursor.execute(qry, (itemID,image,title,description,False))
+            self.cursor.execute(qry, (int(itemID),image,title,description,False))
             self.cnx.commit()
 
+            self.insertView(itemID)
+
             qry = "INSERT INTO FixedPrice(itemID, price,availableNum) VALUE (%s,%s,%s);"
-            self.cursor.execute(qry , (itemID, float(price), int(available)))
+            self.cursor.execute(qry , (int(itemID), float(price), int(available)))
             self.cnx.commit()
         except mysql.connector.errors as ERR:
             print(ERR)

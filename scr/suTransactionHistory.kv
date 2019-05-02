@@ -1,13 +1,22 @@
 <suTransactionRow@BoxLayout>:
+<<<<<<< HEAD
     itemID: ''
     buyerID: ''
     price: ''
     numDeal: ''
     shipping_status: ''
+=======
+    sellerID: 0
+    itemID: 0
+    buyerID: 0
+    shipping: False
+    price: 0
+>>>>>>> upstream/master
     date: ''
     BoxLayout:
         GridLayout:
             cols: 6
+<<<<<<< HEAD
             Label:
                 text: root.itemID
                 color: 0,0,1,1
@@ -24,6 +33,19 @@
                 text: root.shipping_status
                 color: 0,0,1,1
             Label:
+=======
+            CenterLabel:
+                text: str(root.sellerID)
+            CenterLabel:
+                text: str(root.itemID)
+            CenterLabel:
+                text: str(root.buyerID)
+            CenterLabel:
+                text: "Shipped" if root.shipping else "Shipping"
+            CenterLabel:
+                text: str(root.price)
+            CenterLabel:
+>>>>>>> upstream/master
                 text: root.date
                 color: 0,0,1,1
 
@@ -32,6 +54,15 @@
     BoxLayout:
         orientation: "vertical"
         spacing: 20
+        BoxLayout:
+            size_hint_y: 0.1
+            Label:
+                size_hint_x: 0.9
+            GrayButton:
+                text:"Home"
+                size_hint_x: 0.1
+                size: 150, 100
+                on_press: root.tohome()
         BoxLayout:
             orientation: 'vertical'
             size_hint_y: .2
@@ -48,6 +79,7 @@
                             size: self.size
             BoxLayout:
                 orientation: 'horizontal'
+<<<<<<< HEAD
                 BoldLabel:
                     text: 'Item ID'
                 BoldLabel:
@@ -58,8 +90,20 @@
                     text: 'numDeal'
                 BoldLabel:
                     text: 'shipped?'
+=======
+                BoldLabel: 
+                    text: 'Seller ID'
                 BoldLabel:
-                    text: 'Date'
+                    text: 'Item ID'
+                BoldLabel:
+                    text: 'Buyer ID'
+                BoldLabel:
+                    text: 'Shipping Status'
+                BoldLabel:
+                    text: 'Price Deal'
+>>>>>>> upstream/master
+                BoldLabel:
+                    text: 'Deal Date'
         RecycleView:
             size_hint_y: .7
             id: transactions
@@ -67,9 +111,9 @@
             viewclass: 'suTransactionRow'
             VRVL:
                 default_size: None, dp(20)
-        BoxLayout:
-            size_hint_y: .1
-            GrayButton:
-                text:"home"
-                size: 150, 100
-                on_press: root.tohome()
+#        BoxLayout:
+#            size_hint_y: .1
+#            GrayButton:
+#                text:"home"
+#                size: 150, 100
+#                on_press: root.tohome()

@@ -13,12 +13,17 @@
             text: root.username
 
 <itemBlackLists@BoxLayout>:
-    item: ""
-    BoxLayout:
-        orientation:"vertical"
+    ownerID: ""
+    itemID: ""
+    itemTitle: ""
+    GridLayout:
+        cols: 3
         CenterLabel:
-            text: root.item
-
+            text: root.ownerID
+        CenterLabel:
+            text: root.itemID
+        CenterLabel:
+            text: root.itemTitle
 
 
 <blackTaboo>:
@@ -83,11 +88,21 @@
                         viewclass: 'userBlackLists'
                         VRVL:
                             default_size: None, dp(20)
-                    BoxLayout:
+#                    BoxLayout:
+
+                    BoldLabel:
                         size_hint_y:0.2
-                        BoldLabel:
-                            text: "Item BlackList"
-                            font_size: 50
+                        text: "Item BlackList"
+                        font_size: 50
+                    GridLayout:
+                        size_hint_y: 0.2
+                        cols: 3
+                        CenterLabel:
+                            text: "ownerID"
+                        CenterLabel:
+                            text: "itemID"
+                        CenterLabel:
+                            text: "itemTitle"
                     RecycleView:
                         size_hint_y: 0.7
                         id: itemBlackList

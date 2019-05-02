@@ -12,6 +12,7 @@ class SU():
         self.cnx = cnx
         self.cursor = cursor
         self.ID = suID
+
     def getGU(self):
         self.cursor.execute("SELECT * FROM GUapplications;")
         self.guApplication =[]
@@ -99,26 +100,30 @@ class SU():
         #                  check for two justified compliant that will cause warning
         pass
 
-    def getTabooList(self):
-        self.cursor.execute("SELECT * FROM Taboo;")
-        self.tabooList = []
 
-        for taboo in self.cursor:
-            self.tabooList.append({'taboo': taboo[0]})
 
-        return self.tabooList
+
     def getTransaction(self):
-        self.cursor.execute("SELECT * FROM Transaction;")
-        self.transactions = []
+        self.cursor.execute("SELECT * FROM Transaction NATURAL JOIN ItemOwner ORDER BY dealTime DESC;")
+        self.OUtransactions = []
 
         for transaction in self.cursor:
+<<<<<<< HEAD
             self.transactions.append({'itemID': str(transaction[0]), 'buyerID': str(transaction[1]),
             'price':'$'+str(transaction[3]), 'numDeal':str(transaction[4]),'shipping_status':str(transaction[5]),
             'date': str(transaction[6])[:10] }) #to be fixed(query)
             print(transaction)
         return self.transactions
+=======
+            self.OUtransactions.append({'sellerID': transaction[7], 'itemID': transaction[0],
+            'buyerID':transaction[1],'price':round(transaction[3],2),'shipping': transaction[5],
+            'date': transaction[6].strftime("%m/%d/%Y") }) #to be fixed(query)
+            # print(transaction)
+        return self.OUtransactions
+>>>>>>> upstream/master
 
     def getUserBlackList(self):
+        # Return list of dict{'username'} in ouBlacklist
         self.cursor.execute("SELECT * FROM ouBlacklist;")
         self.userBlackList = []
 
@@ -128,16 +133,31 @@ class SU():
         return self.userBlackList
 
     def getItemBlackList(self):
-        self.cursor.execute("SELECT * FROM itemBlackList;")
+        # Return list of dict{'ownerID', 'itemID', 'itemTitle'} in the itemBlackList
+        self.cursor.execute("SELECT * FROM itemBlackList NATURAL JOIN ItemOwner;")
         self.itemBlackList = []
 
         for item in self.cursor:
-            self.itemBlackList.append({'item': str(item[0])})
+            self.itemBlackList.append({'ownerID':str(item[2]),'itemID': str(item[0]), 'itemTitle':item[1]})
 
         return self.itemBlackList
 
+
+    def getTabooList(self):
+        # Return list of dict{'taboo'} in the taboo DB
+        self.cursor.execute("SELECT * FROM Taboo;")
+        self.tabooList = []
+
+        for taboo in self.cursor:
+            self.tabooList.append({'taboo': taboo[0]})
+        return self.tabooList
+
     def addTaboo(self, taboo):
-        qry = ("INSERT INTO Taboo(word) VALUES ('%s');" %taboo )
+        '''
+        :param taboo: a string of taboo word
+        :return: True if insert sucessfully, False if insert false
+        '''
+        qry = ("INSERT INTO Taboo(word) VALUES ('%s');" %taboo)
         try:
             self.cursor.execute(qry)
             self.cnx.commit()
