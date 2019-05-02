@@ -105,18 +105,18 @@ class SU():
 
         for taboo in self.cursor:
             self.tabooList.append({'taboo': taboo[0]})
-
         return self.tabooList
+
     def getTransaction(self):
-        self.cursor.execute("SELECT * FROM Transaction;")
-        self.transactions = []
+        self.cursor.execute("SELECT * FROM Transaction NATURAL JOIN ItemOwner ORDER BY dealTime DESC;")
+        self.OUtransactions = []
 
         for transaction in self.cursor:
-            self.transactions.append({'numb': str(transaction[1]), 'itemID': str(transaction[1]),
-            'seller':str(transaction[1]), 'buyer':str(transaction[1]),'price':'$'+str(transaction[3]),
-            'date': str(transaction[6]) }) #to be fixed(query)
-            print(transaction)
-        return self.transactions
+            self.OUtransactions.append({'sellerID': transaction[7], 'itemID': transaction[0],
+            'buyerID':transaction[1],'price':round(transaction[3],2),'shipping': transaction[5],
+            'date': transaction[6].strftime("%m/%d/%Y") }) #to be fixed(query)
+            # print(transaction)
+        return self.OUtransactions
 
     def getUserBlackList(self):
         self.cursor.execute("SELECT * FROM ouBlacklist;")
@@ -128,16 +128,16 @@ class SU():
         return self.userBlackList
 
     def getItemBlackList(self):
-        self.cursor.execute("SELECT * FROM itemBlackList;")
+        self.cursor.execute("SELECT * FROM itemBlackList NATURAL JOIN ItemOwner;")
         self.itemBlackList = []
 
         for item in self.cursor:
-            self.itemBlackList.append({'item': str(item[0])})
+            self.itemBlackList.append({'ownerID':str(item[2]),'itemID': str(item[0]), 'itemTitle':item[1]})
 
         return self.itemBlackList
 
     def addTaboo(self, taboo):
-        qry = ("INSERT INTO Taboo(word) VALUES ('%s');" %taboo )
+        qry = ("INSERT INTO Taboo(word) VALUES ('%s');" %taboo)
         try:
             self.cursor.execute(qry)
             self.cnx.commit()

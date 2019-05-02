@@ -412,7 +412,7 @@ class ouWarning(Screen):
             else:
                 time['warningID'] = "decline deal"
 
-            time['warnTime'] = time['warnTime'].strftime('%m/%d/%Y')
+            time['warnTime'] = time['warnTime'].strftime("%m/%d/%Y, %H:%M:%S")
         # self.ids['complaint'].data = ou.getComplaints()
         self.ids['warning'].data = warningTimes
 
@@ -420,7 +420,7 @@ class ouWarning(Screen):
         # for warningtype in complaintTimes:
         #     warningtype['warningID']
         for times in complaintTimes:
-            times['compliantTime'] = times['compliantTime'].strftime('%m/%d/%Y')
+            times['compliantTime'] = times['compliantTime'].strftime("%m/%d/%Y, %H:%M:%S")
         self.ids['complaint'].data = complaintTimes
         print("Refresh")
 
@@ -822,7 +822,7 @@ class Manager(Screen):
         messages = ou.getFriendMessage(friendID)
         self.friendID = friendID
         for mess in messages:
-            mess['sendTime'] = mess['sendTime'].strftime('%m/%d/%Y')
+            mess['sendTime'] = mess['sendTime'].strftime("%H:%M:%S")
         root.ids["friendPage"].ids['messages'].data = messages
 
 
