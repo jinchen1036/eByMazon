@@ -1,25 +1,31 @@
 <suTransactionRow@BoxLayout>:
-    numb: ''
     itemID: ''
-    seller: ''
-    buyer: ''
+    buyerID: ''
     price: ''
+    numDeal: ''
+    shipping_status: ''
     date: ''
     BoxLayout:
         GridLayout:
             cols: 6
-            BoldLabel:
-                text: root.numb
-            BoldLabel:
+            Label:
                 text: root.itemID
-            BoldLabel:
-                text: root.seller
-            BoldLabel:
-                text: root.buyer
-            BoldLabel:
+                color: 0,0,1,1
+            Label:
+                text: root.buyerID
+                color: 0,0,1,1
+            Label:
                 text: root.price
-            BoldLabel:
+                color: 0,0,1,1
+            Label:
+                text: root.numDeal
+                color: 0,0,1,1
+            Label:
+                text: root.shipping_status
+                color: 0,0,1,1
+            Label:
                 text: root.date
+                color: 0,0,1,1
 
 <suTransaction>:
     # name: "GUapplication"
@@ -42,16 +48,16 @@
                             size: self.size
             BoxLayout:
                 orientation: 'horizontal'
-                BoldLabel: 
-                    text: '#'
                 BoldLabel:
                     text: 'Item ID'
                 BoldLabel:
-                    text: 'Seller'
+                    text: 'buyerID'
                 BoldLabel:
-                    text: 'Buyer'
+                    text: 'price'
                 BoldLabel:
-                    text: 'Price'
+                    text: 'numDeal'
+                BoldLabel:
+                    text: 'shipped?'
                 BoldLabel:
                     text: 'Date'
         RecycleView:

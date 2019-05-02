@@ -462,17 +462,19 @@ class editPassword(FloatLayout):
 
 class transactionHistory(Screen):
 
-    # data1 = {'title': str(1), 'price': 1000, 'date': 2019,
-    # 'seller': str(1), 'cancel': True}
     # data1 = { 'cancel': True}
     # data2 = { 'accept': True}
     def backProfile(self):
         root.toProfile()
     def OTransactions(self,id):
-        self.ids['bought'].data = su.viewTransactionHistory1(self,id) #data selection to be fixed
-        self.ids['sold'].data = su.viewTransactionHistory2(self,id) #data selection to be fixed
-        # self.ids['bought'].data = self.data1
-        # self.ids['bought'].data = self.data2
+        data1 = [{'title': str(1), 'price': '1000', 'date': '2019',
+        'seller': str(1), 'cancel': True}]
+        data2 = [{'title': str(1), 'price': '1000', 'date': '2019',
+        'seller': str(1), 'cancel': True}]
+        # self.ids['bought'].data = su.viewTransactionHistory1(self,id) #data selection to be fixed
+        # self.ids['sold'].data = su.viewTransactionHistory2(self,id) #data selection to be fixed
+        self.ids['bought'].data = data1
+        self.ids['bought'].data = data2
 class fixedItem(Screen):
     itemIndex = NumericProperty()
     user = BooleanProperty()
@@ -899,8 +901,8 @@ class Manager(Screen):
         self.ids['blackTaboo'].blackListData()
         self.ids['screenmanager'].current = "blackTaboo"
     def toSUtransaction(self):
-        self.ids['suTransaction'].Transactions()
         self.ids['screenmanager'].current = "suTransaction"
+        self.ids['suTransaction'].Transactions()
 
 class eByMazonApp(App):
 
@@ -913,8 +915,8 @@ class eByMazonApp(App):
 
 if __name__ == "__main__":
     config = {
-        "user": '',                 # Enter your own username
-        "password": '',             # Enter your own password
+        "user": 'eby',                 # Enter your own username
+        "password": 'ebypw',             # Enter your own password
         "host": '127.0.0.1',
         "database": 'eByMazon'
     }
