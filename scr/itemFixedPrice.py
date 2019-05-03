@@ -46,6 +46,7 @@ class fixedItem(Screen):
         self.ids["purchaseInfo"].text = ""
         self.ids["purchase"].ids["purchaseManager"].current = "cancel"
 
+
     def toPurchase(self):
         item = globalV.itemList[self.itemIndex]
         numWant = int(self.ids["purchaseInfo"].text)

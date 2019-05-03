@@ -1,5 +1,6 @@
 from kivy.uix.screenmanager import Screen
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 
 try:
     from scr.GlobalVariable import globalV
@@ -57,6 +58,24 @@ class blackTaboo(Screen):
         self.ids['userBlackList'].data = globalV.su.getUserBlackList()
         self.ids['itemBlackList'].data = globalV.su.getItemBlackList()
 
+
+
+########################################### Compliant Management ################################################
+class complainInfo(GridLayout):
+    def approveComplain(self):
+        globalV.su.manageCompliant(itemID=self.itemID,complianerID= self.complainerID,action=True)
+        globalV.root.ids['processCompliant'].displayComplain()
+
+    def rejectComplain(self):
+        globalV.su.manageCompliant(itemID=self.itemID, complianerID=self.complainerID, action=False)
+        globalV.root.ids['processCompliant'].displayComplain()
+
+class processCompliant(Screen):
+    def tohome(self):
+        globalV.root.ids['screenmanager'].current = "suHomepage"
+
+    def displayComplain(self):
+        self.ids['complains'].data = globalV.su.viewCompliant()
 
 
 class itemManage(Screen):

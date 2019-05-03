@@ -90,18 +90,31 @@ class SU():
         self.cursor.execute("DELETE FROM ItemInfo WHERE itemID = %s;" % itemID)
         self.cnx.commit()
 
+
+
     def viewCompliant(self):
         # Get all compliant from DB, return array of dict{itemID, complianerID, description, compliantTime}
-        pass
+        self.cursor.execute("SELECT * FROM Complaint NATURAL JOIN ItemOwner ORDER BY justified;")
+        self.compliants = []
+        for compliant in self.cursor:
+            self.compliants.append({'ownerID': compliant[5],'itemID':compliant[0],
+                                    'complainerID':compliant[1],'complain':compliant[2],
+                                    'time':compliant[3].strftime("%m/%d/%Y"),'justified': compliant[4]})
+        return self.compliants
 
     def manageCompliant(self, itemID, complianerID, action):
         # action == True: remove: delete compliant in DB
         # action == False: justified: change the justified to True in DB
         #                  check for two justified compliant that will cause warning
-        pass
+        if action:
+            self.cursor.execute("UPDATE Complaint SET justified = TRUE WHERE itemID = %s AND complainerID = %s;" %(itemID,complianerID))
 
+        # need to check warning
 
-
+        else:
+            self.cursor.execute("DELETE FROM Complaint WHERE itemID = %s AND complainerID = %s;" % (
+            itemID, complianerID))
+        self.cnx.commit()
 
     def getTransaction(self):
         self.cursor.execute("SELECT * FROM Transaction NATURAL JOIN ItemOwner ORDER BY dealTime DESC;")

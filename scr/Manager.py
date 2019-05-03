@@ -4,21 +4,23 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
+
 from kivy.uix.screenmanager import Screen
 from kivy.properties import BooleanProperty,ObjectProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
 
-# self define classes
-from scr.GlobalVariable import globalV
+######### import self define classes #################
+
 try:
-    from scr.GeneralFunctions import General
     from scr.GU import GU
     from scr.SU import SU
     from scr.OU import OU
     from scr.Item import Item
+    from scr.GeneralFunctions import General
+    from scr.GlobalVariable import globalV
 
-    # KV function pages
+    # KV page function
     from scr.Login import appealPop,Login
     from scr.Signup import Signup
 
@@ -30,16 +32,18 @@ try:
     from scr.ouItem import ouItem,LoadImage
     from scr.ouFriend import friendInfo,friendList
 
-    from scr.suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo,itemManage
+    from scr.suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo
+    from scr.suManagement import complainInfo,processCompliant, itemManage
 
 except ModuleNotFoundError:
-    from GeneralFunctions import General
     from GU import GU
     from SU import SU
     from OU import OU
     from Item import Item
+    from GeneralFunctions import General
+    from GlobalVariable import globalV
 
-    # KV function pages
+    # KV page function
     from Login import appealPop,Login
     from Signup import Signup
 
@@ -51,7 +55,8 @@ except ModuleNotFoundError:
     from ouItem import ouItem,LoadImage
     from ouFriend import friendInfo,friendList
 
-    from suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo,itemManage
+    from suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo
+    from suManagement import complainInfo, processCompliant, itemManage
 
 ################################## Home Page Item Recycle View ###############################################
 class item(BoxLayout):
@@ -74,23 +79,6 @@ class suTransaction(Screen):
 # class itemFixed(Screen):
 #     status = BooleanProperty()
 
-class processCompliant(Screen):
-    def tohome(self):
-        globalV.root.ids['screenmanager'].current = "suHomepage"
-
-    def displayComplain(self):
-        complains = [{'userID': 'userID1', 'itemID': 'itemID1', 'complain': 'shipping too slow', 'time': '3:00'},
-                     {'userID': 'userID2', 'itemID': 'itemID2', 'complain': 'too expensive', 'time': '3:00'}]
-        self.ids['complains'].data = complains
-    def approveComplain(self):
-        print("Approve")
-        pass
-
-    def rejectComplain(self):
-        print("Reject")
-        pass
-
-####################### TO BE FILLED #################
 class editPassword(FloatLayout):
     back = ObjectProperty(None)
     submit = ObjectProperty(None)
@@ -325,6 +313,7 @@ class Manager(Screen):
         self.ids['screenmanager'].current = "ouWarning"
 
     def toCompliant(self):
+        self.ids['processCompliant'].displayComplain()
         self.ids['screenmanager'].current ="processCompliant"
 
     def toBlacklist(self):
