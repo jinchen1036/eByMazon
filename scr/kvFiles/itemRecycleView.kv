@@ -1,7 +1,6 @@
-#include features.kv
-# Image Boxlayout of suItem
-<suItemPost@Screen>:
-    itemID: -1
+# Image Boxlayout of ouItem
+
+<itemPost@Screen>:
     image:None
     title: ""
     priceType:None
@@ -25,6 +24,7 @@
             allow_stretch: True
         BoxLayout:
             pos_hint: {'center_y': 0.5, 'center_x': 0.7}
+
             size_hint_x:0.6
             orientation: "vertical"
             BoldLabel:
@@ -44,39 +44,18 @@
                     text: "$"+root.price
                 SmallLabel:
                     text: "Description: "
+#                SmallLabel:
+#                SmallLabel:
                 LeftLabel:
                     text: root.description
                     font_size: 14
-        BoxLayout:
-            pos_hint: {'center_y': 0.5, 'center_x': 0.7}
-            size_hint_x:0.4
-            orientation: "vertical"
-            Label:
-                size_hint_y: 0.2
-            ProfileInput:
-                id: justification
-                multiline: True
-                size_hint: (0.7,0.5)
-                pos_hint: {'center_y': 0.5, 'center_x': 0.5}
-                hint_text: "Enter Justification, if decline item."
-            BoxLayout:
-                orientation: "horizontal"
-                OrangeButton:
-                    text: "Decline"
-                    pos_hint: {'center_y': .7, 'center_x': 0.5}
-                    size_hint:(0.3, .25)
-                    on_press: root.declineItem()
-                SkyBlueButton:
-                    text: "Approve"
-                    pos_hint: {'center_y': .7, 'center_x': 0.5}
-                    size_hint:(0.3, .25)
-                    on_press: root.approveItem()
 
-<suItemSale@Screen>:
-    itemID: -1
+<itemFixed@Screen>:
+    approve: True
     image:None
     title: ""
     price: ""
+    numLeft: ""
     typeStr: ""
     description: ""
     reviews: ""
@@ -87,7 +66,7 @@
         orientation: "horizontal"
         canvas.before:
             Color:
-                rgb: (255, 255, 0) if root.status else (102, 255, 102)
+                rgb: (211,211,211) if root.status else (102, 255, 102)
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -98,7 +77,6 @@
             x: self.parent.x
             size: self.parent.size
             allow_stretch: True
-
         BoxLayout:
             pos_hint: {'center_y': 0.5, 'center_x': 0.7}
             padding:[0,50,0,50]
@@ -111,16 +89,18 @@
                 cols: 2
                 size_hint:(0.8,0.7)
                 pos_hint: {'center_y': 0.5, 'center_x': 0.5}
-#                SmallLabel:
-#                    text: "Description: "
-#                SmallLabel:
-#                    text: root.description
-#                    multiline: True
-#                    font_size: 14
+                SmallLabel:
+                    text: "Sale Status: "
+                SmallLabel:
+                    text: "On Sale" if root.status else "Sold"
                 SmallLabel:
                     text: "Price: "
                 SmallLabel:
                     text: "$"+root.price
+                SmallLabel:
+                    text: "Number Left: "
+                SmallLabel:
+                    text: root.numLeft
                 SmallLabel:
                     text: "Views: "
                 SmallLabel:
@@ -134,12 +114,83 @@
                 SmallLabel:
                     text: root.dislike
                 SmallLabel:
+                    text: "Description: "
+#                SmallLabel:
+#                SmallLabel:
+                LeftLabel:
+                    text: root.description
+                    multiline: True
+                    font_size: 14
+
+<itemBid@Screen>:
+    approve: True
+    image:None
+    title: ""
+    price: ""
+    currentBid: ""
+    typeStr: ""
+    description: ""
+    reviews: ""
+    likes: ""
+    dislike: ""
+    status: False
+    BoxLayout:
+        orientation: "horizontal"
+        canvas.before:
+            Color:
+                rgb:  (102, 255, 102) if root.status else (211,211,211)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        Image:
+            texture: root.image
+            y: self.parent.y
+            x: self.parent.x
+            size: self.parent.size
+            allow_stretch: True
+        BoxLayout:
+            pos_hint: {'center_y': 0.5, 'center_x': 0.7}
+            padding:[0,50,0,50]
+            size_hint_x:0.6
+            orientation: "vertical"
+            BoldLabel:
+                size_hint_y: 0.2
+                text: root.title
+            GridLayout:
+                cols: 2
+                size_hint:(0.8,0.7)
+                pos_hint: {'center_x': 0.5}
+                SmallLabel:
                     text: "Sale Status: "
                 SmallLabel:
                     text: "On Sale" if root.status else "Sold"
+                SmallLabel:
+                    text: "Start Price: "
+                SmallLabel:
+                    text: "$"+root.price
+                SmallLabel:
+                    text: "Current Bid: "
+                SmallLabel:
+                    text: root.currentBid
+                SmallLabel:
+                    text: "Views: "
+                SmallLabel:
+                    text: root.reviews
+                SmallLabel:
+                    text: "Likes: "
+                SmallLabel:
+                    text: root.likes
+                SmallLabel:
+                    text: "Dislikes: "
+                SmallLabel:
+                    text: root.dislike
+                SmallLabel:
+                    text: "Description: "
+#                SmallLabel:
+#                SmallLabel:
+                LeftLabel:
+                    text: root.description
+                    multiline: True
+                    font_size: 14
 
-            PinkButton:
-                text: "Remove"
-                pos_hint: {'center_y': .7, 'center_x': 0.5}
-                size_hint:(0.5, .25)
-                on_press: root.removeItem()

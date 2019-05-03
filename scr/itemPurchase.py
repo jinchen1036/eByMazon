@@ -1,7 +1,6 @@
 from kivy.uix.screenmanager import Screen
 # self define classes
 
-
 class FixedPurchase(Screen):
     def clear(self):
         self.singlePrice = 0
