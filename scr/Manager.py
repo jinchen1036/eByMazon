@@ -101,14 +101,15 @@ class transactionHistory(Screen):
         pass
     def declinePurchase(self):
         pass
-    def complain():
+    def complain(self):
         self.ids['screenmanager'].current = "rate"
-    def rate():
+    def rate(self):
         self.ids['screenmanager'].current = "complain"
-    def submitComplain():
+    def submitComplain(self):
         pass
-    def submitRate():
+    def submitRate(self):
         pass
+
 
 ####################### Main Class #############################
 class Manager(Screen):
