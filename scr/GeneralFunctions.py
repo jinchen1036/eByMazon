@@ -13,6 +13,27 @@ class General():
         self.cnx = cnx
         self.cursor = cursor
 
+    ################### Check FUNCTIONS ################
+    def checkEmpty(self, input):
+        if input is None or input == '':
+            return False
+        return True
+
+    def checkInt(self, input):
+        if input is None or input == '':
+            return False
+        try:
+            int(input)
+            return True
+        except ValueError:
+            return False
+
+    def checkFloat(self, input):
+        if input is None or input == '':
+            return False
+        return isinstance(input, float) or self.checkInt(input)
+
+    ################### Other FUNCTIONS ################
     def login_check(self, username, password):
         '''
         function: check login info with DB
@@ -39,6 +60,9 @@ class General():
         tempGU = GU(cnx=self.cnx,cursor=self.cursor)
         return tempGU.checkUsername(username)
 
+    def getID(self,username):
+        self.cursor.execute("SELECT ID FROM User WHERE username = '%s'" % username)
+        return self.cursor.fetchone()[0]
 
     def removeOU(self,username):
         """

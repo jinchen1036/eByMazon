@@ -1,0 +1,116 @@
+<complainInfo@GridLayout>:
+    ownerID:0
+    itemID:0
+    complainerID: 0
+    complain:""
+    time:""
+    justified: False
+    cols: 7
+    padding : 5, 0
+    spacing: 10, 0
+
+    CenterLabel:
+        size_hint_x:.15
+        text: str(root.ownerID)
+    CenterLabel:
+        size_hint_x:.15
+        text: str(root.itemID)
+    CenterLabel:
+        size_hint_x:.15
+        text: str(root.complainerID)
+    CenterLabel:
+        size_hint_x:.35
+        text: root.complain
+    CenterLabel:
+        size_hint_x:.15
+        text: root.time
+
+    RightLabel:
+        size_hint_x:.15
+        color: 0, 0, 1, 1
+        opacity: 1 if root.justified else 0
+        text: "Already Justified"
+
+    BoxLayout:
+        size_hint_x:.30
+        opacity: 0 if root.justified else 1
+        disable: 0 if root.justified else 1
+        BlueButton:
+            size_hint_x:.15
+            text:'Approve'
+            on_press:root.approveComplain()
+        OrangeButton:
+            size_hint_x:.15
+            text:'Reject'
+            on_press:root.rejectComplain()
+
+
+
+<processCompliant>:
+#    name: "GUapplication"
+    BoxLayout:
+        orientation: "vertical"
+        padding : 15, 15
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y:0.1
+            CenterLabel:
+                bold: True
+                font_size: 100
+                size_hint_x:0.9
+                text:'Review Complains'
+            GrayButton:
+                size_hint_x:0.1
+                text:'Home'
+                on_press:root.tohome()
+
+
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint: 1, 1
+
+            BoxLayout:
+                orientation: "vertical"
+                size_hint: .5, 1
+                padding : 0, 15
+                spacing: 10, 10
+                size: 500, 30
+
+                GridLayout:
+                    size_hint: (0.9,0.2)
+                    cols: 7
+                    BoldLabel:
+                        size_hint_x:.15
+                        text: "Owner ID"
+                    BoldLabel:
+                        size_hint_x:.15
+                        text: "Item ID"
+                    BoldLabel:
+                        size_hint_x:.15
+                        text: "Complainer ID"
+                    BoldLabel:
+                        size_hint_x:.35
+                        text: "Description"
+                    BoldLabel:
+                        size_hint_x:.20
+                        text: "Complain Time"
+                    BoldLabel:
+                        size_hint_x: .30
+
+                RecycleView:
+                    id: complains
+                    viewclass: 'complainInfo'
+                    VRVL:
+                        default_size: None, dp(30)
+
+
+#        BoxLayout:
+#            orientation: "horizontal"
+#            size_hint_y:0.1
+#            Button:
+#                text: "Refresh"
+#                size_hint_x: .05
+#                spacing_x: 30
+#                on_press:root.displayComplain()

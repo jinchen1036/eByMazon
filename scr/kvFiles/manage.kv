@@ -1,19 +1,21 @@
 #:import FadeTransition kivy.uix.screenmanager.FadeTransition
-#:include features.kv
-#:include signup.kv
-#:include itemFixedPrice.kv
-#:include itemBidding.kv
-#:include GUapplication.kv
-#:include suManageItem.kv
-#:include ouInfo.kv
-#:include friendList.kv
-#:include transactionHistory.kv
-#:include appealPop.kv
-#:include ouItem.kv
-#:include processCompliant.kv
-#:include ouWarning.kv
-#:include blackTabooList.kv
-#:include suTransactionHistory.kv
+#:include kvFiles/features.kv
+#:include kvFiles/login.kv
+#:include kvFiles/signup.kv
+#:include kvFiles/itemFixedPrice.kv
+#:include kvFiles/itemBidding.kv
+#:include kvFiles/GUapplication.kv
+#:include kvFiles/suManageItem.kv
+#:include kvFiles/ouInfo.kv
+#:include kvFiles/friendList.kv
+#:include kvFiles/transactionHistory.kv
+#:include kvFiles/appealPop.kv
+#:include kvFiles/ouItem.kv
+#:include kvFiles/processCompliant.kv
+#:include kvFiles/ouWarning.kv
+#:include kvFiles/blackTabooList.kv
+#:include kvFiles/suTransactionHistory.kv
+
 <Manager>:
     login: False
     userID: None
@@ -24,7 +26,6 @@
         transition: FadeTransition()
 
         Screen:
-#            id: home
             name: 'homepage'
             title: "Home Page"
             BoxLayout:
@@ -120,57 +121,11 @@
                         data:[]
                         viewclass: 'item'
                         VRVL:
-        Screen:
-#            id: login
+        Login:
+            id: login
             name: 'loginpage'
             title: "Login Page"
-            BoxLayout:
-                orientation: "vertical"
-                pos_hint: {'center_y': 0.3, 'center_x': 0.7}
-                WarningLabel:
-                    id: loginCheck
-                    text:""
-                    size_hint_y: 0.2
-                BoxLayout:
-                    size_hint: (0.5,0.4)
-                    orientation: "horizontal"
-                    BoldLabel:
-                        text: "User Name"
-                    InfoInput:
-                        id: loginUsername
-                        size_hint_x: 1.5
-                        size_hint_y: .3
-                        pos_hint: {'center_y': 0.5, 'center_x': 0.5}
-                BoxLayout:
-                    size_hint: (0.5,0.4)
-                    orientation: "horizontal"
-                    BoldLabel:
-                        pos_hint: {'center_y': 1, 'center_x': 0.5}
-                        text: "Password"
-                    InfoInput:
-                        id: loginPassword
-                        size_hint: (1.5,.3)
-                        pos_hint: {'center_y': 1, 'center_x': 0.5}
-                BoxLayout:
-                    orientation: "horizontal"
-                    padding:(50,50)
-                    size_hint: (0.6,1)
-                    OrangeButton:
-                        size_hint_y: .15
-                        pos_hint: {'center_y': 1.3, 'center_x': 0.5}
-                        text: "Login"
-                        on_press:
-                            root.checkLogin(loginUsername.text,loginPassword.text)
-                    YellowButton:
-                        size_hint_y: .15
-                        pos_hint: {'center_y': 1.3, 'center_x': 0.5}
-                        text: "Clear"
-                        on_press: root.clearLogin()
-                    GrayButton:
-                        size_hint_y: .15
-                        pos_hint: {'center_y': 1.3, 'center_x': 0.5}
-                        text: "Cancel"
-                        on_press: root.cancelLogin()
+
         Signup:             # implemented in signup.kv
             id: signup
             name: "signupPage"
@@ -323,7 +278,7 @@
                         OrangeButton:
                             size_hint_y: 0.1
                             text: "History"
-                            on_press: root.history()
+                            on_press: root.ids['screenmanager'].current = "historyPage"
                         OrangeButton:
                             size_hint_y: 0.1
                             text: "My item"
