@@ -90,14 +90,24 @@ class transactionHistory(Screen):
         globalV.root.toProfile()
 
     def OTransactions(self,id):
-        data1 = [{'title': '1','price': 1, 'date': '1','seller':1}]
+        data1 = [{'title': '1','price': 1, 'date': '1','seller':1, 'processed': False}]
+        data2 = [{'title': '1','price': 1, 'date': '1','buyer':1, 'processed': False}]
         # self.ids['bought'].data = globalV.su.viewTransactionHistory1(self,id) #data selection to be fixed
         # self.ids['sold'].data = globalV.su.viewTransactionHistory2(self,id) #data selection to be fixed
         self.ids['bought'].data = data1
+        self.ids['sold'].data = data2
     #---to be filed---#
     def acceptPurchase(self):
         pass
     def declinePurchase(self):
+        pass
+    def complain():
+        self.ids['screenmanager'].current = "rate"
+    def rate():
+        self.ids['screenmanager'].current = "complain"
+    def submitComplain():
+        pass
+    def submitRate():
         pass
 
 ####################### Main Class #############################
