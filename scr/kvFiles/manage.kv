@@ -8,7 +8,7 @@
 #:include kvFiles/suManageItem.kv
 #:include kvFiles/ouInfo.kv
 #:include kvFiles/friendList.kv
-#:include kvFiles/transactionHistory.kv
+#:include kvFiles/ouTransactionHistory.kv
 #:include kvFiles/appealPop.kv
 #:include kvFiles/ouItem.kv
 #:include kvFiles/processCompliant.kv
@@ -277,7 +277,7 @@
                             on_press: root.friendList()
                         OrangeButton:
                             size_hint_y: 0.1
-                            text: "History"
+                            text: "Transaction History"
                             on_press: root.toOuHistory()
                         OrangeButton:
                             size_hint_y: 0.1
@@ -285,18 +285,10 @@
                             on_press: root.toOuItem()
                         OrangeButton:
                             size_hint_y: 0.1
-                            text: "Warning"
+                            text: "Compliants and Warnings"
                             on_press: root.toWarning()
                         Label:
                             size_hint_y: 0.1
-        friendList:
-            id: friendPage
-            name: "friendPage"
-            title: "the friend list"
-        transactionHistory:
-            id: history
-            name: "historyPage"
-            title: "the history"
         Screen:
             name: "editPage"
             title: "to edit profile"
@@ -347,6 +339,14 @@
                         text: "Change Info"
                         width: 500
                         on_press: root.changeInfo(editName.text,editCard.text,editEmail.text,editPhone.text,editAddress.text,editState.text)
+        friendList:
+            id: friendPage
+            name: "friendPage"
+            title: "the friend list"
+        transactionHistory:
+            id: history
+            name: "historyPage"
+            title: "the history"
         fixedItem:
             id: fixedItem
             name: "fixedItem"
