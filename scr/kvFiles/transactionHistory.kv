@@ -1,48 +1,65 @@
 <bought@BoxLayout>:
     title: ''
-    price: ''
+    price: 0
     date: ''
-    seller: ''
-    cancel: True
+    seller: 0
     # image: 
     BoxLayout:
         GridLayout:
-            col: 5
-            BoldLabel:
+            cols: 4
+            CenterLabel:
                 text: root.title
-            BoldLabel:
-                text: root.price
-            BoldLabel:
-                text: root.seller
-            BoldLabel:
+            CenterLabel:
+                text: '$'+str(root.price)
+            CenterLabel:
+                text: str(root.seller)
+            CenterLabel:
                 text: root.date
-            Button:
-                text: 'Cancel' if root.cancel else ''
-                on_press: root.cancelPurchase() 
+            CenterLabel:
+            # Button:
+            #     text: 'Cancel' if root.cancel else ''
+            #     on_press: root.cancelPurchase() 
 
 <sold@BoxLayout>:
     title: ''
-    price: ''
+    price: 0
     date: ''
-    buyer: ''
-    accept: True
+    buyer: 0
+    processed: False
     # image: 
     BoxLayout:
         GridLayout:
-            col: 5
-            BoldLabel:
+            cols: 6
+            CenterLabel:
                 text: root.title
-            BoldLabel:
-                text: root.price
-            BoldLabel:
-                text: root.buyer
-            BoldLabel:
+            CenterLabel:
+                text: '$'+str(root.price)
+            CenterLabel:
+                text: str(root.buyer)
+            CenterLabel:
                 text: root.date
             Button:
-                text: 'Accept' if root.accept else ''
-                on_press: root.acceptPurchase() 
+                text: 'Accept' if not root.processed else ''
+                on_press: root.acceptPurchase()
+                padding: 5,0 
+            Button:
+                text: 'Decline' if not root.processed else ''
+                on_press: root.declinePurchase()
+                padding: 5,0
 
 <transactionHistory>:
+    BoxLayout:
+        size_hint_y: 0.1
+        orientation: "horizontal"
+        height: 30
+        spacing: 10
+        Label:
+            size_hint_x: .8
+        Button:
+            size_hint_x: .2
+            text: "Go back"
+            # size: 150, 100
+            on_press: root.backProfile()
     BoxLayout:
         orientation: "vertical"
         BoxLayout:
@@ -66,7 +83,7 @@
                     text: 'seller'
                 BoldLabel: 
                     text: 'date'
-                BoldLabel: 
+                BoldLabel:
                     text: ''
                 BoldLabel: 
                     text: 'title'
@@ -93,11 +110,3 @@
                 viewclass: 'sold'
                 VRVL:
                     default_size: None, dp(20)
-    BoxLayout:
-        size_hint_y: 0.05
-        orientation: "horizontal"
-        height: 30
-        spacing: 10
-        Button:
-            text: "Go back"
-            on_press: root.backProfile()
