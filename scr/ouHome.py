@@ -44,22 +44,24 @@ class ouWarning(Screen):
         warningTimes = globalV.ou.getWarnings()
         for time in warningTimes:
             if (time['warningID'] == 0):
-                time['warningID'] = "low rating"
+                time['warningID'] = "reckless graders"
             elif (time['warningID'] == 1):
                 time['warningID'] = "complaints"
             elif (time['warningID'] == 2):
                 time['warningID'] = "decline deal"
+            elif (time['warningID'] == 3):
+                time['warningID'] = "item removed by su"
             else:
-                time['warningID'] = "decline deal"
+                time['warningID'] = "use taboo word"
 
-            time['warnTime'] = time['warnTime'].strftime("%m/%d/%Y, %H:%M:%S")
+            # time['warnTime'] = time['warnTime'].strftime("%m/%d/%Y, %H:%M:%S")
         # self.ids['complaint'].data = globalV.ou.getComplaints()
         self.ids['warning'].data = warningTimes
 
         complaintTimes = globalV.ou.getComplaints()
         # for warningtype in complaintTimes:
         #     warningtype['warningID']
-        for times in complaintTimes:
-            times['compliantTime'] = times['compliantTime'].strftime("%m/%d/%Y, %H:%M:%S")
+        # for times in complaintTimes:
+        #     times['compliantTime'] = times['compliantTime'].strftime("%m/%d/%Y, %H:%M:%S")
         self.ids['complaint'].data = complaintTimes
         # print("Refresh")

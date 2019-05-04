@@ -1,21 +1,61 @@
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen
 from kivy.uix.gridlayout import GridLayout
-
+from kivy.uix.floatlayout import FloatLayout
+from kivy.properties import ObjectProperty
 try:
     from scr.GlobalVariable import globalV
 except ModuleNotFoundError:
     from GlobalVariable import globalV
 
 
+class rate(FloatLayout):
+    submitRate = ObjectProperty(None)
+    toHistory = ObjectProperty(None)
+
+
+class complain(FloatLayout):
+    submitComplain = ObjectProperty(None)
+    toHistory = ObjectProperty(None)
+
 
 class bought(GridLayout):
+    def dismiss_popup(self):
+        self._popup.dismiss()
+        globalV.root.ids['history'].getTransaction()
+
     def complain(self):
-        print('Complain')
-        # self.ids['screenmanager'].current = "rate"
+        if self.complained:
+            self.ids['complain'].current = "text"
+        else:
+            print('Complain')
+            content = complain(toHistory=self.dismiss_popup, submitComplain=self.submitComplain)
+            self._popup = Popup(title="Submit Compliant", content=content,
+                                size_hint=(0.8, 0.8))
+            self._popup.open()
+
     def rate(self):
-        print('Rate')
-        # self.ids['screenmanager'].current = "complain"
-    pass
+        if self.rated:
+            self.ids['rating'].current = "text"
+        else:
+            content = rate(toHistory=self.dismiss_popup, submitRate=self.submitRate)
+            self._popup = Popup(title="Submit Rate", content=content,
+                                size_hint=(0.8, 0.8))
+            self._popup.open()
+
+    def submitComplain(self, description):
+        if description != "":
+            print(description)
+            globalV.ou.submitCompliant(self.itemID,description)
+            self.ids['complain'].current = "text"
+            self.dismiss_popup()
+
+    def submitRate(self,rating, comment):
+        if comment != "":
+            globalV.ou.submitRating(self.itemID, rating,comment)
+            self.ids['rating'].current = "text"
+            self.dismiss_popup()
+
 
 class sold(GridLayout):
     def acceptPurchase(self):
@@ -40,8 +80,3 @@ class transactionHistory(Screen):
     #---to be filed---#
 
 
-
-    def submitComplain(self):
-        pass
-    def submitRate(self):
-        pass
