@@ -274,26 +274,78 @@ class OU():
         pass
         
 ##_____to be filled____#
-    def viewTransactionHistory1(self,ouID):
-        # bought
-        # get transaction History from DB
-        # Separate for sell and purchase, return dict{'sell','buy'}
-        # each is list of transaction in form[itemID, buyerID, priceDeal, dealTime]
-        # self.cursor.execute("SELECT * FROM Transaction;")
-        # self.transactions = []
-        # for transaction in self.cursor:
-        #     self.transactions.append({'numb': str(transaction[1]), 'itemID': str(transaction[1]),
-        #     'seller':str(transaction[1]), 'buyer':str(transaction[1]),'price':str(transaction[1]),
-        #     'date': str(transaction[1]) }) #to be fixed(query)
-        #     print(transaction)
-        # return self.transactions
-        pass
-    def viewTransactionHistory2(self,ouID):
-        # sold
-        # get transaction History from DB
-        # Separate for sell and purchase, return dict{'sell','buy'}
-        # each is list of transaction in form[itemID, buyerID, priceDeal, dealTime]
-        pass
+    ####################### Transactions (VIEW/ACCEPT/DECLINE) #####################################
+    def getBuyHistory(self):
+        """
+        :param ouID: the buyer ID
+        :return: list of dict in form:
+                {'itemID'(int), 'itemTitle'(str), 'sellerID'(int), 'sellerName'(str),'price'(float),'time'(str),'ship'(bool) }
+        """
+
+        self.buyHist = []
+        qry = ("SELECT title, ownerID,username,priceTotal,dealTime,shippingStatus,itemID "
+               "FROM Transaction NATURAL JOIN ItemOwner "
+               "NATURAL JOIN ItemInfo "
+               "JOIN User ON ownerID = ID "
+               "WHERE buyerID = %s ORDER BY dealTime DESC;" % self.ID)
+
+        self.cursor.execute(qry)
+        for hist in self.cursor:
+            self.buyHist.append({'itemID':hist[6],'itemTitle': hist[0], 'sellerID': hist[1],
+                                 'sellerName': hist[2],'price': round(hist[3],2),'time': hist[4].strftime("%m/%d/%Y"),
+                                 'ship': hist[5]})
+        return self.buyHist
+
+    def getSaleHistory(self):
+        """
+        :param ouID: seller ID
+        :return: list of dict in form:
+                {'itemID'(int),'itemTitle'(str), 'buyerID'(int), 'buyerName'(str),'price'(float),'time'(str),'ship'(bool) }
+        """
+        self.saleHist = []
+        qry = ("SELECT title, buyerID,username,priceTotal,dealTime,shippingStatus,itemID "
+               "FROM Transaction NATURAL JOIN ItemOwner "
+               "NATURAL JOIN ItemInfo "
+               "JOIN User ON buyerID = ID "
+               "WHERE ownerID = %s ORDER BY dealTime DESC;" % self.ID)
+
+        self.cursor.execute(qry)
+        for hist in self.cursor:
+            self.saleHist.append({'itemID':hist[6],'itemTitle': hist[0], 'buyerID': hist[1],
+                                 'buyerName': hist[2], 'price': round(hist[3],2), 'time': hist[4].strftime("%m/%d/%Y"),
+                                 'ship': hist[5]})
+
+        return self.saleHist
+
+
+    def acceptSale(self,itemID, buyerID, price):
+        # Charge money from buyer
+        qry = ("UPDATE OUstatus SET moneySpend = moneySpend + %s WHERE ouID = %s;" %(price,buyerID))
+        self.cursor.execute(qry)
+        #  need check VIP Status in general
+
+        # Change ship status
+        qry = ("UPDATE Transaction SET shippingStatus = true "
+               "WHERE itemID = %s AND buyerID = %s;" % (itemID,buyerID))
+
+        self.cursor.execute(qry)
+        self.cnx.commit()
+
+
+    def declineSale(self,itemID, buyerID):
+        # delete transaction
+        qry = ("DELETE FROM Transaction WHERE itemID = %s AND buyerID = %s;" % (itemID,buyerID))
+        self.cursor.execute(qry)
+
+        # Add warning
+        description = 'Decline Sale of Item %d' % itemID
+        qry = ("INSERT INTO Warning(ouID, warningID, description)  VALUES (%s,%s,'%s');"
+               % (self.ID, 2,description))
+        self.cursor.execute(qry)
+
+        # Check suspend in general
+
+        self.cnx.commit()
 
     def submitRating(self,itemID, raterID, rating):
         # add rating to DB
