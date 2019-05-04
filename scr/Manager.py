@@ -31,6 +31,7 @@ try:
     from scr.ouHome import ouInformation,ouInfo,ouWarning
     from scr.ouItem import ouItem,LoadImage
     from scr.ouFriend import friendInfo,friendList
+    from scr.ouTransaction import transactionHistory,bought
 
     from scr.suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo
     from scr.suManagement import complainInfo,processCompliant, itemManage
@@ -54,6 +55,7 @@ except ModuleNotFoundError:
     from ouHome import ouInformation,ouInfo,ouWarning
     from ouItem import ouItem,LoadImage
     from ouFriend import friendInfo,friendList
+    from ouTransaction import transactionHistory,bought
 
     from suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo
     from suManagement import complainInfo, processCompliant, itemManage
@@ -83,32 +85,6 @@ class editPassword(FloatLayout):
     back = ObjectProperty(None)
     submit = ObjectProperty(None)
 
-
-class transactionHistory(Screen):
-    def backProfile(self):
-        print('back')
-        globalV.root.toProfile()
-
-    def OTransactions(self,id):
-        data1 = [{'title': '1','price': 1, 'date': '1','seller':1, 'processed': False}]
-        data2 = [{'title': '1','price': 1, 'date': '1','buyer':1, 'processed': False}]
-        # self.ids['bought'].data = globalV.su.viewTransactionHistory1(self,id) #data selection to be fixed
-        # self.ids['sold'].data = globalV.su.viewTransactionHistory2(self,id) #data selection to be fixed
-        self.ids['bought'].data = data1
-        self.ids['sold'].data = data2
-    #---to be filed---#
-    def acceptPurchase(self):
-        pass
-    def declinePurchase(self):
-        pass
-    def complain(self):
-        self.ids['screenmanager'].current = "rate"
-    def rate(self):
-        self.ids['screenmanager'].current = "complain"
-    def submitComplain(self):
-        pass
-    def submitRate(self):
-        pass
 
 
 ####################### Main Class #############################
@@ -310,7 +286,7 @@ class Manager(Screen):
         self.ids['screenmanager'].current = "GUapplication"
 
     def toOuHistory(self):
-        self.ids['history'].OTransactions(1)
+        self.ids['history'].getTransaction()
         self.ids['screenmanager'].current = "historyPage"
 
     def toouInfo(self):
