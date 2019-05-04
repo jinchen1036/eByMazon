@@ -21,8 +21,9 @@ class ouInfo(Screen):
         ouData = []
         for ou in ous:
             remove = True if ou.status == 3 else False
-            status = 'Ordinary'
-            if ou.status == 1:
+            if ou.status == 0:
+                status = 'Ordinary'
+            elif ou.status == 1:
                 status = 'VIP'
             elif ou.status == 2:
                 status = 'Suspend'

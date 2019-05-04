@@ -15,8 +15,10 @@ class OU():
         self.depromote = False
         self.vipCheck()
         self.compliantCheck()
+
         self.getOUInfo()
         self.getItem()
+        self.getComplaints()
 
     ####################### Get Info #####################################
     def getOUInfo(self):
@@ -86,25 +88,28 @@ class OU():
             except ValueError:
                 rater.append(raterID)
 
-        avgRate = sumRate/i
+        avgRate = 0
+        if i != 0:
+            avgRate = sumRate/i
 
-        self.cursor.execute("UPDATE OUstatus SET aveRate = %s WHERE ouID = %s;" % (avgRate,self.ID))
-        self.cnx.commit()
+            self.cursor.execute("UPDATE OUstatus SET aveRate = %s WHERE ouID = %s;" % (avgRate,self.ID))
+            self.cnx.commit()
 
         # Check warning
         self.cursor.execute("SELECT EXISTS(SELECT * FROM Warning WHERE ouID = %s);" % self.ID)
         warn = self.cursor.fetchone()[0]
 
+        promote = not warn and status == 0
+        rateP = len(rater) >= 3 and avgRate >= 4
+
         # depromote to ordinary
-        if avgRate < 4 and status == 1:
+        if avgRate < 4 and avgRate != 0 and status == 1:
             self.cursor.execute("UPDATE OUstatus SET status = 0 WHERE ouID = %s;" % self.ID)
             self.cnx.commit()
             self.depromote = True
 
         # promote a VIP
-        promote = not warn and status == 0
-        rateP = len(rater) >= 3 and avgRate >= 4
-        if (rateP or moneySpend>500) and promote:
+        elif (rateP or moneySpend>500) and promote:
             self.cursor.execute("UPDATE OUstatus SET status = 1 WHERE ouID = %s;" % self.ID)
             self.cnx.commit()
             self.promote = True
