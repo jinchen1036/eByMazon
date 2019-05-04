@@ -1,20 +1,21 @@
 <bought@BoxLayout>:
     title: ''
-    price: ''
+    price: 0
     date: ''
-    seller: ''
+    seller: 0
     # image: 
     BoxLayout:
         GridLayout:
-            col: 4
+            cols: 4
             CenterLabel:
                 text: root.title
             CenterLabel:
-                text: root.price
+                text: '$'+str(root.price)
             CenterLabel:
-                text: root.seller
+                text: str(root.seller)
             CenterLabel:
                 text: root.date
+            CenterLabel:
             # Button:
             #     text: 'Cancel' if root.cancel else ''
             #     on_press: root.cancelPurchase() 
@@ -24,39 +25,40 @@
     price: 0
     date: ''
     buyer: 0
-    type: 1
-    accept: True
-    decline: True
+    processed: False
     # image: 
     BoxLayout:
         GridLayout:
-            col: 7
+            cols: 6
             CenterLabel:
                 text: root.title
             CenterLabel:
-                text: root.price
+                text: '$'+str(root.price)
             CenterLabel:
-                text: root.buyer
+                text: str(root.buyer)
             CenterLabel:
                 text: root.date
             Button:
-                text: 'Accept' if root.accept else ''
-                on_press: root.acceptPurchase() 
+                text: 'Accept' if not root.processed else ''
+                on_press: root.acceptPurchase()
+                padding: 5,0 
             Button:
-                text: 'Decline' if root.decline else ''
+                text: 'Decline' if not root.processed else ''
                 on_press: root.declinePurchase()
+                padding: 5,0
 
 <transactionHistory>:
     BoxLayout:
-        size_hint_y: 0.01
+        size_hint_y: 0.1
         orientation: "horizontal"
         height: 30
         spacing: 10
         Label:
-            size_hint_x: .9
+            size_hint_x: .8
         Button:
+            size_hint_x: .2
             text: "Go back"
-            size: 150, 100
+            # size: 150, 100
             on_press: root.backProfile()
     BoxLayout:
         orientation: "vertical"
@@ -81,7 +83,7 @@
                     text: 'seller'
                 BoldLabel: 
                     text: 'date'
-                BoldLabel: 
+                BoldLabel:
                     text: ''
                 BoldLabel: 
                     text: 'title'

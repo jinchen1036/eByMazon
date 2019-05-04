@@ -85,17 +85,19 @@ class editPassword(FloatLayout):
 
 
 class transactionHistory(Screen):
-    # data1 = {'title': str(1), 'price': 1000, 'date': 2019,
-    # 'seller': str(1), 'cancel': True}
-    # data1 = { 'cancel': True}
-    # data2 = { 'accept': True}
     def backProfile(self):
+        print('back')
         globalV.root.toProfile()
     def OTransactions(self,id):
-        self.ids['bought'].data = globalV.su.viewTransactionHistory1(self,id) #data selection to be fixed
-        self.ids['sold'].data = globalV.su.viewTransactionHistory2(self,id) #data selection to be fixed
-        # self.ids['bought'].data = self.data1
-        # self.ids['bought'].data = self.data2
+        data1 = [{'title': '1','price': 1, 'date': '1','seller':1}]
+        # self.ids['bought'].data = globalV.su.viewTransactionHistory1(self,id) #data selection to be fixed
+        # self.ids['sold'].data = globalV.su.viewTransactionHistory2(self,id) #data selection to be fixed
+        self.ids['bought'].data = data1
+    #---to be filed---#
+    def acceptPurchase(): 
+        pass
+    def declinePurchase():
+        pass
 
 ####################### Main Class #############################
 class Manager(Screen):
@@ -295,7 +297,9 @@ class Manager(Screen):
         self.ids['guApply'].getApplications()
         self.ids['screenmanager'].current = "GUapplication"
 
-
+    def toOuHistory(self):
+        self.ids['history'].OTransactions(1)
+        self.ids['screenmanager'].current = "historyPage"
     def toouInfo(self):
         self.ids['ouInfo'].getOUInformation()
         self.ids['screenmanager'].current = "ouInfo"
@@ -311,7 +315,6 @@ class Manager(Screen):
     def toWarning(self):
         self.ids['ouWarning'].warningData()
         self.ids['screenmanager'].current = "ouWarning"
-
     def toCompliant(self):
         self.ids['processCompliant'].displayComplain()
         self.ids['screenmanager'].current ="processCompliant"
