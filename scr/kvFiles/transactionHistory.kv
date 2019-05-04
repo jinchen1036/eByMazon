@@ -24,12 +24,14 @@
                     text: 'Complain' 
                     on_press: root.complain()
                     padding: 5,0
+                    background_color: (2.14, .04, .25,.7)
 
                 Button:
                     disable: root.processed
                     text: 'Rate'
                     on_press: root.rate()
                     padding: 5,0
+                    background_color:(.03, 1.65, .89, .7)
 
             # Button:
             #     text: 'Cancel' if root.cancel else ''
@@ -61,11 +63,13 @@
                     text: 'Accept' if not root.processed else ''
                     on_press: root.acceptPurchase()
                     padding: 5,0 
+                    background_color:(.03, 1.65, .89, .7)
                 Button:
                     diable: root.processed
                     text: 'Decline' if not root.processed else ''
                     on_press: root.declinePurchase()
                     padding: 5,0
+                    background_color: (2.14, .04, .25,.7)
 
 <transactionHistory>:
     BoxLayout:
@@ -79,14 +83,16 @@
                 size_hint_x: .8
             GrayButton:
                 size_hint_x: .2
-                text: "Go back"
+                # size_hint_y: 
+                text: "Go Back"
                 on_press: root.backProfile()
+                # background_color: (2.14, 1.41, .06, .7)
 
 #    BoxLayout:
 #        orientation: "vertical"
         BoxLayout:
             orientation: 'vertical'
-            size_hint_y: .4
+            size_hint_y: .2
             BoldLabel:
                 text: "My Transition History"
                 canvas.before:
@@ -118,60 +124,66 @@
                 BoldLabel: 
                     text: ''
         BoxLayout:
-            size_hint_y: 2
+            size_hint_y: 
             orientation: 'horizontal'
             RecycleView:
                 id: bought
                 data:[]
                 viewclass: 'bought'
                 VRVL:
-                    default_size: None, dp(20)
+                    default_size: None, dp(40)
             RecycleView:
                 id: sold
                 data:[]
                 viewclass: 'sold'
                 VRVL:
-                    default_size: None, dp(20)
+                    default_size: None, dp(40)
 
 <complain>:
     id: complain
-    BoxLayout:
-        orientation:'vertical'
-        size_hint: .5, .5
-        pos_hint: {'center_x': .5, 'center_y': .5}
+    Screen:
         BoxLayout:
-            TextInput:
-                id: complain_response
-                hint_text: 'Enter Your Complains'
-                size_hint_y: .8
+            orientation:'vertical'
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
             BoxLayout:
-                orientation: 'horizontal'
-                spacing: 20
-                Button:
-                    text: 'Submit'
-                    on_press: root.submitComplain()
-                Button:
-                    text: 'Cancel'
-                    on_press: root.toHistory()
+                TextInput:
+                    id: complain_response
+                    hint_text: 'Enter Your Complains'
+                    size_hint_y: .8
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: 20
+                    Button:
+                        text: 'Submit'
+                        on_press: root.submitComplain()
+                        background_color: (2.14, .04, .25,.7)
+                    Button:
+                        text: 'Cancel'
+                        on_press: root.toHistory()
                 
 <rate>:
     id: rate
-    BoxLayout:
-        orientation:'vertical'
-        size_hint: .5, .5
-        pos_hint: {'center_x': .5, 'center_y': .5}
+    Screen:
         BoxLayout:
-            TextInput:
-                id: rate_response
-                hint_text: 'Enter Your comments'
-                size_hint_y: .8
+            orientation:'vertical'
+            size_hint: .5, .5
+            pos_hint: {'center_x': .5, 'center_y': .5}
             BoxLayout:
-                orientation: 'horizontal'
-                spacing: 20
-                Button:
-                    text: 'Submit'
-                    on_press: root.submitRate()
-                Button:
-                    text: 'Cancel'
-                    on_press: root.toHistory()
+                TextInput:
+                    id: rate_response
+                    hint_text: 'Enter Your comments'
+                    size_hint_y: .8
+                BoxLayout:
+                    orientation: 'horizontal'
+                    spacing: 20
+                    Button:
+                        text: 'Submit'
+                        on_press: root.submitRate()
+                        background_color: (2.14, .04, .25,.7)
+
+                    Button:
+                        text: 'Cancel'
+                        on_press: root.toHistory()
+                    
 
