@@ -88,6 +88,7 @@ class transactionHistory(Screen):
     def backProfile(self):
         print('back')
         globalV.root.toProfile()
+
     def OTransactions(self,id):
         data1 = [{'title': '1','price': 1, 'date': '1','seller':1, 'processed': False}]
         data2 = [{'title': '1','price': 1, 'date': '1','buyer':1, 'processed': False}]
@@ -96,9 +97,9 @@ class transactionHistory(Screen):
         self.ids['bought'].data = data1
         self.ids['sold'].data = data2
     #---to be filed---#
-    def acceptPurchase(): 
+    def acceptPurchase(self):
         pass
-    def declinePurchase():
+    def declinePurchase(self):
         pass
     def complain():
         self.ids['screenmanager'].current = "rate"
@@ -310,6 +311,7 @@ class Manager(Screen):
     def toOuHistory(self):
         self.ids['history'].OTransactions(1)
         self.ids['screenmanager'].current = "historyPage"
+
     def toouInfo(self):
         self.ids['ouInfo'].getOUInformation()
         self.ids['screenmanager'].current = "ouInfo"
