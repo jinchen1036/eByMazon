@@ -4,46 +4,61 @@
     price: ''
     date: ''
     seller: ''
-    cancel: True
     # image: 
     BoxLayout:
         GridLayout:
-            col: 5
-            BoldLabel:
+            col: 4
+            CenterLabel:
                 text: root.title
-            BoldLabel:
+            CenterLabel:
                 text: root.price
-            BoldLabel:
+            CenterLabel:
                 text: root.seller
-            BoldLabel:
+            CenterLabel:
                 text: root.date
-            Button:
-                text: 'Cancel' if root.cancel else ''
-                on_press: root.cancelPurchase() 
+            # Button:
+            #     text: 'Cancel' if root.cancel else ''
+            #     on_press: root.cancelPurchase() 
 
 <sold@BoxLayout>:
     title: ''
-    price: ''
+    price: 0
     date: ''
-    buyer: ''
+    buyer: 0
+    type: 1
     accept: True
+    decline: True
     # image: 
     BoxLayout:
         GridLayout:
-            col: 5
-            BoldLabel:
+            col: 7
+            CenterLabel:
                 text: root.title
-            BoldLabel:
+            CenterLabel:
                 text: root.price
-            BoldLabel:
+            CenterLabel:
                 text: root.buyer
-            BoldLabel:
+            CenterLabel:
                 text: root.date
             Button:
                 text: 'Accept' if root.accept else ''
                 on_press: root.acceptPurchase() 
+            Button:
+                text: 'Decline' if root.decline else ''
+                on_press: root.declinePurchase()
 
 <transactionHistory>:
+    BoxLayout:
+        size_hint_y: 0.01
+        orientation: "horizontal"
+        height: 30
+        spacing: 10
+        Label:
+            size_hint_x: .9
+        Button:
+            text: "Go back"
+            size: 150, 100
+            on_press: root.backProfile()
     BoxLayout:
         orientation: "vertical"
         BoxLayout:
@@ -94,11 +109,3 @@
                 viewclass: 'sold'
                 VRVL:
                     default_size: None, dp(20)
-    BoxLayout:
-        size_hint_y: 0.05
-        orientation: "horizontal"
-        height: 30
-        spacing: 10
-        Button:
-            text: "Go back"
-            on_press: root.backProfile()

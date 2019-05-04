@@ -15,9 +15,9 @@
             CenterLabel:
                 text: str(root.buyerID)
             CenterLabel:
-                text: "Shipped" if root.shipping else "Shipping"
+                text: "Shipped" if root.shipping else "on Shipping"
             CenterLabel:
-                text: str(root.price)
+                text: '$'+str(root.price)
             CenterLabel:
                 text: root.date
                 color: 0,0,1,1
@@ -59,9 +59,9 @@
                 BoldLabel:
                     text: 'Buyer ID'
                 BoldLabel:
-                    text: 'Shipping Status'
+                    text: 'Shipped?'
                 BoldLabel:
-                    text: 'Price Deal'
+                    text: 'Price'
                 BoldLabel:
                     text: 'Deal Date'
         RecycleView:
