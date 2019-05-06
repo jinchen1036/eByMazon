@@ -110,7 +110,6 @@ class SU():
             self.cursor.execute("UPDATE Complaint SET justified = TRUE WHERE itemID = %s AND complainerID = %s;" %(itemID,complianerID))
 
         # need to check warning
-
         else:
             self.cursor.execute("DELETE FROM Complaint WHERE itemID = %s AND complainerID = %s;" % (
             itemID, complianerID))

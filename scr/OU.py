@@ -1,4 +1,3 @@
-
 import datetime
 import mysql.connector
 
@@ -12,9 +11,14 @@ class OU():
         self.cursor = cursor
         self.cnx = cnx
         self.ID = ouID
+        self.promote = False
+        self.depromote = False
+        self.vipCheck()
+        self.compliantCheck()
+
         self.getOUInfo()
         self.getItem()
-        self.getCompliants()
+        self.getComplaints()
 
     ####################### Get Info #####################################
     def getOUInfo(self):
@@ -49,18 +53,83 @@ class OU():
         self.cursor.execute(qry)
         self.taxRate = self.cursor.fetchone()[0]
 
-    def getCompliants(self):
-        qry =("SELECT * FROM Complaint NATURAL JOIN ItemOwner "
+    def getComplaints(self):
+        qry =("SELECT itemID, description, compliantTime FROM Complaint NATURAL JOIN ItemOwner "
               "WHERE justified = TRUE AND ownerID = %s;"% self.ID)
         self.cursor.execute(qry)
         self.compliants = []
         for compliant in self.cursor:
             self.compliants.append({'itemID':compliant[0], 'description': compliant[1],
-                                    'compliantTime': compliant[2]})
+                                    'compliantTime': compliant[2].strftime("%m/%d/%Y")})
             print(self.ID, self.name, compliant[0])
+        return self.compliants
 
+    ####################### Check OU status #####################################
+    def vipCheck(self):
 
+        # Get status, moneySpend
+        self.cursor.execute("SELECT status, moneySpend FROM OUstatus WHERE ouID = %s;" % self.ID)
+        info = self.cursor.fetchone()
 
+        status, moneySpend = info[0], info[1]
+
+        # Get Rating
+        qry = ("SELECT raterID,rating FROM ItemRate NATURAL JOIN ItemOwner "
+               "WHERE ownerID = %s ORDER BY postTime DESC ;" % self.ID)
+        self.cursor.execute(qry)
+
+        i, sumRate = 0,0
+        rater = []
+        for raterID,rating in self.cursor:
+            sumRate += rating   # Get sum rate
+            i += 1
+            try:                # check distinct rater
+                rater.index(raterID)
+            except ValueError:
+                rater.append(raterID)
+
+        avgRate = 0
+        if i != 0:
+            avgRate = sumRate/i
+
+            self.cursor.execute("UPDATE OUstatus SET aveRate = %s WHERE ouID = %s;" % (avgRate,self.ID))
+            self.cnx.commit()
+
+        # Check warning
+        self.cursor.execute("SELECT EXISTS(SELECT * FROM Warning WHERE ouID = %s);" % self.ID)
+        warn = self.cursor.fetchone()[0]
+
+        promote = not warn and status == 0
+        rateP = len(rater) >= 3 and avgRate >= 4
+
+        # depromote to ordinary
+        if avgRate < 4 and avgRate != 0 and status == 1:
+            self.cursor.execute("UPDATE OUstatus SET status = 0 WHERE ouID = %s;" % self.ID)
+            self.cnx.commit()
+            self.depromote = True
+
+        # promote a VIP
+        elif (rateP or moneySpend>500) and promote:
+            self.cursor.execute("UPDATE OUstatus SET status = 1 WHERE ouID = %s;" % self.ID)
+            self.cnx.commit()
+            self.promote = True
+
+    def compliantCheck(self):
+        qry = ("SELECT count(*) FROM Warning WHERE warningID = 1 AND ouID = %s;" % self.ID)
+        self.cursor.execute(qry)
+        count = self.cursor.fetchone()[0]
+
+        #  check if warn not exist
+        if count == 0:
+            qry =("SELECT count(*) FROM Complaint NATURAL JOIN ItemOwner JOIN OUstatus ON ownerID = ouID "
+                  "WHERE justified = TRUE AND ownerID = %s AND compliantTime > statusTime;" % self.ID)
+            self.cursor.execute(qry)
+            count = self.cursor.fetchone()[0]
+            des = "Received %d Complain" % count
+            if count >= 2:
+                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 1, '%s');" % (self.ID,des))
+                self.cursor.execute(qry)
+                self.cnx.commit()
     ####################### Change Info #####################################
     def changePassword(self,password):
         #update password in DB
@@ -267,12 +336,7 @@ class OU():
         # add to transactionDB and update buyer money spend
         pass
 
-    def declineTransaction(self, itemID, buyerID):
-        # No available if the shipping status is true for item
-        # Else: remove from transaction, deduct moneyspend from buyer status
-        # Add warning to OU
-        pass
-        
+
 ##_____to be filled____#
     ####################### Transactions (VIEW/ACCEPT/DECLINE) #####################################
     def getBuyHistory(self):
@@ -283,17 +347,20 @@ class OU():
         """
 
         self.buyHist = []
-        qry = ("SELECT title, ownerID,username,priceTotal,dealTime,shippingStatus,itemID "
+        qry = ("SELECT title, ownerID,username,priceTotal,dealTime,shippingStatus,itemID, "
+               "(SELECT EXISTS(SELECT * FROM Complaint WHERE itemID = ItemInfo.itemID AND complainerID = %s)), "
+               "(SELECT EXISTS(SELECT * FROM ItemRate WHERE itemID = ItemInfo.itemID AND raterID = %s))"
                "FROM Transaction NATURAL JOIN ItemOwner "
                "NATURAL JOIN ItemInfo "
                "JOIN User ON ownerID = ID "
-               "WHERE buyerID = %s ORDER BY dealTime DESC;" % self.ID)
+               "WHERE buyerID = %s ORDER BY dealTime DESC;" % (self.ID,self.ID,self.ID))
 
         self.cursor.execute(qry)
+
         for hist in self.cursor:
             self.buyHist.append({'itemID':hist[6],'itemTitle': hist[0], 'sellerID': hist[1],
                                  'sellerName': hist[2],'price': round(hist[3],2),'time': hist[4].strftime("%m/%d/%Y"),
-                                 'ship': hist[5]})
+                                 'ship': hist[5], 'complained': hist[7],'rated': hist[8]})
         return self.buyHist
 
     def getSaleHistory(self):
@@ -343,28 +410,38 @@ class OU():
                % (self.ID, 2,description))
         self.cursor.execute(qry)
 
-        # Check suspend in general
-
         self.cnx.commit()
 
-    def submitRating(self,itemID, raterID, rating):
+    ####################### Transactions (VIEW/ACCEPT/DECLINE) #####################################
+    def submitRating(self,itemID, rating,description):
         # add rating to DB
         # check for bad rating that will cause warning or depromotion
         # check for good rating that will cause promotion
-        pass
+        qry = ("INSERT INTO ItemRate(itemID, raterID, rating, description) VALUES (%s,%s,%s,'%s');"
+               %(itemID,self.ID,rating,description))
+        self.cursor.execute(qry)
+        self.cnx.commit()
 
-    def submitCompliant(self,itemID, complianterID, description):
-        # add compliant to DB
-        pass
+        self.ratingCheck()
 
-    def getComplaints(self):
-        self.cursor.execute("SELECT itemID, description, compliantTime FROM Complaint NATURAL JOIN ItemOwner WHERE ownerID = %s;"% self.ID)
-        self.complaintList = []
+    def submitCompliant(self,itemID, description):
+        qry = ("INSERT INTO Complaint(itemID, complainerID, description) VALUES (%s,%s,'%s');"
+               % (itemID, self.ID, description))
+        self.cursor.execute(qry)
+        self.cnx.commit()
 
-        for complaint in self.cursor:
-            self.complaintList.append({"itemID": complaint[0],"description":complaint[1],
-                                      "compliantTime":complaint[2]})
-        return self.complaintList
+
+
+
+    ####################### Compliant and Warning View #####################################
+    # def getComplaints(self):
+    #     self.cursor.execute("SELECT itemID, description, compliantTime FROM Complaint NATURAL JOIN ItemOwner WHERE ownerID = %s;"% self.ID)
+    #     self.complaintList = []
+    #
+    #     for complaint in self.cursor:
+    #         self.complaintList.append({"itemID": complaint[0],"description":complaint[1],
+    #                                   "compliantTime":complaint[2]})
+    #     return self.complaintList
 
     def getWarnings(self):
         self.cursor.execute("SELECT warningID, description, warnTime FROM Warning WHERE ouID = %s;" % self.ID)
@@ -372,5 +449,43 @@ class OU():
 
         for warning in self.cursor:
             self.warningList.append({'warningID': warning[0], 'description':warning[1],
-                                      'warnTime':warning[2]})
+                                      'warnTime':warning[2].strftime("%m/%d/%Y")})
         return self.warningList
+
+
+
+    ########################## Check VIP #####################################
+
+    def ratingCheck(self):
+        # Get Rating
+        qry = ("SELECT rating FROM ItemRate NATURAL JOIN ItemOwner "
+               "WHERE raterID = %s ORDER BY postTime DESC ;" % self.ID)
+        self.cursor.execute(qry)
+
+        lowRating, highRating = 0, 0
+        for rating, _ in self.cursor:
+            if rating <= 1:
+                lowRating +=1
+                highRating = 0
+            elif 2<= rating <5:
+                lowRating, highRating = 0, 0
+            elif rating == 5:
+                lowRating = 0
+                highRating += 1
+
+            if lowRating >= 3 or highRating >= 3:
+                des = "Give Too Many High Rating" if highRating >= 3 else "Give Too Many Low Rating"
+                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 0, %s);" % (self.ID,des))
+                self.cursor.execute(qry)
+                self.cnx.commit()
+
+
+
+
+
+
+
+
+
+
+

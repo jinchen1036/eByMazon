@@ -33,7 +33,8 @@ class General():
             return False
         return isinstance(input, float) or self.checkInt(input)
 
-    ################### Other FUNCTIONS ################
+
+    ################### Login FUNCTIONS ################
     def login_check(self, username, password):
         '''
         function: check login info with DB
@@ -53,6 +54,7 @@ class General():
         user = self.cursor.fetchone()
         if user:
             if not user[1]:     # For OU
+                self.checkWarning(user[0])
                 self.cursor.execute("SELECT status FROM OUstatus WHERE ouID = %s;" % user[0])
                 return {'ID': user[0], 'userType': user[1],'status':self.cursor.fetchone()[0]}
             return {'ID': user[0], 'userType': user[1]}  # For SU
@@ -60,9 +62,21 @@ class General():
         tempGU = GU(cnx=self.cnx,cursor=self.cursor)
         return tempGU.checkUsername(username)
 
+
     def getID(self,username):
         self.cursor.execute("SELECT ID FROM User WHERE username = '%s'" % username)
         return self.cursor.fetchone()[0]
+
+
+    def checkWarning(self, id):
+        qry = ("SELECT count(*) FROM Warning NATURAL JOIN OUstatus "
+               "WHERE ouID = %s AND warnTime > statusTime;" % id)
+
+        self.cursor.execute(qry)
+        count = self.cursor.fetchone()[0]
+        if count >= 2:
+            self.cursor.execute("UPDATE OUstatus SET status = 2 WHERE ouID = %s;" % id)
+            self.cnx.commit()
 
     def removeOU(self,username):
         """
@@ -79,6 +93,16 @@ class General():
             return False
 
 
+
+    def appeal(self,ouID,message):
+        qry = "INSERT INTO Appeal VALUE (%s,'%s');" %(ouID,message)
+        try:
+            self.cursor.execute(qry)
+            self.cnx.commit()
+        except mysql.connector.Error as err:
+            print("Error in submit appeal: %s" % err)
+
+    ################### Item FUNCTIONS ################
     def popularItem(self):
         """
         :return: list of Item()
@@ -90,17 +114,6 @@ class General():
         for info in allItems:
             allItem.append(Item(cnx=self.cnx,cursor=self.cursor,itemID=info[0]))
         return allItem
-
-    def appeal(self,ouID,message):
-        qry = "INSERT INTO Appeal VALUE (%s,'%s');" %(ouID,message)
-        try:
-            self.cursor.execute(qry)
-            self.cnx.commit()
-        except mysql.connector.Error as err:
-            print("Error in submit appeal: %s" % err)
-
-
-
     def searchItem(self,keywords):
         """
         :param keywords: search keyword
@@ -150,20 +163,20 @@ class General():
             return False
         return True
 
-    def checkStaus(self, ouID):
-        # return status of the select OU
-        pass
+    # def checkStaus(self, ouID):
+    #     # return status of the select OU
+    #     pass
 
-    def changeStaus(self, ouID):
-        #update new status
-        # get call when receive warning or low rating
-        pass
+    # def changeStaus(self, ouID):
+    #     #update new status
+    #     # get call when receive warning or low rating
+    #     pass
 
-    def manageWarnig(self,ouID):
-        # called when add a warning
-        # check number warning receive, if greater or equal to 2, suspend OU
-        # else make sure that ou is not VIP
-        pass
+    # def manageWarnig(self,ouID):
+    #     # called when add a warning
+    #     # check number warning receive, if greater or equal to 2, suspend OU
+    #     # else make sure that ou is not VIP
+    #     pass
 
     # def ouBlacklist(self,ouID):
     #     # remove the ou from all DB and all active sale item post by that ou,

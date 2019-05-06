@@ -304,6 +304,7 @@ class Manager(Screen):
     def toWarning(self):
         self.ids['ouWarning'].warningData()
         self.ids['screenmanager'].current = "ouWarning"
+
     def toCompliant(self):
         self.ids['processCompliant'].displayComplain()
         self.ids['screenmanager'].current ="processCompliant"

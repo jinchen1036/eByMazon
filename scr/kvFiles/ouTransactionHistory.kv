@@ -1,5 +1,6 @@
 #: include kvFiles/features.kv
 <bought>:
+    id: test
     itemID:0
     itemTitle: ''
     sellerID: 0
@@ -7,6 +8,8 @@
     price: 0
     time: ''
     ship: False
+    complained: False
+    rated: False
 
     # image:
     cols: 6
@@ -20,17 +23,36 @@
         text: "Shipped" if root.ship else "Not Yet"
     CenterLabel:
         text: root.time
+
     BoxLayout:
-        orientation: 'vertical'
-        size_hint_y: 2
-        GreenButton:
-            disable: root.ship
-            text: 'Rate'
-            on_press: root.rate()
-        LightRedButton:
-            disable: root.ship
-            text: 'Complain'
-            on_press: root.complain()
+        ScreenManager:
+            id: rating
+            Screen:
+                name: 'button'
+                GreenButton:
+                    disable: 1 if root.ship else 0
+                    text: 'Rate'
+                    on_press: root.rate()
+            Screen:
+                name: 'text'
+                CenterLabel:
+                    id: rateValue
+                    text: 'Already Rate'
+
+    BoxLayout:
+        ScreenManager:
+            id: complain
+            Screen:
+                name: 'button'
+                LightRedButton:
+#                    opacity: 1 if root.ship else 0
+                    disable: root.ship
+                    text: 'Complain'
+                    on_press: root.complain()
+            Screen:
+                name: 'text'
+                CenterLabel:
+                    text: 'Complain Filed'
 
 
 <sold>:
@@ -42,7 +64,6 @@
     time: ''
     ship: False
 
-    # image:
     cols: 6
     CenterLabel:
         text: root.itemTitle
@@ -70,7 +91,93 @@
             text: 'Decline'
             on_press: root.declinePurchase()
 
+<complain>:
+    warn: False
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation:'vertical'
+        size_hint: .7, .7
+        padding: 20,20
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        BoldLabel:
+            size_hint_y: 0.2
+            text: "Please Enter Your Complain Below"
+        TextInput:
+            id: complain_response
+            hint_text: 'Enter Your Complain, Cannot leave blank'
+            size_hint: (0.6,0.6)
+            pos_hint: {'center_x': .5, 'center_y': .5}
+        BoxLayout:
+            size_hint_y: 0.2
+            orientation: 'horizontal'
+            spacing: 20
+            RedButton:
+                text: 'Submit'
+                on_press: root.submitComplain(complain_response.text)
+            GrayButton:
+                text: 'Cancel'
+                on_press: root.toHistory()
+        CenterLabel:
+            size_hint_y: 0.1
+            text: "You cannot leave description blank!!!"
+            opacity: 1 if complain_response.text == "" else 0
 
+<rate>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation:'vertical'
+        size_hint: .7, .7
+        padding: 20,20
+        pos_hint: {'center_x': .5, 'center_y': .5}
+
+        BoldLabel:
+            size_hint_y: 0.1
+            text: "Please Enter Your Rating Below"
+        GridLayout:
+            cols: 2
+            size_hint_y: 0.5
+            BoldLabel:
+                text:"Please Select the Rating \nbetween 1 - 5: "
+            BoxLayout:
+                orientation: 'horizontal'
+                Slider:
+                    id: rating
+                    min: 0
+                    max: 5
+                    step: 0.5
+                    size_hint_y: .8
+                CenterLabel:
+                    text: str(rating.value)
+            BoldLabel:
+                text: "Please Leave \nYour Comments"
+            TextInput:
+                id: rate_response
+                hint_text: 'Enter Your comments'
+                size_hint: (0.8,.8)
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 20
+            size_hint_y: 0.2
+            RedButton:
+                text: 'Submit'
+                on_press: root.submitRate(rating.value,rate_response.text)
+            GrayButton:
+                text: 'Cancel'
+                on_press: root.toHistory()
+        CenterLabel:
+            size_hint_y: 0.1
+            text: "You cannot leave rating blank!!!"
+            opacity: 1 if rate_response.text == "" else 0
 
 
 <transactionHistory>:
@@ -109,7 +216,7 @@
 
         GridLayout:
             size_hint_y: .05
-            cols: 6
+            cols: 7
             BoldLabel:
                 text: 'Item Title'
             BoldLabel:
@@ -120,6 +227,7 @@
                 text: 'Ship Status'
             BoldLabel:
                 text: 'Deal Date'
+            BoxLayout:
             BoxLayout:
 
         RecycleView:
@@ -158,49 +266,5 @@
             VRVL:
                 default_size: None, dp(40)
 
-<complain>:
-    id: complain
-    BoxLayout:
-        orientation:'vertical'
-        size_hint: .5, .5
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        BoxLayout:
-            TextInput:
-                id: complain_response
-                hint_text: 'Enter Your Complains'
-                size_hint_y: .8
-            BoxLayout:
-                orientation: 'horizontal'
-                spacing: 20
-                Button:
-                    text: 'Submit'
-                    on_press: root.submitComplain()
-                    background_color: (2.14, .04, .25,.7)
-                Button:
-                    text: 'Cancel'
-                    on_press: root.toHistory()
-                
-<rate>:
-    id: rate
-    BoxLayout:
-        orientation:'vertical'
-        size_hint: .5, .5
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        BoxLayout:
-            TextInput:
-                id: rate_response
-                hint_text: 'Enter Your comments'
-                size_hint_y: .8
-            BoxLayout:
-                orientation: 'horizontal'
-                spacing: 20
-                Button:
-                    text: 'Submit'
-                    on_press: root.submitRate()
-                    background_color: (2.14, .04, .25,.7)
 
-                Button:
-                    text: 'Cancel'
-                    on_press: root.toHistory()
-                    
 
