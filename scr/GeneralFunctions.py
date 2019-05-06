@@ -95,7 +95,7 @@ class General():
 
 
     def appeal(self,ouID,message):
-        qry = "INSERT INTO Appeal VALUE (%s,'%s');" %(ouID,message)
+        qry = "INSERT INTO Appeal(ouID, message) VALUES (%s,'%s');" % (ouID, message)
         try:
             self.cursor.execute(qry)
             self.cnx.commit()

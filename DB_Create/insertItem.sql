@@ -14,9 +14,9 @@ INSERT INTO FixedPrice(itemID, price, availableNum) VALUES
 INSERT INTO ItemBid(itemID, startPrice) VALUES (5,300),(6,800);
 INSERT INTO BidRecord (itemID,bidderID, bidPrice) VALUES (5,4,320),(5,2,330),(5,5,350);
 INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal, numDeal, shippingStatus)
-VALUES (1,7,15.99,16.40,1,TRUE),(1,6,15.99,17.30,1,TRUE),(2,5,7.99,9,1,TRUE),(2,6,7.99,18,2,TRUE),(1,9,22,24,1,TRUE);
+VALUES (1,7,15.99,16.40,1,FALSE ),(1,6,15.99,17.30,1,TRUE),(2,5,7.99,9,1,FALSE),(2,6,7.99,18,2,FALSE),(1,9,22,24,1,FALSE );
 INSERT INTO Complaint(itemID, complainerID, description, justified) VALUES
-(1,7,'Arrive Too Late',TRUE),(1,6,'Broken Item',TRUE),(2,9,'Wrong Shipment',TRUE);
+(1,7,'Arrive Too Late',TRUE),(1,6,'Broken Item',FALSE),(2,9,'Wrong Shipment',FALSE );
 INSERT INTO ItemRate(itemID,raterID, rating,description) VALUES
 (1,6,4,'Good Product'),(1,7,3,'Nice Sound');
 -- Electronic, Home, Grocery, Clothes,Furniture,Education,Music

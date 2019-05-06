@@ -1,4 +1,5 @@
 import mysql.connector
+import datetime
 try:
     from scr.OU import OU
     from scr.Item import Item
@@ -31,8 +32,24 @@ class SU():
             self.ous.append(OU(cnx=self.cnx, cursor=self.cursor, ouID=id[0]))
         return self.ous
 
+    def getAppeal(self):
+        self.cursor.execute("SELECT * FROM Appeal;")
+        self.appeals =[]
+        ids = self.cursor.fetchall()
+        for id in ids:
+            self.appeals.append({'ouID':id[0], 'message':id[1], 'time':id[2].strftime("%m/%d/%Y")})
+        return self.appeals
+
+    def deleteAppeal(self,ouID):
+        self.cursor.execute("DELETE FROM Appeal WHERE ouID = %s;"% ouID)
+        self.cnx.commit()
+
+    def acceptAppeal(self,ouID):
+        self.cursor.execute("UPDATE OUstatus SET status = 0, statusTime = '%s' WHERE ouID = %s;" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), ouID))
+        self.deleteAppeal(ouID)
+
     def removeOU(self, ouID):
-        qry = "UPDATE OUstatus SET status = 3 WHERE ouID = %s" % ouID
+        qry = "UPDATE OUstatus SET status = 3 WHERE ouID = %s;" % ouID
         self.cursor.execute(qry)
         self.cnx.commit()
 

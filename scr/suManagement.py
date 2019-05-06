@@ -63,10 +63,14 @@ class blackTaboo(Screen):
 ########################################### Compliant Management ################################################
 class complainInfo(GridLayout):
     def approveComplain(self):
+        print(self.justified)
+        print('Approve')
         globalV.su.manageCompliant(itemID=self.itemID,complianerID= self.complainerID,action=True)
         globalV.root.ids['processCompliant'].displayComplain()
 
     def rejectComplain(self):
+        print(self.justified)
+        print('Reject')
         globalV.su.manageCompliant(itemID=self.itemID, complianerID=self.complainerID, action=False)
         globalV.root.ids['processCompliant'].displayComplain()
 

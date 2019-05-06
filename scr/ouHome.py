@@ -11,6 +11,17 @@ class ouInformation(BoxLayout):
     def removeOU(self,ouID):
         globalV.su.removeOU(ouID)
         globalV.root.ids['ouInfo'].getOUInformation()
+class ouAppeal(BoxLayout):
+    def acceptAppeal(self):
+        globalV.su.acceptAppeal(self.ouID)
+        globalV.root.ids['ouInfo'].getOUInformation()
+        print("Accept Appeal")
+
+    def declineAppeal(self):
+        globalV.su.removeOU(self.ouID)
+        globalV.su.deleteAppeal(self.ouID)
+        globalV.root.ids['ouInfo'].getOUInformation()
+        print("Decline Appeal")
 
 class ouInfo(Screen):
     def tohome(self):
@@ -32,9 +43,13 @@ class ouInfo(Screen):
 
             ouData.append({'ouID': ou.ID, 'ouName': ou.name, 'ouPhone': ou.phone, 'ouEmail': ou.email,
                            'ouCard': ou.card, 'ouAddress': ou.address,'ouState':ou.state,
-                           'ouStatus':status, 'ouRate': ou.avgRate, 'ouComplaint': len(ou.compliants),
+                           'ouStatus': status, 'ouRate': ou.avgRate, 'ouComplaint': len(ou.compliants),
                            'ouWarning': 0, 'remove': remove})
         self.ids['ouInformation'].data = ouData
+        self.getOUAppeal()
+
+    def getOUAppeal(self):
+        self.ids['ouAppeal'].data = globalV.su.getAppeal()
 
 ############################################## OU Warning Page #################################################
 class ouWarning(Screen):

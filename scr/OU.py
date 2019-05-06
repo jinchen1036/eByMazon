@@ -463,7 +463,7 @@ class OU():
         self.cursor.execute(qry)
 
         lowRating, highRating = 0, 0
-        for rating, _ in self.cursor:
+        for rating in self.cursor:
             if rating <= 1:
                 lowRating +=1
                 highRating = 0
