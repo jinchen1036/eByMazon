@@ -548,12 +548,13 @@ class OU():
 
         lowRating, highRating = 0, 0
         for rating in self.cursor:
-            if rating <= 1:
+
+            if rating[0] <= 1:
                 lowRating +=1
                 highRating = 0
-            elif 2<= rating <5:
+            elif 2<= rating[0] <5:
                 lowRating, highRating = 0, 0
-            elif rating == 5:
+            elif rating[0] == 5:
                 lowRating = 0
                 highRating += 1
 
