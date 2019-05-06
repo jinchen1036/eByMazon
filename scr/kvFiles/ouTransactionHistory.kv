@@ -29,7 +29,9 @@
             Screen:
                 name: 'init'
                 GreenButton:
-#                    disabled: 1 if root.ship else 0
+                    size_hint:(0.5,0.5)
+                    pos_hint: {'center_x':0.5,'center_y':0.5}
+                    disabled: 0 if root.ship else 1
                     text: 'Rate'
                     on_press: root.rate()
             Screen:
@@ -44,7 +46,9 @@
             Screen:
                 name: 'init'
                 LightRedButton:
-#                    opacity: 1 if root.ship else 0
+                    size_hint:(0.5,0.5)
+                    pos_hint: {'center_x':0.5,'center_y':0.5}
+                    disabled: 0 if root.ship else 1
 #                    disabled: root.ship
                     text: 'Complain'
                     on_press: root.complain()
@@ -52,6 +56,28 @@
                 name: 'after'
                 CenterLabel:
                     text: 'Complain Filed'
+
+<bid@BoxLayout>:
+    itemID:0
+    itemTitle: ''
+    sellerID: 0
+    sellerName: ''
+    bidPrice: 0
+    bidTime: ''
+    endTime: ''
+    GridLayout:
+        cols:6
+        CenterLabel:
+            text: root.itemTitle
+        CenterLabel:
+            text: root.sellerName
+        CenterLabel:
+            text: '$'+str(root.bidPrice)
+        CenterLabel:
+            text: root.bidTime
+        CenterLabel:
+            text: root.endTime
+        BoxLayout:
 
 
 <sold>:
@@ -227,11 +253,41 @@
             BoxLayout:
             BoxLayout:
 
+
         RecycleView:
             size_hint_y: .5
             id: bought
             data:[]
             viewclass: 'bought'
+            VRVL:
+                default_size: None, dp(40)
+
+        CenterLabel:
+            size_hint_y: .05
+            text: 'Bid Items'
+            font_size: 50
+            bold: True
+
+        GridLayout:
+            size_hint_y: .05
+            cols: 6
+            BoldLabel:
+                text: 'Item Title'
+            BoldLabel:
+                text: 'Seller Username'
+            BoldLabel:
+                text: 'Bid Price'
+            BoldLabel:
+                text: 'Bid Time'
+            BoldLabel:
+                text: 'Bid End Time'
+            BoxLayout:
+
+        RecycleView:
+            size_hint_y: .5
+            id: bid
+            data:[]
+            viewclass: 'bid'
             VRVL:
                 default_size: None, dp(40)
 

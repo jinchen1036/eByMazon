@@ -296,8 +296,11 @@ class OU():
         """
         qry = ("SELECT discount FROM ItemOwner NATURAL JOIN FriendList WHERE itemID = %s AND friendID = %s;" %(itemID, self.ID))
         self.cursor.execute(qry)
-        discount = self.cursor.fetchone()[0]
-        return 0 if discount is None else discount
+        try:
+            return self.cursor.fetchone()[0]
+        except TypeError:
+            return 0
+
 
 
     def calculatePurchase(self, itemID, price, numWant=1):
@@ -310,30 +313,52 @@ class OU():
         friendDiscount =  self.checkFriendDiscount(itemID)
         vipDiscount = 0.05 if self.status == 1 else 0
 
-        deductF = basePrice * friendDiscount
-        deductV = basePrice * vipDiscount
-        taxAmount = basePrice * self.taxRate
+        deductF = round(basePrice * friendDiscount,2)
+        deductV = round(basePrice * vipDiscount,2)
+        taxAmount = round(basePrice * self.taxRate,2)
         finalPrice = basePrice + taxAmount - deductF - deductV
 
         return [basePrice, taxAmount, deductF,deductV,finalPrice]
 
 
 
-    def bidding(self,itemID, bidderID, price):
+    def bidding(self,itemID, price):
         # record bidding in BidRecord
-        pass
+        # bidderID = self.ID
+        qry = ("INSERT INTO BidRecord(itemID, bidderID, bidPrice) VALUES (%s,%s,%s);" %(itemID,self.ID,price))
+        self.cursor.execute(qry)
+        self.cnx.commit()
 
-    def purchaseFixedPrice(self, itemID, buyerID, numBuy):
-        # get price from itemDB by itemID
-        # get finalPrice by call self.calculateTotal
-        # add to transactionDB and update buyer money spend
-        pass
+
+    def purchaseFixedPrice(self, itemID, singlePrice, numBuy,numLeft):
+        """
+        :param itemID(int):  itemID of item want to buy
+        :param singlePrice(float):  price of the item
+        :param numBuy(int): number of item want to but
+        :param numLeft(int): number of item left after purchase
+        :return:nothing, update in DB
+                add to transaction, change availableNum in FixedPrice, check saleStatus in ItemInfo
+        """
+        finalPrice = self.calculatePurchase(itemID=itemID, price=singlePrice, numWant=numBuy)[-1]
+        qry = ("INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal,numDeal) "
+               "VALUES (%s,%s,%s,%s,%s)" % (itemID,self.ID, singlePrice,finalPrice,numBuy))
+        self.cursor.execute(qry)
+
+        qry = ("UPDATE FixedPrice SET availableNum = availableNum - %s WHERE itemID = %s;"%(numBuy,itemID))
+        self.cursor.execute(qry)
+
+        if numLeft == 0:
+            qry = ("UPDATE ItemInfo SET saleStatus = FALSE WHERE itemID = %s;" % itemID)
+            self.cursor.execute(qry)
+
+        self.cnx.commit()
 
     def purchaseBidding(self, itemID):
         # get called when reach to the endDay of bidding
         # get second highest bidder from BidRecordDB
         # get finalPrice by call self.calculateTotal
         # add to transactionDB and update buyer money spend
+
         pass
 
 
@@ -362,6 +387,22 @@ class OU():
                                  'sellerName': hist[2],'price': round(hist[3],2),'time': hist[4].strftime("%m/%d/%Y"),
                                  'ship': hist[5], 'complained': hist[7],'rated': hist[8]})
         return self.buyHist
+
+    def getBidRecord(self):
+        self.bidHist = []
+        qry =("SELECT itemID, title, ownerID,username,bidPrice,bidTime, endDay "
+               "FROM BidRecord NATURAL JOIN ItemInfo "
+               "NATURAL JOIN ItemBid NATURAL JOIN ItemOwner "
+               "JOIN User ON ownerID = ID "
+               "WHERE bidderID = %s ORDER BY bidTime DESC;" % self.ID)
+        self.cursor.execute(qry)
+
+        for hist in self.cursor:
+            self.bidHist.append({'itemID':hist[0],'itemTitle': hist[1], 'sellerID': hist[2],
+                                 'sellerName': hist[3],'bidPrice': round(hist[4],2),'bidTime': hist[5].strftime("%m/%d/%Y"),
+                                 'endTime': hist[6].strftime("%m/%d/%Y")})
+        return self.bidHist
+
 
     def getSaleHistory(self):
         """
@@ -454,7 +495,7 @@ class OU():
 
 
 
-    ########################## Check VIP #####################################
+    ########################## Check Rating #####################################
 
     def ratingCheck(self):
         # Get Rating

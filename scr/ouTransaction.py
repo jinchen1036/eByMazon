@@ -74,9 +74,11 @@ class transactionHistory(Screen):
         print('back')
         globalV.root.toProfile()
 
+
     def getTransaction(self):
         self.ids['bought'].data = globalV.ou.getBuyHistory()
         self.ids['sold'].data = globalV.ou.getSaleHistory()
+        self.ids['bid'].data = globalV.ou.getBidRecord()
     #---to be filed---#
 
 

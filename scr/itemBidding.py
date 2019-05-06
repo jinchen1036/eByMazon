@@ -10,6 +10,7 @@ class biddingItem(Screen):
     itemIndex = NumericProperty()
     user = BooleanProperty()
     def tohome(self):
+        self.warn = False
         self.ids["purchaseInfo"].text = ""
         self.ids["purchase"].clear()
         self.ids["purchase"].ids["purchaseManager"].current = "empty"
@@ -19,6 +20,8 @@ class biddingItem(Screen):
         item = globalV.itemList[index]
         item.addView()
         self.itemIndex = index
+        self.itemID = item.itemID
+        self.price = item.price
         self.user = not globalV.root.login
         self.ids['itemImage'].texture = item.image
         self.ids['itemTitle'].text = item.title
@@ -44,6 +47,8 @@ class biddingItem(Screen):
 
     def bidding(self):
         # purchase Item
+        globalV.ou.bidding(self.itemID,float(self.ids["purchaseInfo"].text) )
+        self.bid = False
         self.ids["purchase"].ids["purchaseManager"].current = "empty"
 
     def cancelbid(self):
@@ -51,13 +56,27 @@ class biddingItem(Screen):
         self.ids["purchaseInfo"].text = ""
         self.ids["purchase"].ids["purchaseManager"].current = "cancel"
 
-    def toPurchase(self):
-        item = globalV.itemList[self.itemIndex]
-        # numWant = 1
-        bidprice = float(self.ids["purchaseInfo"].text)
-        purchaseInfo = [bidprice, 1]
-        purchaseInfo.extend(globalV.ou.calculatePurchase(item.itemID,bidprice,1))
+    def checkNumwant(self,num):
+        try:
+            if float(num) >= self.price:
+                self.warn = False
+                return True
+            self.warn = True
+            return False
+        except ValueError:
+            self.warn = True
+            return False
 
-        self.bid = True
-        self.ids["purchase"].infoLoad(purchaseInfo)
-        self.ids["purchase"].ids["purchaseManager"].current = "Purchase"
+
+    def toPurchase(self):
+        check = self.checkNumwant(self.ids["purchaseInfo"].text)
+        if check:
+            item = globalV.itemList[self.itemIndex]
+            # numWant = 1
+            bidprice = float(self.ids["purchaseInfo"].text)
+            purchaseInfo = [bidprice, 1]
+            purchaseInfo.extend(globalV.ou.calculatePurchase(item.itemID,bidprice,1))
+
+            self.bid = True
+            self.ids["purchase"].infoLoad(purchaseInfo)
+            self.ids["purchase"].ids["purchaseManager"].current = "Purchase"
