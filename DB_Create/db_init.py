@@ -70,8 +70,8 @@ def executeScriptsFromFile(cnx, cursor,filename):
 
 if __name__  == "__main__":
     config = {
-        "user": '',                 # Enter your own username
-        "password": '',             # Enter your own password
+        "user": 'jinchen',                 # Enter your own username
+        "password": '19841036',             # Enter your own password
         "host": '127.0.0.1',
         # "database": 'eByMazon'
     }

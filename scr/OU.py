@@ -14,14 +14,19 @@ class OU():
         self.promote = False
         self.depromote = False
         self.vipCheck()
-        self.compliantCheck()
+
 
         self.getOUInfo()
         self.getItem()
+        self.biddingCheck()
         self.getComplaints()
 
     ####################### Get Info #####################################
     def getOUInfo(self):
+        """
+        :return: initalized self.variables:
+            - name,card,email,address,state,phone,moneySpend,avgRate,status,taxRate
+        """
         # Get ou information in strings: name, card number, address, state, phone
         self.cursor.execute("SELECT * FROM OU WHERE ouID = %s"% self.ID)
 
@@ -35,9 +40,16 @@ class OU():
 
         self.getTax()
 
+    def getTax(self):
+        qry = "SELECT taxRate FROM Tax WHERE state = '%s';" % self.state
+        self.cursor.execute(qry)
+        self.taxRate = self.cursor.fetchone()[0]
 
     def getItem(self):
-        ''' Get items that own by current OU, in list of Item class '''
+        '''
+        :return: self.items
+            self.items - list of item object owned by current OU object
+        '''
 
         qry = "SELECT itemID FROM ItemOwner NATURAL JOIN ItemInfo WHERE ownerID = %s;" % self.ID
         self.cursor.execute(qry)
@@ -48,12 +60,11 @@ class OU():
             self.items.append(Item(cnx=self.cnx, cursor=self.cursor,itemID=item[0]))
         return self.items
 
-    def getTax(self):
-        qry = "SELECT taxRate FROM Tax WHERE state = '%s';" % self.state
-        self.cursor.execute(qry)
-        self.taxRate = self.cursor.fetchone()[0]
-
     def getComplaints(self):
+        '''
+        :return: self.compliants
+            self.compliants: list of dict{itemID,description,compliantTime }
+        '''
         qry =("SELECT itemID, description, compliantTime FROM Complaint NATURAL JOIN ItemOwner "
               "WHERE justified = TRUE AND ownerID = %s;"% self.ID)
         self.cursor.execute(qry)
@@ -64,9 +75,16 @@ class OU():
             print(self.ID, self.name, compliant[0])
         return self.compliants
 
-    ####################### Check OU status #####################################
-    def vipCheck(self):
 
+    ####################### Check and update OU status #####################################
+    def vipCheck(self):
+        '''
+        :return: check for vip status
+            1. update average rating
+            2. check rating and warning for update status
+            3. set self.depromote = True if depromote
+                   self.promote = True if promote
+        '''
         # Get status, moneySpend
         self.cursor.execute("SELECT status, moneySpend FROM OUstatus WHERE ouID = %s;" % self.ID)
         info = self.cursor.fetchone()
@@ -114,22 +132,39 @@ class OU():
             self.cnx.commit()
             self.promote = True
 
-    def compliantCheck(self):
-        qry = ("SELECT count(*) FROM Warning WHERE warningID = 1 AND ouID = %s;" % self.ID)
+    def biddingCheck(self):
+        """
+        :return: check if any bid item is ready to be sold
+        """
+        qry =("SELECT itemID, endDay "
+               "FROM BidRecord "
+               "NATURAL JOIN ItemBid "
+               "WHERE bidderID = %s ORDER BY bidTime DESC;" % self.ID)
         self.cursor.execute(qry)
-        count = self.cursor.fetchone()[0]
+        for hist in self.cursor:
+            if (hist[1] <= datetime.datetime.now()):
+               self.purchaseBidding(hist[0])
 
-        #  check if warn not exist
-        if count == 0:
-            qry =("SELECT count(*) FROM Complaint NATURAL JOIN ItemOwner JOIN OUstatus ON ownerID = ouID "
-                  "WHERE justified = TRUE AND ownerID = %s AND compliantTime > statusTime;" % self.ID)
-            self.cursor.execute(qry)
-            count = self.cursor.fetchone()[0]
-            des = "Received %d Complain" % count
-            if count >= 2:
-                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 1, '%s');" % (self.ID,des))
-                self.cursor.execute(qry)
-                self.cnx.commit()
+    # def compliantCheck(self):
+    #     '''
+    #     :return: check 2 justified compliants, if true add to warning DB
+    #     '''
+    #     qry = ("SELECT count(*) FROM Warning WHERE warningID = 1 AND ouID = %s;" % self.ID)
+    #     self.cursor.execute(qry)
+    #     count = self.cursor.fetchone()[0]
+    #
+    #     #  check if warn not exist
+    #     if count == 0:
+    #         qry =("SELECT count(*) FROM Complaint NATURAL JOIN ItemOwner JOIN OUstatus ON ownerID = ouID "
+    #               "WHERE justified = TRUE AND ownerID = %s AND compliantTime > statusTime;" % self.ID)
+    #         self.cursor.execute(qry)
+    #         count = self.cursor.fetchone()[0]
+    #         des = "Received %d Complain" % count
+    #         if count >= 2:
+    #             qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 1, '%s');" % (self.ID,des))
+    #             self.cursor.execute(qry)
+    #             self.cnx.commit()
+
     ####################### Change Info #####################################
     def changePassword(self,password):
         #update password in DB
@@ -354,16 +389,40 @@ class OU():
         self.cnx.commit()
 
     def purchaseBidding(self, itemID):
-        # get called when reach to the endDay of bidding
-        # get second highest bidder from BidRecordDB
-        # get finalPrice by call self.calculateTotal
-        # add to transactionDB and update buyer money spend
+        '''
+        :param itemID: bidding item id
+        :return:
+            assign second highest bidder to purchase the item, update transaction
+            delete all bid recod for this item
+        '''
+        item = Item(cnx=self.cnx,cursor=self.cursor,itemID=itemID)
 
-        pass
+        finalPrice = self.calculatePurchase(itemID=itemID, price=item.secondPrice)[-1]
 
+        qry = ("INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal) VALUES (%s,%s,%s,%s);"
+               %(itemID,item.secondBidder,item.secondPrice,finalPrice))
+        self.cursor.execute(qry)
 
-##_____to be filled____#
+        self.cursor.execute("DELETE FROM BidRecord WHERE itemID = %s;"% itemID)
+        self.cnx.commit()
+
     ####################### Transactions (VIEW/ACCEPT/DECLINE) #####################################
+    def getBidRecord(self):
+        self.bidHist = []
+        qry =("SELECT itemID, title, ownerID,username,bidPrice,bidTime, endDay "
+               "FROM BidRecord NATURAL JOIN ItemInfo "
+               "NATURAL JOIN ItemBid NATURAL JOIN ItemOwner "
+               "JOIN User ON ownerID = ID "
+               "WHERE bidderID = %s ORDER BY bidTime DESC;" % self.ID)
+        self.cursor.execute(qry)
+
+        for hist in self.cursor:
+            self.bidHist.append({'itemID':hist[0],'itemTitle': hist[1], 'sellerID': hist[2],
+                                 'sellerName': hist[3],'bidPrice': round(hist[4],2),'bidTime': hist[5].strftime("%m/%d/%Y"),
+                                 'endTime': hist[6].strftime("%m/%d/%Y")})
+        return self.bidHist
+
+
     def getBuyHistory(self):
         """
         :param ouID: the buyer ID
@@ -387,22 +446,6 @@ class OU():
                                  'sellerName': hist[2],'price': round(hist[3],2),'time': hist[4].strftime("%m/%d/%Y"),
                                  'ship': hist[5], 'complained': hist[7],'rated': hist[8]})
         return self.buyHist
-
-    def getBidRecord(self):
-        self.bidHist = []
-        qry =("SELECT itemID, title, ownerID,username,bidPrice,bidTime, endDay "
-               "FROM BidRecord NATURAL JOIN ItemInfo "
-               "NATURAL JOIN ItemBid NATURAL JOIN ItemOwner "
-               "JOIN User ON ownerID = ID "
-               "WHERE bidderID = %s ORDER BY bidTime DESC;" % self.ID)
-        self.cursor.execute(qry)
-
-        for hist in self.cursor:
-            self.bidHist.append({'itemID':hist[0],'itemTitle': hist[1], 'sellerID': hist[2],
-                                 'sellerName': hist[3],'bidPrice': round(hist[4],2),'bidTime': hist[5].strftime("%m/%d/%Y"),
-                                 'endTime': hist[6].strftime("%m/%d/%Y")})
-        return self.bidHist
-
 
     def getSaleHistory(self):
         """
