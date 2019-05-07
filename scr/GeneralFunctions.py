@@ -68,7 +68,7 @@ class General():
         self.cursor.execute("SELECT ID FROM User WHERE username = '%s'" % username)
         return self.cursor.fetchone()[0]
 
-    ##################### OU Check ####################################
+    ########################################## OU Check #########################################################
     def compliantCheck(self,ID):
         '''
         :return: check 2 justified compliants, if true add to warning DB
@@ -115,8 +115,6 @@ class General():
             print("Error in Remove OU: %s"%ERR)
             return False
 
-
-
     def appeal(self,ouID,message):
         qry = "INSERT INTO Appeal(ouID, message) VALUES (%s,'%s');" % (ouID, message)
         try:
@@ -125,18 +123,34 @@ class General():
         except mysql.connector.Error as err:
             print("Error in submit appeal: %s" % err)
 
-    ################### Item FUNCTIONS ################
-    def popularItem(self):
-        """
-        :return: list of Item()
-        """
-        qry = "SELECT itemID FROM ItemInfo WHERE saleStatus = True;"
+    ############################################# Item FUNCTIONS ##########################################
+    def ouPopularItem(self, ouID):
+        # qry = ("SELECT itemID FROM ItemInfo NATURAL JOIN ItemView LEFT JOIN OUlike ON title LIKE CONCAT('%', keyword ,'%') AND ouID = %s WHERE saleStatus = TRUE ORDER BY OUlike.frequency DESC, ItemView.frequency DESC;")% ouID
+        qry = ( "SELECT itemID FROM ItemInfo NATURAL JOIN ItemView LEFT JOIN OUlike ON title LIKE CONCAT('%', keyword ,'%')")
+        qry2 = " AND ouID = %s WHERE saleStatus = TRUE ORDER BY OUlike.frequency DESC, ItemView.frequency DESC;" % ouID
+        qry += qry2
+
         self.cursor.execute(qry)
         allItem = []
         allItems = self.cursor.fetchall()
         for info in allItems:
             allItem.append(Item(cnx=self.cnx,cursor=self.cursor,itemID=info[0]))
         return allItem
+
+    def popularItem(self):
+        """
+        :return: list of Item object order by popular search keyword and view frequency
+        """
+        qry =("SELECT itemID FROM ItemInfo NATURAL JOIN ItemView "
+              "LEFT JOIN searchKeyword ON title LIKE CONCAT('%', keyword ,'%') "
+              "WHERE saleStatus = TRUE ORDER BY searchKeyword.frequency DESC, ItemView.frequency DESC;")
+        self.cursor.execute(qry)
+        allItem = []
+        allItems = self.cursor.fetchall()
+        for info in allItems:
+            allItem.append(Item(cnx=self.cnx,cursor=self.cursor,itemID=info[0]))
+        return allItem
+
     def searchItem(self,keywords):
         """
         :param keywords: search keyword
@@ -157,7 +171,7 @@ class General():
 
         allItem = []
         allItems = self.cursor.fetchall()
-        if allItems is None:
+        if not allItems:
             self.cursor.execute("INSERT INTO Notification VALUE ('%s');"% keywords)
             self.cnx.commit()
             return False
@@ -177,7 +191,7 @@ class General():
         k = sorted(items, key=lambda x: getattr(x, attribute),reverse= decs)
         return k
 
-
+    ############################################# Item FUNCTIONS ##########################################
     def checkOwner(self,ouID,itemID):
         qry = "SELECT EXISTS(SELECT * from ItemOwner WHERE itemID=%s AND ownerID =%s);" % (itemID, ouID)
         self.cursor.execute(qry)
@@ -193,7 +207,7 @@ class General():
             words += word[0]+","
 
         if words != "":
-            words = words[:-2]
+            words = words[:-1]
         return words
     # def checkStaus(self, ouID):
     #     # return status of the select OU

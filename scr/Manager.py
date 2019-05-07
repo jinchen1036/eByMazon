@@ -104,7 +104,11 @@ class Manager(Screen):
 
     def displayItem(self):
         globalV.itemList = globalV.general.popularItem()
-        self.sortItem(self.sort)              # Sort by popular Item
+        self.itemShow()
+
+    def displayOULikeItem(self):
+        globalV.itemList = globalV.general.ouPopularItem(globalV.ou.ID)
+        self.itemShow()
 
     def searchKeyword(self, word):
         if word == "":
@@ -150,6 +154,7 @@ class Manager(Screen):
         if self.login:      # logout
             self.login = False
             globalV.ou = None
+            self.displayItem()
         else:               # login
             self.ids['screenmanager'].current = "loginpage"
 

@@ -61,6 +61,7 @@ class Login(Screen):
                     # global ou
                     globalV.ou = OU(cnx=globalV.cnx, cursor=globalV.cursor,ouID = globalV.root.ouID)
                     self.notificationPoo()
+                    globalV.root.displayOULikeItem()
                     globalV.root.ids['screenmanager'].current = "homepage"
 
                     self.clearLogin()  # clear login info for potential next user
