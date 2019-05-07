@@ -15,7 +15,7 @@
 #:include kvFiles/ouWarning.kv
 #:include kvFiles/blackTabooList.kv
 #:include kvFiles/suTransactionHistory.kv
-
+#:include kvFiles/tabooPop.kv
 <Manager>:
     login: False
     userID: None
@@ -113,7 +113,11 @@
                             LeftLabel:
                                 text: "price high to low"
                         Label:
-                            size_hint_y: 0.4
+                            size_hint_y: 0.2
+                        Button:
+                            text: 'TabooPop'
+                            on_press: root.tobaooPoo()
+
                     Label:
                         size_hint_x: 0.1
                     RecycleView:
