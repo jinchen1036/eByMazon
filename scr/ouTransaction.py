@@ -26,7 +26,7 @@ class bought(GridLayout):
 
     def complain(self):
         if self.complained:
-            self.ids['complain'].current = "text"
+            self.ids['complain'].current = "after"
         else:
             print('Complain')
             content = complain(toHistory=self.dismiss_popup, submitComplain=self.submitComplain)
@@ -36,7 +36,7 @@ class bought(GridLayout):
 
     def rate(self):
         if self.rated:
-            self.ids['rating'].current = "text"
+            self.ids['rating'].current = "after"
         else:
             content = rate(toHistory=self.dismiss_popup, submitRate=self.submitRate)
             self._popup = Popup(title="Submit Rate", content=content,
@@ -47,13 +47,13 @@ class bought(GridLayout):
         if description != "":
             print(description)
             globalV.ou.submitCompliant(self.itemID,description)
-            self.ids['complain'].current = "text"
+            self.ids['complain'].current = "after"
             self.dismiss_popup()
 
     def submitRate(self,rating, comment):
         if comment != "":
             globalV.ou.submitRating(self.itemID, rating,comment)
-            self.ids['rating'].current = "text"
+            self.ids['rating'].current = "after"
             self.dismiss_popup()
 
 
@@ -74,9 +74,11 @@ class transactionHistory(Screen):
         print('back')
         globalV.root.toProfile()
 
+
     def getTransaction(self):
         self.ids['bought'].data = globalV.ou.getBuyHistory()
         self.ids['sold'].data = globalV.ou.getSaleHistory()
+        self.ids['bid'].data = globalV.ou.getBidRecord()
     #---to be filed---#
 
 

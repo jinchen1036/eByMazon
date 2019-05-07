@@ -70,8 +70,8 @@ def executeScriptsFromFile(cnx, cursor,filename):
 
 if __name__  == "__main__":
     config = {
-        "user": '',                 # Enter your own username
-        "password": '',             # Enter your own password
+        "user": 'jinchen',                 # Enter your own username
+        "password": '19841036',             # Enter your own password
         "host": '127.0.0.1',
         # "database": 'eByMazon'
     }
@@ -119,17 +119,17 @@ if __name__  == "__main__":
     insertItemInfo(cursor,itemID=2, image="images/item2.jpg",title="SHE Shero DVD",description = "DVD for concert",
                    priceType=False, saleStatus=False,approvalStatus=False)
     insertItemInfo(cursor,itemID=3,image="images/item3.jpg",title="Harry Potter Book Series",
-                   description="Author: J. K. Rowling. Include The Philosopher's Stone. (1997), The Chamber of Secrets. (1998),\n"
-                   "The Prisoner of Azkaban. (1999),The Goblet of Fire. (2000),The Order of the Phoenix. (2003),\n"
+                   description="Author: J. K. Rowling. Include The Philosopher's Stone. (1997), \nThe Chamber of Secrets. (1998),"
+                   "The Prisoner of Azkaban. (1999),\nThe Goblet of Fire. (2000), The Order of the Phoenix. (2003),\n"
                    "The Half-Blood Prince. (2005),The Deathly Hallows. (2007)",
                    priceType=False,  saleStatus=True,approvalStatus=True)
     insertItemInfo(cursor,itemID=4,image="images/item4.jpg",title="The Hunger Games",
                    description="2008 dystopian novel by the American writer Suzanne Collins.",
                    priceType=False, saleStatus=False,approvalStatus=False)
-    insertItemInfo(cursor,itemID=5,image="images/item5.jpg",title="Samsung 17-Inch Series 7 Chronos Laptop",
-                   description="Used a year, still in good condition, Bright and vivid display; Good JBL speakers; Long battery life",
+    insertItemInfo(cursor,itemID=5,image="images/item5.jpg",title="Samsung 17-Inch Laptop",
+                   description="17-Inch Series 7 Chronos Laptop.\n Used a year, still in good condition, Bright and vivid display; \n Good JBL speakers; Long battery life",
                    priceType=True,saleStatus=True,approvalStatus=True)
-    insertItemInfo(cursor,itemID=6,image="images/item6.jpg",title="Macbook Air 13-Inch",description="Used 2 year, early 2015 version. "
+    insertItemInfo(cursor,itemID=6,image="images/item6.jpg",title="Macbook Air 13-Inch",description="Used 2 year, early 2015 version.\n"
                     "1.8GHz dual-core Intel Core i5 processor,\n Turbo Boost up to 2.9GHz,\n128GB SSD storage",
                    priceType=True,  saleStatus=False,approvalStatus=False)
     # Insert values to other tables

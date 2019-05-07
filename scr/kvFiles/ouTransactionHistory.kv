@@ -1,4 +1,3 @@
-#: include kvFiles/features.kv
 <bought>:
     id: test
     itemID:0
@@ -28,13 +27,15 @@
         ScreenManager:
             id: rating
             Screen:
-                name: 'button'
+                name: 'init'
                 GreenButton:
-                    disable: 1 if root.ship else 0
+                    size_hint:(0.5,0.5)
+                    pos_hint: {'center_x':0.5,'center_y':0.5}
+                    disabled: 0 if root.ship else 1
                     text: 'Rate'
                     on_press: root.rate()
             Screen:
-                name: 'text'
+                name: 'after'
                 CenterLabel:
                     id: rateValue
                     text: 'Already Rate'
@@ -43,16 +44,39 @@
         ScreenManager:
             id: complain
             Screen:
-                name: 'button'
+                name: 'init'
                 LightRedButton:
-#                    opacity: 1 if root.ship else 0
-                    disable: root.ship
+                    size_hint:(0.5,0.5)
+                    pos_hint: {'center_x':0.5,'center_y':0.5}
+                    disabled: 0 if root.ship else 1
                     text: 'Complain'
                     on_press: root.complain()
             Screen:
-                name: 'text'
+                name: 'after'
                 CenterLabel:
                     text: 'Complain Filed'
+
+<bid@BoxLayout>:
+    itemID:0
+    itemTitle: ''
+    sellerID: 0
+    sellerName: ''
+    bidPrice: 0
+    bidTime: ''
+    endTime: ''
+    GridLayout:
+        cols:6
+        CenterLabel:
+            text: root.itemTitle
+        CenterLabel:
+            text: root.sellerName
+        CenterLabel:
+            text: '$'+str(root.bidPrice)
+        CenterLabel:
+            text: root.bidTime
+        CenterLabel:
+            text: root.endTime
+        BoxLayout:
 
 
 <sold>:
@@ -64,7 +88,7 @@
     time: ''
     ship: False
 
-    cols: 6
+    cols: 7
     CenterLabel:
         text: root.itemTitle
     CenterLabel:
@@ -75,21 +99,19 @@
         text: "Shipped" if root.ship else "Not Yet"
     CenterLabel:
         text: root.time
-    BoxLayout:
-        orientation: 'vertical'
-        size_hint_y: 2
-        GreenButton:
-            size_hint_x:0.3
-            disable: 0 if root.ship else 1
-            opacity: 0 if root.ship else 1
-            text: 'Accept'
-            on_press: root.acceptPurchase()
-        LightRedButton:
-            size_hint_x:0.3
-            disable: 0 if root.ship else 1
-            opacity: 0 if root.ship else 1
-            text: 'Decline'
-            on_press: root.declinePurchase()
+
+    GreenButton:
+        size_hint_y:0.2
+        disabled: 1 if root.ship else 0
+        opacity: 0 if root.ship else 1
+        text: 'Accept'
+        on_press: root.acceptPurchase()
+    LightRedButton:
+        size_hint_y:0.2
+        disabled: 1 if root.ship else 0
+        opacity: 0 if root.ship else 1
+        text: 'Decline'
+        on_press: root.declinePurchase()
 
 <complain>:
     warn: False
@@ -230,11 +252,41 @@
             BoxLayout:
             BoxLayout:
 
+
         RecycleView:
             size_hint_y: .5
             id: bought
             data:[]
             viewclass: 'bought'
+            VRVL:
+                default_size: None, dp(40)
+
+        CenterLabel:
+            size_hint_y: .05
+            text: 'Bid Items'
+            font_size: 50
+            bold: True
+
+        GridLayout:
+            size_hint_y: .05
+            cols: 6
+            BoldLabel:
+                text: 'Item Title'
+            BoldLabel:
+                text: 'Seller Username'
+            BoldLabel:
+                text: 'Bid Price'
+            BoldLabel:
+                text: 'Bid Time'
+            BoldLabel:
+                text: 'Bid End Time'
+            BoxLayout:
+
+        RecycleView:
+            size_hint_y: .5
+            id: bid
+            data:[]
+            viewclass: 'bid'
             VRVL:
                 default_size: None, dp(40)
 
@@ -246,7 +298,7 @@
 
         GridLayout:
             size_hint_y: .05
-            cols: 6
+            cols: 7
             BoldLabel:
                 text: 'Item Title'
             BoldLabel:
@@ -257,6 +309,7 @@
                 text: 'Ship Status'
             BoldLabel:
                 text: 'Deal Date'
+            BoxLayout:
             BoxLayout:
         RecycleView:
             size_hint_y: .5

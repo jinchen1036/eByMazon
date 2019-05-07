@@ -11,6 +11,7 @@ class fixedItem(Screen):
     user = BooleanProperty()
 
     def tohome(self):
+        self.warn = False
         self.ids["purchaseInfo"].text = ""
         self.ids["purchase"].clear()
         self.ids["purchase"].ids["purchaseManager"].current = "empty"
@@ -20,6 +21,8 @@ class fixedItem(Screen):
         item = globalV.itemList[index]
         item.addView()
         self.itemIndex = index
+        self.price= item.price
+        self.numberAva = item.available
         self.user = not globalV.root.login
         self.ids['itemImage'].texture = item.image
         self.ids['itemTitle'].text = item.title
@@ -39,6 +42,11 @@ class fixedItem(Screen):
 
     def purchasing(self):
         # purchase Item
+        item = globalV.itemList[self.itemIndex]
+        numwant = int(self.ids['purchaseInfo'].text)
+        numLeft = self.numberAva - numwant
+        globalV.ou.purchaseFixedPrice(item.itemID, item.price,numwant,numLeft)
+        self.purchased = False
         self.ids["purchase"].ids["purchaseManager"].current = "empty"
 
     def cancelPurchase(self):
@@ -47,12 +55,25 @@ class fixedItem(Screen):
         self.ids["purchase"].ids["purchaseManager"].current = "cancel"
 
 
+    def checkNumwant(self,num):
+        try:
+            int(num)
+            if int(num) <= self.numberAva:
+                self.warn = False
+                return True
+            self.warn = True
+            return False
+        except ValueError:
+            self.warn = True
+            return False
     def toPurchase(self):
-        item = globalV.itemList[self.itemIndex]
-        numWant = int(self.ids["purchaseInfo"].text)
-        purchaseInfo = [item.price,numWant ]
-        purchaseInfo.extend(globalV.ou.calculatePurchase(item.itemID,item.price,numWant))
+        check = self.checkNumwant(self.ids["purchaseInfo"].text)
+        if check:
+            item = globalV.itemList[self.itemIndex]
+            numWant = int(self.ids["purchaseInfo"].text)
+            purchaseInfo = [item.price,numWant ]
+            purchaseInfo.extend(globalV.ou.calculatePurchase(item.itemID,item.price,numWant))
 
-        self.purchased = True
-        self.ids["purchase"].infoLoad(purchaseInfo)
-        self.ids["purchase"].ids["purchaseManager"].current = "Purchase"
+            self.purchased = True
+            self.ids["purchase"].infoLoad(purchaseInfo)
+            self.ids["purchase"].ids["purchaseManager"].current = "Purchase"

@@ -1,6 +1,7 @@
-#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#import FadeTransition kivy.uix.screenmanager.FadeTransition
 <appealPop>:
     title: 'Apeal Form'
+    size_hint:(0.8,0.8)
     BoxLayout:
         canvas.before:
             Color:
@@ -10,7 +11,7 @@
                 size: self.size
         ScreenManager:
             id: appealManager
-            transition: FadeTransition()
+#            transition: FadeTransition()
             Screen:
                 name:"askdecision"
                 title: 'Appeal Form'

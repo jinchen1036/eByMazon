@@ -54,6 +54,7 @@ class General():
         user = self.cursor.fetchone()
         if user:
             if not user[1]:     # For OU
+                self.compliantCheck(user[0])
                 self.checkWarning(user[0])
                 self.cursor.execute("SELECT status FROM OUstatus WHERE ouID = %s;" % user[0])
                 return {'ID': user[0], 'userType': user[1],'status':self.cursor.fetchone()[0]}
@@ -67,6 +68,27 @@ class General():
         self.cursor.execute("SELECT ID FROM User WHERE username = '%s'" % username)
         return self.cursor.fetchone()[0]
 
+    ##################### OU Check ####################################
+    def compliantCheck(self,ID):
+        '''
+        :return: check 2 justified compliants, if true add to warning DB
+        '''
+        qry = ("SELECT count(*) FROM Warning WHERE warningID = 1 AND ouID = %s;" % ID)
+        self.cursor.execute(qry)
+        count = self.cursor.fetchone()[0]
+
+        #  check if warn not exist
+        if count == 0:
+            qry =("SELECT count(*) FROM Complaint NATURAL JOIN ItemOwner JOIN OUstatus ON ownerID = ouID "
+                  "WHERE justified = TRUE AND ownerID = %s AND compliantTime > statusTime;" % ID)
+            self.cursor.execute(qry)
+            count = self.cursor.fetchone()[0]
+            des = "Received %d Complain" % count
+            if count >= 2:
+                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 1, '%s');" % (ID,des))
+                self.cursor.execute(qry)
+                self.cnx.commit()
+
 
     def checkWarning(self, id):
         qry = ("SELECT count(*) FROM Warning NATURAL JOIN OUstatus "
@@ -77,6 +99,7 @@ class General():
         if count >= 2:
             self.cursor.execute("UPDATE OUstatus SET status = 2 WHERE ouID = %s;" % id)
             self.cnx.commit()
+
 
     def removeOU(self,username):
         """
@@ -95,7 +118,7 @@ class General():
 
 
     def appeal(self,ouID,message):
-        qry = "INSERT INTO Appeal VALUE (%s,'%s');" %(ouID,message)
+        qry = "INSERT INTO Appeal(ouID, message) VALUES (%s,'%s');" % (ouID, message)
         try:
             self.cursor.execute(qry)
             self.cnx.commit()
@@ -163,6 +186,15 @@ class General():
             return False
         return True
 
+    def checkNotification(self):
+        self.cursor.execute("SELECT keyword from Notification;")
+        words = ""
+        for word in self.cursor:
+            words += word[0]+","
+
+        if words != "":
+            words = words[:-2]
+        return words
     # def checkStaus(self, ouID):
     #     # return status of the select OU
     #     pass

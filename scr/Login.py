@@ -5,10 +5,12 @@ try:
     from scr.GlobalVariable import globalV
     from scr.OU import OU
     from scr.SU import SU
+    from scr.notificationPop import notificationPop
 except ModuleNotFoundError:
     from GlobalVariable import globalV
     from OU import OU
     from SU import SU
+    from notificationPop import notificationPop
 
 class appealPop(Popup):
     def homepage(self):
@@ -58,7 +60,9 @@ class Login(Screen):
                 else:                   # Create OU
                     # global ou
                     globalV.ou = OU(cnx=globalV.cnx, cursor=globalV.cursor,ouID = globalV.root.ouID)
+                    self.notificationPoo()
                     globalV.root.ids['screenmanager'].current = "homepage"
+
                     self.clearLogin()  # clear login info for potential next user
 
         else:   # Problem With Login
@@ -71,3 +75,11 @@ class Login(Screen):
                 self.ids['loginCheck'].text = "You are in the Blacklist!!!"
             else:
                 self.ids['loginCheck'].text ="No User Found"
+
+    def notificationPoo(self):
+        noti = notificationPop()
+        noti.checkNotificationitem()
+        noti.checkVIPchange()
+        if noti.ids['messageShow'].text != "":
+
+            noti.open()

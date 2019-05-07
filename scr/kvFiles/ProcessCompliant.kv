@@ -1,4 +1,4 @@
-<complainInfo@GridLayout>:
+<complainInfo>:
     ownerID:0
     itemID:0
     complainerID: 0
@@ -33,16 +33,20 @@
 
     BoxLayout:
         size_hint_x:.30
-        opacity: 0 if root.justified else 1
-        disable: 0 if root.justified else 1
         BlueButton:
             size_hint_x:.15
             text:'Approve'
+            opacity: 0 if root.justified else 1
+            disabled: True if root.justified else False
             on_press:root.approveComplain()
+
         OrangeButton:
             size_hint_x:.15
             text:'Reject'
+            opacity: 0 if root.justified else 1
+            disabled: True if root.justified else False
             on_press:root.rejectComplain()
+
 
 
 

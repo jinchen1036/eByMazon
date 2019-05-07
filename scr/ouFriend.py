@@ -12,7 +12,9 @@ except ModuleNotFoundError:
 class friendInfo(GridLayout):
     def deleteFriend(self):
         # print(self.friendID)
+
         test = globalV.ou.deleteFriend(self.friendID)
+        globalV.root.ids["friendPage"].displayFriend()
 
     def getFriendMessage(self):
         globalV.root.ids["friendPage"].selectedFriend = self.username
@@ -52,6 +54,7 @@ class friendList(Screen):
                 friendID = globalV.general.getID(username)
                 globalV.ou.addFriend(friendID, float(discount)/100)
                 print("Add Friend, Discount: ", float(discount)/100)
+                self.displayFriend()
             else:
                 self.ids['warning'].text = 'Discount must below 100%'
 

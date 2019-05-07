@@ -20,6 +20,7 @@ class GUapplication(Screen):
 class guApplications(BoxLayout):
     def manageApplication(self,guUsername, action):
         globalV.su.manageApplication(guUsername, action)
+        globalV.root.ids['guApply'].getApplications()
 
 ##################################################### SU Pages #################################################
 class suItemPost(Screen):
@@ -63,10 +64,14 @@ class blackTaboo(Screen):
 ########################################### Compliant Management ################################################
 class complainInfo(GridLayout):
     def approveComplain(self):
+        print(self.justified)
+        print('Approve')
         globalV.su.manageCompliant(itemID=self.itemID,complianerID= self.complainerID,action=True)
         globalV.root.ids['processCompliant'].displayComplain()
 
     def rejectComplain(self):
+        print(self.justified)
+        print('Reject')
         globalV.su.manageCompliant(itemID=self.itemID, complianerID=self.complainerID, action=False)
         globalV.root.ids['processCompliant'].displayComplain()
 
