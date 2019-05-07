@@ -37,6 +37,7 @@ try:
     from scr.suManagement import complainInfo,processCompliant, itemManage
 
     from scr.Taboo import tabooPop
+    from scr.notificationPop import notificationPop
 except ModuleNotFoundError:
     from GU import GU
     from SU import SU
@@ -61,6 +62,7 @@ except ModuleNotFoundError:
     from suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo
     from suManagement import complainInfo, processCompliant, itemManage
     from Taboo import tabooPop
+    from notificationPop import notificationPop
 
 ################################## Home Page Item Recycle View ###############################################
 class item(BoxLayout):
@@ -318,9 +320,14 @@ class Manager(Screen):
     def toSUtransaction(self):
         self.ids['screenmanager'].current = "suTransaction"
         self.ids['suTransaction'].Transactions()
+
     def tobaooPoo(self):
         taboo = tabooPop()
         taboo.open()
+    def notificationPoo(self):
+        noti = notificationPop()
+        noti.open()
+
 class eByMazonApp(App):
 
     def build(self):

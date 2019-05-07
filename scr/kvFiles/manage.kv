@@ -16,6 +16,7 @@
 #:include kvFiles/blackTabooList.kv
 #:include kvFiles/suTransactionHistory.kv
 #:include kvFiles/tabooPop.kv
+#:include kvFiles/notificationPop.kv
 <Manager>:
     login: False
     userID: None
@@ -117,7 +118,9 @@
                         Button:
                             text: 'TabooPop'
                             on_press: root.tobaooPoo()
-
+                        Button:
+                            text: 'notification Pop'
+                            on_press: root.notificationPoo()
                     Label:
                         size_hint_x: 0.1
                     RecycleView:
