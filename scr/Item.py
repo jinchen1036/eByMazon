@@ -75,21 +75,7 @@ class Item():
                 self.secondPrice = b2[1]
                 self.secondTime = b2[2]
 
-    def getRating(self):
-        qry = "SELECT rating, description,postTime FROM itemRate WHERE itemID = %s ORDER BY postTime DESC;" % self.itemID
-        self.cursor.execute(qry)
-        self.rating = 0
-        self.ratings = []
 
-
-        i = 0
-        for info in self.cursor:
-            self.rating += info[0]
-            i+=1
-            self.ratings.append({"Rating": info[0],"Comment": info[1], "Time": info[2]})
-
-        if i > 0:
-            self.rating /= i
 
     def checkLiked(self,ouID):
         qry = "SELECT EXISTS(SELECT * from ItemOwner WHERE itemID=%s AND ownerID =%s);" % (self.itemID,ouID)
@@ -141,3 +127,20 @@ class Item():
             self.cnx.commit()
         except mysql.connector.errors as err:
             print("Update views error: %s"%err)
+
+    def getRating(self):
+        qry = ("SELECT username, rating, description FROM itemRate "
+               "JOIN User ON ItemRate.raterID = User.ID WHERE itemID = %s ORDER BY postTime DESC;") % self.itemID
+        self.cursor.execute(qry)
+        self.rating = 0
+        self.ratings = []
+
+        i = 0
+        for info in self.cursor:
+            self.rating += int(info[1])
+            i+=1
+            self.ratings.append({"rater":info[0],"rating": info[1],"comment": info[2]})
+
+        if i > 0:
+            self.rating /= i
+        return self.ratings
