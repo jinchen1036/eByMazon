@@ -20,6 +20,7 @@ class GUapplication(Screen):
 class guApplications(BoxLayout):
     def manageApplication(self,guUsername, action):
         globalV.su.manageApplication(guUsername, action)
+        globalV.root.ids['guApply'].getApplications()
 
 ##################################################### SU Pages #################################################
 class suItemPost(Screen):
