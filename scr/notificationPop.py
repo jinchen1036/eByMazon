@@ -9,11 +9,18 @@ except ModuleNotFoundError:
 
 class notificationPop(Popup):
     def dismissPop(self):
+        self.ids['messageShow'].text =""
         notificationPop.dismiss(self)
-        # globalV.root.ids['login'].clearLogin()
-        # globalV.root.tohome()
 
-    # def switchScreen(self, screenName):
-    #     self.ids['appealManager'].current = screenName
+    def checkNotificationitem(self):
+        noti = globalV.general.checkNotification()
+        if noti != "":
+            self.ids['messageShow'].text += "\nKeywords search by other users: \n      "+noti
+
+    def checkVIPchange(self):
+        if globalV.ou.promote:
+            self.ids['messageShow'].text += "\n\nCongratulation, You have be promote to VIP!!!\n\n"
+        elif globalV.ou.depromote:
+            self.ids['messageShow'].text += "\n\nYou have be depromote to ordinary user!!!\n\n"
 
 

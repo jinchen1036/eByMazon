@@ -186,6 +186,15 @@ class General():
             return False
         return True
 
+    def checkNotification(self):
+        self.cursor.execute("SELECT keyword from Notification;")
+        words = ""
+        for word in self.cursor:
+            words += word[0]+","
+
+        if words != "":
+            words = words[:-2]
+        return words
     # def checkStaus(self, ouID):
     #     # return status of the select OU
     #     pass
