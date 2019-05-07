@@ -14,7 +14,12 @@ class SU():
         self.cursor = cursor
         self.ID = suID
 
+    ########################################## GU Management ###############################################
     def getGU(self):
+        '''
+        :return: initial  self.guApplication
+            self.guApplication -> list of dict{guusername,guname,guphone,guemail,guaddress,guState,gucard}
+        '''
         self.cursor.execute("SELECT * FROM GUapplications;")
         self.guApplication =[]
 
@@ -24,38 +29,13 @@ class SU():
                                        'guState': gu[5], 'gucard': gu[3]})
         return self.guApplication
 
-    def getOU(self):
-        self.cursor.execute("SELECT ouID FROM OU;")
-        self.ous =[]
-        ids = self.cursor.fetchall()
-        for id in ids:
-            self.ous.append(OU(cnx=self.cnx, cursor=self.cursor, ouID=id[0]))
-        return self.ous
-
-    def getAppeal(self):
-        self.cursor.execute("SELECT * FROM Appeal;")
-        self.appeals =[]
-        ids = self.cursor.fetchall()
-        for id in ids:
-            self.appeals.append({'ouID':id[0], 'message':id[1], 'time':id[2].strftime("%m/%d/%Y")})
-        return self.appeals
-
-    def deleteAppeal(self,ouID):
-        self.cursor.execute("DELETE FROM Appeal WHERE ouID = %s;"% ouID)
-        self.cnx.commit()
-
-    def acceptAppeal(self,ouID):
-        self.cursor.execute("UPDATE OUstatus SET status = 0, statusTime = '%s' WHERE ouID = %s;" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), ouID))
-        self.deleteAppeal(ouID)
-
-    def removeOU(self, ouID):
-        qry = "UPDATE OUstatus SET status = 3 WHERE ouID = %s;" % ouID
-        self.cursor.execute(qry)
-        self.cnx.commit()
-
     def manageApplication(self, username, action):
-        # action == True: approve: register GU to OU account and delete application, set password same as username
-        # action == False: decline: delete it from application accounts
+        '''
+        :param username: gu applicant's username
+        :param action(bool):
+                if True approve: register GU to OU account and delete application, set password same as username
+                if False decline: delete it from application accounts
+        '''
         if action:
             self.cursor.execute("SELECT * FROM GUapplications WHERE username = '%s';" % username)
             info = self.cursor.fetchone()
@@ -75,7 +55,59 @@ class SU():
         self.cursor.execute("DELETE FROM GUapplications WHERE username = '%s';" % username)
         self.cnx.commit()
 
+    ########################################## OU Management ###############################################
+    def getOU(self):
+        '''
+        :return: initial self.ous
+            self.ous -> list of OU object
+        '''
+        self.cursor.execute("SELECT ouID FROM OU;")
+        self.ous =[]
+        ids = self.cursor.fetchall()
+        for id in ids:
+            self.ous.append(OU(cnx=self.cnx, cursor=self.cursor, ouID=id[0]))
+        return self.ous
+
+    def getAppeal(self):
+        '''
+        :return: initial self.appeals
+            self.appeals -> list of dict{ouID,message,time}
+        '''
+        self.cursor.execute("SELECT * FROM Appeal;")
+        self.appeals =[]
+        ids = self.cursor.fetchall()
+        for id in ids:
+            self.appeals.append({'ouID':id[0], 'message':id[1], 'time':id[2].strftime("%m/%d/%Y")})
+        return self.appeals
+
+    def deleteAppeal(self,ouID):
+        '''
+        :param ouID: ou's appeal to be delete
+        '''
+        self.cursor.execute("DELETE FROM Appeal WHERE ouID = %s;"% ouID)
+        self.cnx.commit()
+
+    def acceptAppeal(self,ouID):
+        '''
+        :param ouID: ou's appeal to be approve
+        '''
+        self.cursor.execute("UPDATE OUstatus SET status = 0, statusTime = '%s' WHERE ouID = %s;" % (datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), ouID))
+        self.deleteAppeal(ouID)
+
+    def removeOU(self, ouID):
+        '''
+        :param ouID: ou to be remove
+        '''
+        qry = "UPDATE OUstatus SET status = 3 WHERE ouID = %s;" % ouID
+        self.cursor.execute(qry)
+        self.cnx.commit()
+
+    ########################################## Item Management ###############################################
     def getAllItem(self):
+        '''
+        :return: initial self.items
+            self.items -> list of Item object
+        '''
         qry = "SELECT itemID FROM ItemOwner NATURAL JOIN ItemInfo;"
         self.cursor.execute(qry)
         self.items = []
@@ -84,18 +116,39 @@ class SU():
             self.items.append(Item(cnx=self.cnx, cursor=self.cursor,itemID=item[0]))
         return self.items
 
-    def manageItem(self, itemID, action, justification='removed By SU'):
-        # action == True: approve: change approvalStatus in ItemDB to True
-        # action == False: decline: remove the item in ItemDB, add warning to post OU in warningDB
+    def manageItem(self, itemID, action, justification='item removed By SU'):
+        '''
+        :param itemID: item to be approve or decline
+        :param action(bool):
+            if True approve: change approvalStatus in ItemDB to True, check with notificationDB for any keyword remove
+            if False decline: remove the item in ItemDB, add warning to post OU in warningDB
+        :param justification:
+            need if decline, default 'itemremoved By SU'
+        '''
+
         if not action:      #decline
             self.removeItem(itemID,justification)
         else:               # approve
             self.cursor.execute("UPDATE ItemInfo SET saleStatus = True, approvalStatus = True WHERE itemID = %s;" % itemID)
+
+            self.cursor.execute("SELECT title FROM ItemInfo WHERE itemID = %s;" % itemID)
+            title = self.cursor.fetchone()[0]
+
+            # Remove keyword from notification DB
+            self.cursor.execute("DELETE FROM Notification WHERE '%s' LIKE CONCAT('%', keyword ,'%') ;" % title)
+
         self.cnx.commit()
 
-    def removeItem(self,itemID, justification='removed By SU'):
-        # remove all the occurance of this item in DB
-        # add to Blacklist and warning to owner
+
+    def removeItem(self,itemID, justification='item removed By SU'):
+        '''
+        :param itemID: item to be remove
+        :param justification: note from su reason, default: 'item removed By SU'
+        :return:
+            remove all the occurance of this item in DB
+            add to Blacklist and warning to owner
+        '''
+
         item = Item(self.cnx, self.cursor, itemID)
         # add warning
         self.cursor.execute("INSERT INTO Warning(ouID,warningID,description) VALUE (%s,3,'%s')"
@@ -108,9 +161,13 @@ class SU():
         self.cnx.commit()
 
 
-
+    ########################################## Complain Management ###############################################
     def viewCompliant(self):
-        # Get all compliant from DB, return array of dict{itemID, complianerID, description, compliantTime}
+        '''
+        :return: initial self.compliants
+            self.compliants -> list of dict{itemID, complianerID, description, compliantTime}
+        '''
+
         self.cursor.execute("SELECT * FROM Complaint NATURAL JOIN ItemOwner ORDER BY justified;")
         self.compliants = []
         for compliant in self.cursor:
@@ -120,18 +177,23 @@ class SU():
         return self.compliants
 
     def manageCompliant(self, itemID, complianerID, action):
-        # action == True: remove: delete compliant in DB
-        # action == False: justified: change the justified to True in DB
-        #                  check for two justified compliant that will cause warning
+        '''
+        :param itemID: item with that complain
+        :param complianerID: complainer id
+        :param action:
+            if True: remove: delete compliant in DB
+            if False: justified: change the justified to True in DB
+        :return:
+        '''
         if action:
             self.cursor.execute("UPDATE Complaint SET justified = TRUE WHERE itemID = %s AND complainerID = %s;" %(itemID,complianerID))
 
-        # need to check warning
+        # check warning during ou login
         else:
-            self.cursor.execute("DELETE FROM Complaint WHERE itemID = %s AND complainerID = %s;" % (
-            itemID, complianerID))
+            self.cursor.execute("DELETE FROM Complaint WHERE itemID = %s AND complainerID = %s;" % (itemID, complianerID))
         self.cnx.commit()
 
+    ########################################## Other Management ###############################################
     def getTransaction(self):
         self.cursor.execute("SELECT * FROM Transaction NATURAL JOIN ItemOwner ORDER BY dealTime DESC;")
         self.OUtransactions = []
@@ -178,7 +240,7 @@ class SU():
         :param taboo: a string of taboo word
         :return: True if insert sucessfully, False if insert false
         '''
-        qry = ("INSERT INTO Taboo(word) VALUES ('%s');" %taboo)
+        qry = ("INSERT INTO Taboo(word) VALUES ('%s');" % taboo)
         try:
             self.cursor.execute(qry)
             self.cnx.commit()

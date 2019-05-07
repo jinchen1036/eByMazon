@@ -27,11 +27,14 @@ class fixedItem(Screen):
         self.ids['itemImage'].texture = item.image
         self.ids['itemTitle'].text = item.title
         self.ids['itemDescription'].text=item.descrpition
+        self.ids['itemRates'].text = str(item.rating) if item.rating else "None"
         self.ids['itemPrice'].text="$"+str(item.price)
         self.ids['itemAvailable'].text = str(item.available)
         self.ids['itemLike'].text = str(item.likeness)
         self.ids['itemDislike'].text = str(item.dislike)
+        self.ids['itemRate'].data = item.getRating()
         self.disableAction = globalV.root.checkDisable(item.itemID)
+
 
 
     def dislikeItem(self,name):
