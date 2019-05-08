@@ -326,10 +326,32 @@ class Manager(Screen):
         self.ids['screenmanager'].current = "suTransaction"
         self.ids['suTransaction'].Transactions()
 
-    def tobaooPoo(self):
+    def tobaooPoo(self,label):
         taboo = tabooPop()
+        taboo.changeLabel(label)
         taboo.open()
 
+    def change_to_star(self,input):
+
+        ''' pre-condition: if input contains taboo
+            params: userInput and taboo contained
+            return: string with taboo replaced
+        '''
+
+        taboos = globalV.general.findtaboo(input)
+        if not taboos:
+            return False
+      
+        for taboo in taboos:
+            taboo = taboo.lower()
+            input = input.lower()
+        
+            result = input.replace(taboo, '*'*len(taboo))
+            
+            self.taboochange = result
+            print(taboo)
+            print(result)
+        return result
 
 class eByMazonApp(App):
 
