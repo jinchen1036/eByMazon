@@ -24,7 +24,7 @@ class Signup(Screen):
 
         self.ids['warnApplication'].text = ""
         self.ids['warnUsername'].text = ""
-        self.stateV, self.cardV, self.nameV = True, True,True
+        self.stateV, self.cardV, self.nameV,self.phoneV = True, True,True,True
 
     def checkUsername(self,username):
         nameCheck = globalV.guest.checkUsername(username)

@@ -44,7 +44,7 @@ class ouInfo(Screen):
             ouData.append({'ouID': ou.ID, 'ouName': ou.name, 'ouPhone': ou.phone, 'ouEmail': ou.email,
                            'ouCard': ou.card, 'ouAddress': ou.address,'ouState':ou.state,
                            'ouStatus': status, 'ouRate': ou.avgRate, 'ouComplaint': len(ou.compliants),
-                           'ouWarning': 0, 'remove': remove})
+                           'ouWarning': len(ou.warningList), 'remove': remove})
         self.ids['ouInformation'].data = ouData
         self.getOUAppeal()
 

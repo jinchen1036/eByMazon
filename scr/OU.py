@@ -54,6 +54,7 @@ class OU():
         self.getItem()
         self.biddingCheck()
         self.getComplaints()
+        self.getWarnings()
 
     ####################### Get Info #####################################
     def getOUInfo(self):

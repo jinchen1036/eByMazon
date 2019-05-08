@@ -154,7 +154,7 @@ class Manager(Screen):
         if self.login:      # my account
             self.toProfile()
         else:               # sign up
-            self.ids['screenmanager'].current = "signupPage"
+            self.tosignup()
 
     def suLogout(self):     # logout from su homepage
         self.login = False
@@ -272,6 +272,9 @@ class Manager(Screen):
         self.displayItem()
         self.ids['screenmanager'].current = "homepage"
 
+    def tosignup(self):
+        self.ids['signup'].clearSignup()
+        self.ids['screenmanager'].current = "signupPage"
     def toguApply(self):
         self.ids['guApply'].getApplications()
         self.ids['screenmanager'].current = "GUapplication"
