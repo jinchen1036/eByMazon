@@ -106,23 +106,22 @@ class ouItem(Screen):
         self.isUsed = status
 
     def submitBidingItem(self, title, description, itemPrice, itemBidDay):
-        found1 = globalV.root.change_to_star(title)
-        found2 = globalV.root.change_to_star(description)
-        if found1 or found2:
-            result=''
-            result = [x for x in [found1,found2] if x!=False]
-            print(result)
-            pop = ''
-            for word in result:
-                pop+= word + ' '
-            print(pop)
-            globalV.root.toTaboo(pop)
-            if found1: 
-                self.ids['itemTitle'].text = found1
-            if found2: 
-                self.ids['itemDescription'].text = found2
+        found1 = globalV.root.replaceTaboo(title)
+        found2 = globalV.root.replaceTaboo(description)
+        tabooFound = found1 or found2
+
+        if tabooFound:
+            replaceWord = ''
+            if found1:
+                replaceWord += "Taboo in item title: %s \n" % found1
+                self.ids['itemTitle1'].text = ""
+            if found2:
+                replaceWord += "Taboo in item description1: %s \n" % found2
+                self.ids['itemDescription1'].text = ""
+            globalV.root.toTaboo(replaceWord)
+            globalV.ou.addWarning(warningID=4, description='Taboo word in submit item info')
             
-        if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(itemBidDay)):
+        if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(itemBidDay))or tabooFound:
             condition = False
         else:
             try:
@@ -150,22 +149,20 @@ class ouItem(Screen):
     def submitFixedItem(self, title, description, itemPrice, number_available):
         found1 = globalV.root.replaceTaboo(title)
         found2 = globalV.root.replaceTaboo(description)
+        tabooFound = found1 or found2
 
-        if found1 or found2:
-            result=''
-            result = [x for x in [found1,found2] if x!=False]
-            print(result)
-            pop = ''
-            for word in result:
-                pop+= word + ' '
-            print(pop)
-            globalV.root.toTaboo(pop)
-            if found1: 
-                self.ids['itemTitle1'].text = found1
-            if found2: 
-                self.ids['itemDescription1'].text = found2
+        if tabooFound:
+            replaceWord = ''
+            if found1:
+                replaceWord += "Taboo in item title: %s \n" % found1
+                self.ids['itemTitle1'].text = ""
+            if found2:
+                replaceWord += "Taboo in item description1: %s \n" % found2
+                self.ids['itemDescription1'].text = ""
+            globalV.root.toTaboo(replaceWord)
+            globalV.ou.addWarning(warningID=4, description='Taboo word in submit item info')
 
-        if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(number_available)):
+        if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(number_available)) or tabooFound:
             condition = False
         else:
             try:

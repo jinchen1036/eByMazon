@@ -600,7 +600,10 @@ class OU():
 
 
 
-
+    def addWarning(self,warningID, description):
+        qry = "INSERT INTO Warning(ouID, warningID, description) VALUES (%s,%s,'%s');"%(self.ID,warningID,description)
+        self.cursor.execute(qry)
+        self.cnx.commit()
 
 
 
