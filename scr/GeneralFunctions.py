@@ -1,6 +1,22 @@
+# Functions in this General Class
+# - checkEmpty(self, input)
+# - checkInt(self, input)
+# - checkFloat(self, input)
+# - login_check(self, username, password)
+# - getID(self,username)
+# - compliantCheck(self,ID)
+# - checkWarning(self, id)
+# - removeOU(self,username)
+# - appeal(self,ouID,message)
+# - ouPopularItem(self, ouID)
+# - popularItem(self)
+# - searchItem(self,keywords)
+# - sortItem(self,items,attribute, decs)
+# - checkOwner(self,ouID,itemID)
+# - checkNotification(self)
+# - findtaboo(self, input)
+
 import mysql.connector
-# from kivy.core.image import Image as CoreImage
-# from io import BytesIO
 try:
     from scr.GU import GU
     from scr.Item import Item

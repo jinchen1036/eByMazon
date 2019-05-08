@@ -10,6 +10,8 @@
             WarningLabel:
                 id: warnApplication
                 text: ""
+                font_size: 50
+
             BoxLayout:
                 size_hint_y: 0.8
                 orientation: 'vertical'
@@ -26,8 +28,12 @@
                     opacity: 0 if root.stateV else 1
                 WarningLabel:
                     id: warnCard
-                    text: "Card Num Can't be Empty!!"
+                    text: "Card Num should have be 16 digits!!"
                     opacity: 0 if root.cardV else 1
+                WarningLabel:
+                    id: warnPhone
+                    text: "Phone should have be 10 digits!!"
+                    opacity: 0 if root.phoneV else 1
 
         BoxLayout:
             orientation: 'horizontal'

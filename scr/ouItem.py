@@ -42,6 +42,7 @@ class ouItem(Screen):
         self.ids['itemPrice1'].text = ""
         self.ids['itemNumbers1'].text = ""
         self.ids['fixedItemWarning'].text = ""
+        self.ids['image'].text = "Choose Image"
         self.image = ""
         # self.isTitle, self.isDescription, self.isPrice, self.isNumber = True, True, True, True
 
@@ -115,7 +116,7 @@ class ouItem(Screen):
             for word in result:
                 pop+= word + ' '
             print(pop)
-            globalV.root.tobaooPoo(pop)
+            globalV.root.toTaboo(pop)
             if found1: 
                 self.ids['itemTitle'].text = found1
             if found2: 
@@ -147,8 +148,9 @@ class ouItem(Screen):
             self.backPostItemPage()
 
     def submitFixedItem(self, title, description, itemPrice, number_available):
-        found1 = globalV.root.change_to_star(title)
-        found2 = globalV.root.change_to_star(description)
+        found1 = globalV.root.replaceTaboo(title)
+        found2 = globalV.root.replaceTaboo(description)
+
         if found1 or found2:
             result=''
             result = [x for x in [found1,found2] if x!=False]
@@ -157,7 +159,7 @@ class ouItem(Screen):
             for word in result:
                 pop+= word + ' '
             print(pop)
-            globalV.root.tobaooPoo(pop)
+            globalV.root.toTaboo(pop)
             if found1: 
                 self.ids['itemTitle1'].text = found1
             if found2: 

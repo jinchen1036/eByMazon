@@ -1,3 +1,22 @@
+# Functions in this SU Class
+# - getGU(self)
+# - manageApplication(self, username, action)
+# - getOU(self)
+# - getAppeal(self)
+# - deleteAppeal(self,ouID)
+# - acceptAppeal(self,ouID)
+# - removeOU(self, ouID)
+# - getAllItem(self)
+# - manageItem(self, itemID, action, justification='item removed By SU')
+# - removeItem(self,itemID, justification='item removed By SU')
+# - viewCompliant(self)
+# - manageCompliant(self, itemID, complianerID, action)
+# - getTransaction(self)
+# - getUserBlackList(self)
+# - getItemBlackList(self)
+# - getTabooList(self)
+# - addTaboo(self, taboo)
+
 import mysql.connector
 import datetime
 try:
@@ -6,7 +25,6 @@ try:
 except ModuleNotFoundError:
     from OU import OU
     from Item import Item
-
 
 class SU():
     def __init__(self,cnx, cursor,suID):
@@ -135,7 +153,9 @@ class SU():
             title = self.cursor.fetchone()[0]
 
             # Remove keyword from notification DB
-            self.cursor.execute("DELETE FROM Notification WHERE '%s' LIKE CONCAT('%', keyword ,'%') ;" % title)
+            qry = "DELETE FROM Notification WHERE '%s' "% title
+            qry += " LIKE CONCAT('%', keyword ,'%') ;"
+            self.cursor.execute(qry)
 
         self.cnx.commit()
 

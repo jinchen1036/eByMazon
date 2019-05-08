@@ -1,3 +1,10 @@
+# Functions in this GU Class
+# - checkUsername(self,username)
+# - checkState(self,state)
+# - checkInput(self,input)
+# - apply(self, username, name, email, card, address, state, phone)
+
+
 import mysql.connector
 class GU():
     def __init__(self,cnx,cursor):

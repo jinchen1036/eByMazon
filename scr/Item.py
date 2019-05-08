@@ -1,3 +1,17 @@
+# Functions in this Item Class
+# - itemProfile(self)
+# - getFixedinfo(self)
+# - getBiddingInfo(self)
+# - getBiddings(self)
+# - checkLiked(self,ouID)
+# - addLiked(self,ouID)
+# - likeItem(self,ouID)
+# - dislikeItem(self,ouID)
+# - addView(self)
+# - getRating(self)
+
+
+
 import mysql.connector
 from kivy.core.image import Image as CoreImage
 from io import BytesIO

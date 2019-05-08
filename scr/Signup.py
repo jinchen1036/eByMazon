@@ -8,7 +8,7 @@ except ModuleNotFoundError:
 ################################################## Sign Up Page ###############################################
 class Signup(Screen):
     # sign up page implement in signup.kv
-    stateV,cardV,nameV = BooleanProperty(),BooleanProperty(),BooleanProperty()
+    stateV,cardV,nameV,phoneV = BooleanProperty(),BooleanProperty(),BooleanProperty(),BooleanProperty()
 
     def tohome(self):
         globalV.root.tohome()
@@ -38,41 +38,49 @@ class Signup(Screen):
             self.ids['warnUsername'].text = "Username are in system blacklist!"
 
     def checkName(self,name):
-        self.nameV = not globalV.guest.checkInput(name)
+        self.nameV = globalV.general.checkEmpty(name)
 
     def checkState(self,state):
         self.stateV = globalV.guest.checkState(state.upper())
 
     def checkCard(self,card):
-        self.cardV = not globalV.guest.checkInput(card)
+        self.cardV = globalV.general.checkInt(card)
+        if self.cardV:
+            self.cardV = (len(card) == 16)
+    def checkPhone(self,phone):
+        self.phoneV = globalV.general.checkInt(phone)
+        if self.phoneV:
+            self.phoneV = (len(phone) == 10)
 
     def signUp(self,username, name, phone, email,address,state,card):
-        found1 = globalV.root.change_to_star(username)
-        found2 = globalV.root.change_to_star(name)
-        found3 = globalV.root.change_to_star(address)
-        
-        if found1 or found2 or found3:
-            result=''
-            result = [x for x in [found1,found2,found3] if x!=False]
-            print(result)
-            pop = ''
-            for word in result:
-                pop+= word + ' '
-            print(pop)
-            globalV.root.tobaooPoo(pop)
-            if found1: 
-                self.ids['GUusername'].text = found1
-            if found2: 
-                self.ids['GUname'].text = found2
-            if found3: 
-                self.ids['GUaddress'].text = found3
+        found1 = globalV.root.replaceTaboo(username)
+        found2 = globalV.root.replaceTaboo(name)
+        found3 = globalV.root.replaceTaboo(address)
+
+        tabooFound = found1 or found2 or found3
+        if tabooFound:
+            replaceWord = ''
+            if found1:
+                self.ids['GUusername'].text = ""
+                replaceWord += "Taboo in username: %s \n" %found1
+            if found2:
+                self.ids['GUname'].text = ""
+                replaceWord += "Taboo in name: %s \n" % found2
+            if found3:
+                self.ids['GUaddress'].text = ""
+                replaceWord += "Taboo in address: %s \n" % found3
+
+            globalV.root.toTaboo(replaceWord)
 
         self.checkName(name)
         self.checkState(state)
         self.checkCard(card)
         self.checkUsername(username)
-         
-        if globalV.guest.checkUsername(username) or not self.stateV or not self.cardV or not self.nameV:
+        self.checkPhone(phone)
+
+
+
+        if globalV.guest.checkUsername(username) or not self.stateV or not self.cardV or not self.nameV or not self.phoneV or tabooFound:
             self.ids['warnApplication'].text = "Fail to Apply!!!"
         else:
             applied = globalV.guest.apply(username, name, email,card,address,state.upper(),phone)

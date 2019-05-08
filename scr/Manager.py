@@ -4,14 +4,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 
-
 from kivy.uix.screenmanager import Screen
 from kivy.properties import BooleanProperty,ObjectProperty
 from kivy.lang import Builder
 from kivy.core.window import Window
 
 ######### import self define classes #################
-
 try:
     from scr.GU import GU
     from scr.SU import SU
@@ -80,15 +78,9 @@ class suTransaction(Screen):
         self.ids['transactions'].data = globalV.su.getTransaction() #data selection to be fixed
                                                             #connections done
 
-################################### Others ################################
-
-# class itemFixed(Screen):
-#     status = BooleanProperty()
-
 class editPassword(FloatLayout):
     back = ObjectProperty(None)
     submit = ObjectProperty(None)
-
 
 
 ####################### Main Class #############################
@@ -169,7 +161,6 @@ class Manager(Screen):
         globalV.su = None
         self.tohome()
 
-
     ####################### Goto OU Profile #############################
 
     def toProfile(self):
@@ -215,7 +206,6 @@ class Manager(Screen):
         globalV.ou.updateOUInfo(name, card, email, phone, address, state)
         self.toProfile()
 
-
     ###################### To Item Page from homepage ###################
     def checkDisable(self, itemID):
         if globalV.ou is not None:
@@ -245,7 +235,6 @@ class Manager(Screen):
         # print('friendlist')
         self.ids["friendPage"].initInfo()
         self.ids['screenmanager'].current = "friendPage"
-
 
     ################################### SU Item Page ################################
     def getSUitem(self):
@@ -278,17 +267,10 @@ class Manager(Screen):
         self.ids["itemManage"].ids["itemPost"].data = waitI
         self.ids["itemManage"].ids["itemSale"].data = saleI
 
-
+    ################################### Change Page ################################
     def tohome(self):
         self.displayItem()
         self.ids['screenmanager'].current = "homepage"
-
-
-    # def signup(self):
-    #     self.ids['screenmanager'].current = "signupPage"
-    # def history(self):
-    #     self.ids['screenmanager'].current = "historyPage"
-
 
     def toguApply(self):
         self.ids['guApply'].getApplications()
@@ -326,29 +308,28 @@ class Manager(Screen):
         self.ids['screenmanager'].current = "suTransaction"
         self.ids['suTransaction'].Transactions()
 
-    def tobaooPoo(self,label):
+    def toTaboo(self, label):
         taboo = tabooPop()
         taboo.changeLabel(label)
         taboo.open()
 
-    def change_to_star(self,input):
-
-        ''' pre-condition: if input contains taboo
+    def replaceTaboo(self,word):
+        '''
+            pre-condition: if input contains taboo
             params: userInput and taboo contained
             return: string with taboo replaced
         '''
 
-        taboos = globalV.general.findtaboo(input)
+        taboos = globalV.general.findtaboo(word)
         if not taboos:
             return False
       
         for taboo in taboos:
             taboo = taboo.lower()
-            input = input.lower()
+            word = word.lower()
         
-            result = input.replace(taboo, '*'*len(taboo))
-            
-            self.taboochange = result
+            result = word.replace(taboo, '*'*len(taboo))
+            # self.taboochange = result
             print(taboo)
             print(result)
         return result
