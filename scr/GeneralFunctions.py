@@ -209,6 +209,16 @@ class General():
         if words != "":
             words = words[:-1]
         return words
+    
+    def findtaboo(self, input):
+        qry = "SELECT word FROM Taboo WHERE '%s' " % input
+        qry2 = "LIKE CONCAT('%', word ,'%') ;" 
+        self.cursor.execute(qry+qry2)
+
+        self.taboowords =[]
+        for word in self.cursor:
+            self.taboowords.append(word[0])
+        return self.taboowords
     # def checkStaus(self, ouID):
     #     # return status of the select OU
     #     pass

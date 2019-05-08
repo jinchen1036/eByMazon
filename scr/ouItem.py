@@ -105,6 +105,22 @@ class ouItem(Screen):
         self.isUsed = status
 
     def submitBidingItem(self, title, description, itemPrice, itemBidDay):
+        found1 = globalV.root.change_to_star(title)
+        found2 = globalV.root.change_to_star(description)
+        if found1 or found2:
+            result=''
+            result = [x for x in [found1,found2] if x!=False]
+            print(result)
+            pop = ''
+            for word in result:
+                pop+= word + ' '
+            print(pop)
+            globalV.root.tobaooPoo(pop)
+            if found1: 
+                self.ids['itemTitle'].text = found1
+            if found2: 
+                self.ids['itemDescription'].text = found2
+            
         if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(itemBidDay)):
             condition = False
         else:
@@ -131,6 +147,22 @@ class ouItem(Screen):
             self.backPostItemPage()
 
     def submitFixedItem(self, title, description, itemPrice, number_available):
+        found1 = globalV.root.change_to_star(title)
+        found2 = globalV.root.change_to_star(description)
+        if found1 or found2:
+            result=''
+            result = [x for x in [found1,found2] if x!=False]
+            print(result)
+            pop = ''
+            for word in result:
+                pop+= word + ' '
+            print(pop)
+            globalV.root.tobaooPoo(pop)
+            if found1: 
+                self.ids['itemTitle1'].text = found1
+            if found2: 
+                self.ids['itemDescription1'].text = found2
+
         if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(number_available)):
             condition = False
         else:

@@ -47,10 +47,31 @@ class Signup(Screen):
         self.cardV = not globalV.guest.checkInput(card)
 
     def signUp(self,username, name, phone, email,address,state,card):
+        found1 = globalV.root.change_to_star(username)
+        found2 = globalV.root.change_to_star(name)
+        found3 = globalV.root.change_to_star(address)
+        
+        if found1 or found2 or found3:
+            result=''
+            result = [x for x in [found1,found2,found3] if x!=False]
+            print(result)
+            pop = ''
+            for word in result:
+                pop+= word + ' '
+            print(pop)
+            globalV.root.tobaooPoo(pop)
+            if found1: 
+                self.ids['GUusername'].text = found1
+            if found2: 
+                self.ids['GUname'].text = found2
+            if found3: 
+                self.ids['GUaddress'].text = found3
+
         self.checkName(name)
         self.checkState(state)
         self.checkCard(card)
         self.checkUsername(username)
+         
         if globalV.guest.checkUsername(username) or not self.stateV or not self.cardV or not self.nameV:
             self.ids['warnApplication'].text = "Fail to Apply!!!"
         else:
