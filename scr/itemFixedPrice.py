@@ -20,6 +20,7 @@ class fixedItem(Screen):
     def initInfo(self,index):
         item = globalV.itemList[index]
         item.addView()
+        self.purchased = False
         self.itemIndex = index
         self.price= item.price
         self.numberAva = item.available

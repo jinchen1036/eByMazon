@@ -72,10 +72,11 @@ class friendList(Screen):
 
 
     def displayMessage(self,friendID):
+        self.clearMsg()
         messages = globalV.ou.getFriendMessage(friendID)
         self.friendID = friendID
         for mess in messages:
-            mess['sendTime'] = mess['sendTime'].strftime("%H:%M:%S")
+            mess['sendTime'] = mess['sendTime'].strftime("%m/%d %H:%M")
         self.ids['messages'].data = messages
 
 
@@ -86,6 +87,9 @@ class friendList(Screen):
         elif self.ids['chat'].text =="":
             self.ids['send'].disable = True
             self.ids['warn'].text = "Can't send empty message"
+        elif self.friendID not in globalV.ou.friendIDs:
+            self.ids['send'].disable = True
+            self.ids['warn'].text = "Can't send message without add friend."
         else:
             self.ids['chat'].text = ""
             self.ids['warn'].text = ""

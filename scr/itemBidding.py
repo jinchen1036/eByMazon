@@ -19,6 +19,7 @@ class biddingItem(Screen):
     def initInfo(self,index):
         item = globalV.itemList[index]
         item.addView()
+        self.bid = False
         self.itemIndex = index
         self.itemID = item.itemID
         self.price = item.price

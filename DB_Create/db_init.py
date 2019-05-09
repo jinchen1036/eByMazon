@@ -70,8 +70,8 @@ def executeScriptsFromFile(cnx, cursor,filename):
 
 if __name__  == "__main__":
     config = {
-        "user": 'jinchen',                 # Enter your own username
-        "password": '19841036',             # Enter your own password
+        "user": '',                 # Enter your own username
+        "password": '',             # Enter your own password
         "host": '127.0.0.1',
         # "database": 'eByMazon'
     }
@@ -117,12 +117,12 @@ if __name__  == "__main__":
                    description="New Song + Collection, released on 21 July 2006 by HIM International Music",
                    priceType=False, saleStatus=True,approvalStatus=True)
     insertItemInfo(cursor,itemID=2, image="images/item2.jpg",title="SHE Shero DVD",description = "DVD for concert",
-                   priceType=False, saleStatus=False,approvalStatus=False)
+                   priceType=False, saleStatus=True,approvalStatus=True)
     insertItemInfo(cursor,itemID=3,image="images/item3.jpg",title="Harry Potter Book Series",
                    description="Author: J. K. Rowling. Include The Philosopher's Stone. (1997), \nThe Chamber of Secrets. (1998),"
                    "The Prisoner of Azkaban. (1999),\nThe Goblet of Fire. (2000), The Order of the Phoenix. (2003),\n"
                    "The Half-Blood Prince. (2005),The Deathly Hallows. (2007)",
-                   priceType=False,  saleStatus=True,approvalStatus=True)
+                   priceType=False,  saleStatus=False,approvalStatus=False)
     insertItemInfo(cursor,itemID=4,image="images/item4.jpg",title="The Hunger Games",
                    description="2008 dystopian novel by the American writer Suzanne Collins.",
                    priceType=False, saleStatus=False,approvalStatus=False)
@@ -131,7 +131,20 @@ if __name__  == "__main__":
                    priceType=True,saleStatus=True,approvalStatus=True)
     insertItemInfo(cursor,itemID=6,image="images/item6.jpg",title="Macbook Air 13-Inch",description="Used 2 year, early 2015 version.\n"
                     "1.8GHz dual-core Intel Core i5 processor,\n Turbo Boost up to 2.9GHz,\n128GB SSD storage",
-                   priceType=True,  saleStatus=False,approvalStatus=False)
+                   priceType=True,  saleStatus=True,approvalStatus=True)
+
+    insertItemInfo(cursor,itemID=7,image="images/item7.jpg",title="Woman Eye Glass",description="Plastic frame and lens.\nNon-polarized",
+                   priceType=False,  saleStatus=True,approvalStatus=True)
+    insertItemInfo(cursor,itemID=8,image="images/item8.jpg",title="Wilson Basketball",description="Best combination of grip and durability.\nApproved for play by the NFHS",
+                   priceType=False,  saleStatus=False,approvalStatus=False)
+    insertItemInfo(cursor,itemID=9,image="images/item9.jpg",title="Women Citizen Watch",description="Stainless steel bracelet\nWater resistant to 100 m",
+                   priceType=True,  saleStatus=True,approvalStatus=True)
+    insertItemInfo(cursor,itemID=10,image="images/item10.jpg",title="Jo Malone Perfume",description="2.4 oz Cologne Spray.\nNectarine Blossom & Honey Cologne",
+                   priceType=False,  saleStatus=True,approvalStatus=True)
+    insertItemInfo(cursor,itemID=11,image="images/item11.jpg",title="Bueno Chocolate",description="Delicious kinder milk chocolate.\nTotal 9 Bar\n Weight 1.5 oz per bar",
+                   priceType=False,  saleStatus=True,approvalStatus=True)
+    insertItemInfo(cursor,itemID=12,image="images/item12.jpg",title="Reloaded CD",description="Luhan's first studio album.\nReleased on December 14, 2015",
+                   priceType=False,  saleStatus=True,approvalStatus=True)
     # Insert values to other tables
     print("Insert Item to eByMazon")
     executeScriptsFromFile(cnx,cursor,'insertItem.sql')
