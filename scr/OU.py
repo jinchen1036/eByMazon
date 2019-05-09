@@ -236,9 +236,11 @@ class OU():
     ####################### Friend Info #####################################
     def getFriend(self):
         self.friends=[]
+        self.friendIDs=[]
         qry = ("SELECT friendID,discount,username FROM FriendList JOIN User ON friendID=ID WHERE ownerID = %s;") %self.ID
         self.cursor.execute(qry)
         for info in self.cursor:
+            self.friendIDs.append(info[0])
             self.friends.append({"friendID": info[0],"discount": info[1],"username": info[2]})
         return self.friends
 
@@ -292,6 +294,14 @@ class OU():
             print("Error in add Friend %s" % ERR)
             return False
 
+    def getFriendRequest(self):
+        self.friendReq=[]
+        qry = ("SELECT ownerID,username FROM FriendList JOIN User ON ownerID=ID WHERE friendID = %s;") %self.ID
+        self.cursor.execute(qry)
+        for info in self.cursor:
+            if info[0] not in self.friendIDs:
+                self.friendReq.append({"friendID": info[0],"username": info[1]})
+        return self.friendReq
 
     ####################### Submit Item #####################################
     def submitItem(self):

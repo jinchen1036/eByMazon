@@ -43,7 +43,24 @@
         halign: 'right'
         valign: 'middle'
         text_size: self.size
-
+<friendRequest>:
+    friendID : -1
+    username:""
+    cols: 3
+    padding : 5, 0
+    spacing: 10, 0
+    BlueButton:
+        size_hint: (.35,0.5)
+        text: root.username
+        on_press: root.getFriendMessage()
+    TextInput:
+        id: discount
+        size_hint_x: .15
+        hint_text: '5%'
+    RedButton:
+        size_hint: (.35,0.5)
+        text: "Add"
+        on_press: root.addFriend()
 <friendList>:
     selectedFriend: " Unselected "
     BoxLayout:
@@ -65,6 +82,9 @@
                 orientation: "vertical"
                 size_hint: (0.4,1)
                 pos_hint: {'center_y': .5, 'center_x': 0.8}
+                CenterLabel:
+                    text: "Your Friends"
+                    size_hint_y: 0.1
                 GridLayout:
                     size_hint_y: 0.2
                     cols: 3
@@ -77,12 +97,33 @@
                     CenterLabel:
                         size_hint_x: .15
                 RecycleView:
-                    size_hint_y: 0.8
+                    size_hint_y: 0.6
                     id: friends
                     data: []
                     viewclass: 'friendInfo'
                     VRVL:
-                        default_size: None, dp(50)
+                        default_size: None, dp(40)
+                CenterLabel:
+                    text: "People add you as friend"
+                    size_hint_y: 0.1
+                GridLayout:
+                    size_hint_y: 0.1
+                    cols: 3
+                    CenterLabel:
+                        size_hint_x: .25
+                        text: 'username'
+                    CenterLabel:
+                        size_hint_x: .25
+                        text: 'discount'
+                    CenterLabel:
+                        size_hint_x: .15
+                RecycleView:
+                    size_hint_y: 0.6
+                    id: friendReq
+                    data: []
+                    viewclass: 'friendRequest'
+                    VRVL:
+                        default_size: None, dp(40)
                 BoxLayout:
                     orientation:"vertical"
                     size_hint_y: 0.3
@@ -107,10 +148,7 @@
                             id: discount
                             hint_text: 'discount (%)'
                             size_hint_x: .3
-#                    SkyBlueButton:
-#                        size_hint:(0.5,0.8)
-#                        text:"Refresh List"
-#                        on_press:root.displayFriend()
+
             Vspace:
             BoxLayout:
                 size_hint:(0.7,0.9)

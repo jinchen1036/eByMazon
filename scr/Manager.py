@@ -28,7 +28,7 @@ try:
 
     from scr.ouHome import ouInformation,ouInfo,ouWarning
     from scr.ouItem import ouItem,LoadImage
-    from scr.ouFriend import friendInfo,friendList
+    from scr.ouFriend import friendInfo,friendList,friendRequest
     from scr.ouTransaction import transactionHistory,bought
 
     from scr.suManagement import guApplications,GUapplication,suItemPost,suItemSale,blackTaboo

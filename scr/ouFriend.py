@@ -21,11 +21,23 @@ class friendInfo(GridLayout):
         globalV.root.ids["friendPage"].displayMessage(self.friendID)
         # print(self.friendID)
 
+class friendRequest(GridLayout):
+    def getFriendMessage(self):
+        globalV.root.ids["friendPage"].selectedFriend = self.username
+        globalV.root.ids["friendPage"].displayMessage(self.friendID)
+    def addFriend(self):
+        discount = self.ids['discount'].text
+        discount = 5 if discount =='' else discount
+        globalV.root.ids["friendPage"].addFriend(self.username,discount)
+        globalV.root.ids["friendPage"].ids['friendReq'].data = globalV.ou.getFriendRequest()
+        print("Add")
+
 class friendList(Screen):
     def initInfo(self):
         self.selectedFriend = " Unselected "
         self.ids['chat'].text = ""
         self.ids['friends'].data = globalV.ou.getFriend()
+        self.ids['friendReq'].data = globalV.ou.getFriendRequest()#[{'friendID':1,'username':'xxx'}]
         self.ids['messages'].data = []
         self.clearMsg()
 
