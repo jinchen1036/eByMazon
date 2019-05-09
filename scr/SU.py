@@ -118,6 +118,13 @@ class SU():
         '''
         qry = "UPDATE OUstatus SET status = 3 WHERE ouID = %s;" % ouID
         self.cursor.execute(qry)
+
+
+        self.cursor.execute("SELECT username FROM User WHERE ID = %s" %ouID)
+
+        username = self.cursor.fetchone()[0]
+        self.cursor.execute("INSERT INTO ouBlacklist VALUE ('%s');" % username)
+
         self.cnx.commit()
 
     ########################################## Item Management ###############################################

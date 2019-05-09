@@ -178,7 +178,10 @@ class OU():
         self.cursor.execute(qry)
         for hist in self.cursor:
             if (hist[1] <= datetime.datetime.now()):
-               self.purchaseBidding(hist[0])
+                self.purchaseBidding(hist[0])
+                self.cursor.execute("DELETE FROM BidRecord WHERE itemID = %s;"%hist[0])
+                self.cnx.commit()
+
 
     # def compliantCheck(self):
     #     '''
@@ -468,8 +471,8 @@ class OU():
 
         for hist in self.cursor:
             self.bidHist.append({'itemID':hist[0],'itemTitle': hist[1], 'sellerID': hist[2],
-                                 'sellerName': hist[3],'bidPrice': round(hist[4],2),'bidTime': hist[5].strftime("%m/%d/%Y"),
-                                 'endTime': hist[6].strftime("%m/%d/%Y")})
+                                 'sellerName': hist[3],'bidPrice': round(hist[4],2),'bidTime': hist[5].strftime("%m/%d/%Y, %H:%M"),
+                                 'endTime': hist[6].strftime("%m/%d/%Y, %H:%M")})
         return self.bidHist
 
 
@@ -539,7 +542,7 @@ class OU():
         self.cursor.execute(qry)
 
         # Add warning
-        description = 'Decline Sale of Item %d' % itemID
+        description = 'Decline Sale of Item %d for Buyer %d' % (itemID,buyerID)
         qry = ("INSERT INTO Warning(ouID, warningID, description)  VALUES (%s,%s,'%s');"
                % (self.ID, 2,description))
         self.cursor.execute(qry)

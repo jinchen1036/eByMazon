@@ -93,7 +93,9 @@ class Manager(Screen):
         self.displayItem()          # Display Item
 
     ####################### Display/Search/Sort Homepage Item #############################
-
+    def clearHome(self):
+        self.ids['found'].text = ""
+        self.ids['search_id'].text =""
     def displayItem(self):
         globalV.itemList = globalV.general.popularItem()
         self.itemShow()
@@ -103,6 +105,7 @@ class Manager(Screen):
         self.itemShow()
 
     def searchKeyword(self, word):
+        self.ids['found'].text = ""
         if word == "":
             self.displayItem()
         else:
@@ -148,8 +151,10 @@ class Manager(Screen):
         if self.login:      # logout
             self.login = False
             globalV.ou = None
+            self.clearHome()
             self.displayItem()
         else:               # login
+            self.clearHome()
             self.ids['screenmanager'].current = "loginpage"
 
     def signProfile(self):

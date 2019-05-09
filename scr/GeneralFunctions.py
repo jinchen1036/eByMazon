@@ -128,9 +128,9 @@ class General():
         try:
             qry = "DELETE FROM User WHERE username = '%s';" % username
             self.cursor.execute(qry)
-            self.cursor.execute("INSERT INTO ouBlacklist VALUE ('%s');"%username)
             self.cnx.commit()
             return True
+
         except mysql.connector.Error as ERR:
             print("Error in Remove OU: %s"%ERR)
             return False

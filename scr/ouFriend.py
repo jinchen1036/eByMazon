@@ -59,10 +59,10 @@ class friendList(Screen):
         self.ids['warn'].text=''
 
     def addFriend(self, username, discount):
-        if not globalV.guest.checkUsername(username) or not globalV.general.checkFloat(discount):
-            print(globalV.guest.checkUsername(username))
-            print(globalV.general.checkFloat(discount))
+        if not globalV.general.checkFloat(discount):
             self.ids['warning'].text = 'Please enter valid input for discount'
+        elif globalV.guest.checkUsername(username) != 1 or not globalV.guest.checkUsername(username):
+            self.ids['warning'].text = 'Please enter valid username'
         else:
             if float(discount) < 100:
                 self.clearMsg()
