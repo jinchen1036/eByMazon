@@ -406,22 +406,27 @@ class OU():
         :param singlePrice(float):  price of the item
         :param numBuy(int): number of item want to but
         :param numLeft(int): number of item left after purchase
-        :return:nothing, update in DB
-                add to transaction, change availableNum in FixedPrice, check saleStatus in ItemInfo
+        :return:
+            - True if update in DB; add to transaction, change availableNum in FixedPrice, check saleStatus in ItemInfo
+            - False if duplicate purchase
         """
-        finalPrice = self.calculatePurchase(itemID=itemID, price=singlePrice, numWant=numBuy)[-1]
-        qry = ("INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal,numDeal) "
-               "VALUES (%s,%s,%s,%s,%s)" % (itemID,self.ID, singlePrice,finalPrice,numBuy))
-        self.cursor.execute(qry)
-
-        qry = ("UPDATE FixedPrice SET availableNum = availableNum - %s WHERE itemID = %s;"%(numBuy,itemID))
-        self.cursor.execute(qry)
-
-        if numLeft == 0:
-            qry = ("UPDATE ItemInfo SET saleStatus = FALSE WHERE itemID = %s;" % itemID)
+        try:
+            finalPrice = self.calculatePurchase(itemID=itemID, price=singlePrice, numWant=numBuy)[-1]
+            qry = ("INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal,numDeal) "
+                   "VALUES (%s,%s,%s,%s,%s)" % (itemID,self.ID, singlePrice,finalPrice,numBuy))
             self.cursor.execute(qry)
 
-        self.cnx.commit()
+            qry = ("UPDATE FixedPrice SET availableNum = availableNum - %s WHERE itemID = %s;"%(numBuy,itemID))
+            self.cursor.execute(qry)
+
+            if numLeft == 0:
+                qry = ("UPDATE ItemInfo SET saleStatus = FALSE WHERE itemID = %s;" % itemID)
+                self.cursor.execute(qry)
+
+            self.cnx.commit()
+            return True
+        except mysql.connector.errors.IntegrityError:
+            return False
 
     def purchaseBidding(self, itemID):
         '''

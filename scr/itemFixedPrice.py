@@ -48,9 +48,12 @@ class fixedItem(Screen):
         item = globalV.itemList[self.itemIndex]
         numwant = int(self.ids['purchaseInfo'].text)
         numLeft = self.numberAva - numwant
-        globalV.ou.purchaseFixedPrice(item.itemID, item.price,numwant,numLeft)
+        purchase = globalV.ou.purchaseFixedPrice(item.itemID, item.price,numwant,numLeft)
         self.purchased = False
-        self.ids["purchase"].ids["purchaseManager"].current = "empty"
+        if purchase:
+            self.ids["purchase"].ids["purchaseManager"].current = "empty"
+        else:
+            self.ids["purchase"].ids["purchaseManager"].current = "duplicate"
 
     def cancelPurchase(self):
         self.purchased = False
