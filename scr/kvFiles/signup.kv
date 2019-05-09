@@ -6,6 +6,7 @@
         pos_hint: {'center_y': 0.5, 'center_x': 0.6}
         orientation: "vertical"
         BoxLayout:
+            size_hint_y: 0.3
             orientation: 'horizontal'
             WarningLabel:
                 id: warnApplication
@@ -37,6 +38,7 @@
 
         BoxLayout:
             orientation: 'horizontal'
+            size_hint_y: 0.5
             GridLayout:
                 rows: 7
                 cols: 2
@@ -76,21 +78,25 @@
                 size_hint_x: .5
         BoxLayout:
             orientation: "horizontal"
-            size_hint_x: 0.7
+            size_hint: (0.7,0.2)
             Label:
                 size_hint_x: .2
             OrangeButton:
                 text: "Sign Up"
                 on_press:root.signUp(GUusername.text, GUname.text, GUphone.text,GUemail.text, GUaddress.text,GUState.text,GUcard.text)
                 pos_hint: {'center_y': .7, 'center_x': 0}
-                size_hint_y: .2
+                size_hint_y: .3
             YellowButton:
                 text: "Clear"
                 pos_hint: {'center_y': .7, 'center_x': 0}
-                size_hint_y: .2
+                size_hint_y: .3
                 on_press: root.clearSignup()
             GrayButton:
                 text: "Cancel"
                 on_press:root.tohome()
                 pos_hint: {'center_y': .7, 'center_x': 0}
-                size_hint_y: .2
+                size_hint_y: .3
+
+        BoldLabel:
+            size_hint: (0.8, 0.2)
+            text: "Once your application get approved, your password will be same as your username."
