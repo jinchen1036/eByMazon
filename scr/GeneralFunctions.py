@@ -47,7 +47,11 @@ class General():
     def checkFloat(self, input):
         if input is None or input == '':
             return False
-        return isinstance(input, float) or self.checkInt(input)
+        try:
+            float(input)
+            return True
+        except ValueError:
+            return False
 
 
     ################### Login FUNCTIONS ################
@@ -188,8 +192,10 @@ class General():
         allItem = []
         allItems = self.cursor.fetchall()
         if not allItems:
-            self.cursor.execute("INSERT INTO Notification VALUE ('%s');"% keywords)
-            self.cnx.commit()
+            self.cursor.execute("SELECT EXISTS(SELECT * FROM Notification WHERE keyword = '%s')"% keywords.lower())
+            if self.cursor.fetchone()[0]:
+                self.cursor.execute("INSERT INTO Notification VALUE ('%s');"% keywords.lower())
+                self.cnx.commit()
             return False
         else:
             for info in allItems:

@@ -193,7 +193,7 @@ CREATE TABLE Warning(
   warningID INTEGER, -- 0 for low rating, 1 for 2 complaints, 2 for decline deal, 3 for removed item, 4 for taboo word
   description VARCHAR (128),
   warnTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---   PRIMARY KEY (warnTime),
+  PRIMARY KEY (ouID, warningID,description),
   FOREIGN KEY (ouID) REFERENCES OU(ouID) ON DELETE CASCADE
 );
 

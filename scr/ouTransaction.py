@@ -25,9 +25,7 @@ class bought(GridLayout):
         globalV.root.ids['history'].getTransaction()
 
     def complain(self):
-        if self.complained:
-            self.ids['complain'].current = "after"
-        else:
+        if not self.complained:
             print('Complain')
             content = complain(toHistory=self.dismiss_popup, submitComplain=self.submitComplain)
             self._popup = Popup(title="Submit Compliant", content=content,
@@ -35,9 +33,7 @@ class bought(GridLayout):
             self._popup.open()
 
     def rate(self):
-        if self.rated:
-            self.ids['rating'].current = "after"
-        else:
+        if not self.rated:
             content = rate(toHistory=self.dismiss_popup, submitRate=self.submitRate)
             self._popup = Popup(title="Submit Rate", content=content,
                                 size_hint=(0.8, 0.8))
@@ -47,13 +43,11 @@ class bought(GridLayout):
         if description != "":
             print(description)
             globalV.ou.submitCompliant(self.itemID,description)
-            self.ids['complain'].current = "after"
             self.dismiss_popup()
 
     def submitRate(self,rating, comment):
         if comment != "":
             globalV.ou.submitRating(self.itemID, rating,comment)
-            self.ids['rating'].current = "after"
             self.dismiss_popup()
 
 

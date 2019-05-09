@@ -22,38 +22,19 @@
     CenterLabel:
         text: root.time
 
-    BoxLayout:
-        ScreenManager:
-            id: rating
-            Screen:
-                name: 'init'
-                GreenButton:
-                    size_hint:(0.5,0.5)
-                    pos_hint: {'center_x':0.5,'center_y':0.5}
-                    disabled: 0 if root.ship else 1
-                    text: 'Rate'
-                    on_press: root.rate()
-            Screen:
-                name: 'after'
-                CenterLabel:
-                    id: rateValue
-                    text: 'Already Rate'
+    GreenButton:
+        size_hint:(0.5,0.5)
+        pos_hint: {'center_x':0.5,'center_y':0.5}
+        disabled: 0 if root.ship else 1
+        text: 'Already Rate' if root.rated else 'Rate'
+        on_press: root.rate()
 
-    BoxLayout:
-        ScreenManager:
-            id: complain
-            Screen:
-                name: 'init'
-                LightRedButton:
-                    size_hint:(0.5,0.5)
-                    pos_hint: {'center_x':0.5,'center_y':0.5}
-                    disabled: 0 if root.ship else 1
-                    text: 'Complain'
-                    on_press: root.complain()
-            Screen:
-                name: 'after'
-                CenterLabel:
-                    text: 'Complain Filed'
+    LightRedButton:
+        size_hint:(0.5,0.5)
+        pos_hint: {'center_x':0.5,'center_y':0.5}
+        disabled: 0 if root.ship else 1
+        text: 'Already Complain' if root.complained else 'Complain'
+        on_press: root.complain()
 
 <bid@BoxLayout>:
     itemID:0

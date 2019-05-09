@@ -122,7 +122,7 @@ class editProfile(Screen):
 
         if not (globalV.general.checkEmpty(name) or globalV.guest.checkState(state.upper())):
             self.valid = True
-        elif not globalV.general.checkEmpty(state)  or len(card) != 16 or len(phone) != 10:
+        elif not globalV.guest.checkState(state)  or len(card) != 16 or len(phone) != 10:
             self.valid = True
         elif not(globalV.general.checkInt(card) or globalV.general.checkInt(phone)):
             self.valid = True

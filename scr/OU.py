@@ -241,7 +241,7 @@ class OU():
         self.cursor.execute(qry)
         for info in self.cursor:
             self.friendIDs.append(info[0])
-            self.friends.append({"friendID": info[0],"discount": info[1],"username": info[2]})
+            self.friends.append({"friendID": info[0],"discount": round(info[1],2),"username": info[2]})
         return self.friends
 
     def getFriendMessage(self,friendID):
@@ -610,7 +610,7 @@ class OU():
 
             if lowRating >= 3 or highRating >= 3:
                 des = "Give Too Many High Rating" if highRating >= 3 else "Give Too Many Low Rating"
-                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 0, %s);" % (self.ID,des))
+                qry = ("REPLACE INTO Warning(ouID, warningID, description) VALUES (%s, 0, '%s');" % (self.ID,des))
                 self.cursor.execute(qry)
                 self.cnx.commit()
 

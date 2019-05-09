@@ -50,7 +50,7 @@ INSERT INTO Taboo(word) VALUES ('subway'),('CSC'),('TG'),('super'),('winner');
 INSERT INTO ouBlacklist VALUES ('block123'),('test123');
 
 
-INSERT INTO Notification VALUES ('headphone'),('Phone'),('ink');
+INSERT INTO Notification VALUES ('headphone'),('phone'),('ink');
 
 INSERT INTO searchKeyword(keyword, frequency) VALUES ('Chocolate', 3),('watch', 6),('CD', 8),('Computer', 7);
 -- INSERT INTO Warning(ouID, warningID,description) VALUES (3, 0,'Low Rating'), (2, 1,'2 compliants');

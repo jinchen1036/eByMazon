@@ -113,8 +113,10 @@ class Manager(Screen):
 
             if globalV.itemList:
                 self.sortItem(self.sort)
+                self.ids['found'].text = ""
             else:
                 self.ids['homeItem'].data = []
+                self.ids['found'].text = "No result found for %s" % word
                 print("No result for %s" % word)
 
     def sortItem(self, sortType):
