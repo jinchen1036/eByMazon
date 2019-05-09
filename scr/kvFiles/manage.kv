@@ -17,6 +17,7 @@
 #:include kvFiles/suTransactionHistory.kv
 #:include kvFiles/tabooPop.kv
 #:include kvFiles/notificationPop.kv
+#:include kvFiles/editProfile.kv
 <Manager>:
     login: False
     userID: None
@@ -265,7 +266,7 @@
                             id: ouStatusTime
                         BlueButton:
                             text: "Edit Profile"
-                            on_press: root.editInfo()
+                            on_press: root.toEditProfile()
                         YellowButton:
                             text: "Change Password"
                             on_press: root.getPassword()
@@ -296,56 +297,10 @@
                             on_press: root.toWarning()
                         Label:
                             size_hint_y: 0.1
-        Screen:
+        editProfile:
+            id: editProfile
             name: "editPage"
-            title: "to edit profile"
-            BoxLayout:
-                orientation: 'vertical'
-                size_hint: [0.8,0.8]
-                pos_hint: {'center_y': .3, 'center_x': 0.5}
-                GridLayout:
-                    cols: 2
-                    CenterLabel:
-                        text: 'Name'
-                    InfoInput:
-                        id: editName
-                    centerBLabel:
-                        text: 'Phone number'
-                    InfoInput:
-                        id: editPhone
-                    centerBLabel:
-                        text: 'Email'
-                    InfoInput:
-                        id: editEmail
-                    centerBLabel:
-                        text: 'Address'
-                    InfoInput:
-                        id: editAddress
-                    centerBLabel:
-                        text: 'State'
-                    InfoInput:
-                        id: editState
-                    centerBLabel:
-                        text: 'Card Number'
-                    InfoInput:
-                        id: editCard
-                BoxLayout:
-                    orientation: "horizontal"
-                    spacing: 50
-                    Label:
-                        size_hint_x: 0.2
-                    GrayButton:
-                        pos_hint: {'center_y': .7, 'center_x': 0.5}
-                        size_hint:(None, .25)
-                        width: 500
-                        text: "Go back"
-                        on_press: root.toProfile()
-                    OrangeButton:
-                        pos_hint: {'center_y': .7, 'center_x': 0.5}
-                        size_hint:(None, .25)
-                        text: "Change Info"
-                        width: 500
-                        on_press: root.changeInfo(editName.text,editCard.text,editEmail.text,editPhone.text,editAddress.text,editState.text)
+            title: "Edit profile"
         friendList:
             id: friendPage
             name: "friendPage"

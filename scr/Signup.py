@@ -89,3 +89,59 @@ class Signup(Screen):
                 self.ids['warnApplication'].text = ""
                 self.clearSignup()
                 globalV.root.tohome()
+
+class editProfile(Screen):
+    def toProfile(self):
+        globalV.root.toProfile()
+    def editInfo(self):
+        self.ids['editName'].text =  globalV.ou.name
+        self.ids['editPhone'].text = globalV.ou.phone
+        self.ids['editEmail'].text = globalV.ou.email
+        self.ids['editCard'].text = globalV.ou.card
+        self.ids['editAddress'].text = globalV.ou.address
+        self.ids['editState'].text = globalV.ou.state
+        self.valid = False
+
+    def checkName(self,name):
+        self.nameV = globalV.general.checkEmpty(name)
+
+    def checkState(self,state):
+        self.stateV = globalV.guest.checkState(state.upper())
+
+    def checkCard(self,card):
+        self.cardV = globalV.general.checkInt(card)
+        if self.cardV:
+            self.cardV = (len(card) == 16)
+    def checkPhone(self,phone):
+        self.phoneV = globalV.general.checkInt(phone)
+        if self.phoneV:
+            self.phoneV = (len(phone) == 10)
+
+    def changeInfo(self,name, card, email, phone, address, state):
+        # Need Check....... inputs, add warning label
+
+        if not (globalV.general.checkEmpty(name) or globalV.guest.checkState(state.upper())):
+            self.valid = True
+        elif not globalV.general.checkEmpty(state)  or len(card) != 16 or len(phone) != 10:
+            self.valid = True
+        elif not(globalV.general.checkInt(card) or globalV.general.checkInt(phone)):
+            self.valid = True
+        else:
+            found1 = globalV.root.replaceTaboo(name)
+            found2 = globalV.root.replaceTaboo(address)
+
+            tabooFound = found1 or found2
+            if tabooFound:
+                replaceWord = ''
+                if found1:
+                    self.ids['editName'].text = ""
+                    replaceWord += "Taboo in name: %s \n" % found1
+                if found2:
+                    self.ids['editAddress'].text = ""
+                    replaceWord += "Taboo in address: %s \n" % found2
+
+                globalV.root.toTaboo(replaceWord)
+                globalV.ou.addWarning(warningID=4, description='Taboo word in edit profile info')
+            else:
+                globalV.ou.updateOUInfo(name, card, email, phone, address, state)
+                self.toProfile()

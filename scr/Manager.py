@@ -20,7 +20,7 @@ try:
 
     # KV page function
     from scr.Login import appealPop,Login
-    from scr.Signup import Signup
+    from scr.Signup import Signup, editProfile
 
     from scr.itemFixedPrice import fixedItem
     from scr.itemBidding import biddingItem
@@ -177,14 +177,7 @@ class Manager(Screen):
         self.ids['ouStatusTime'].text = "Status Start Time: {:%b %d, %Y}".format(globalV.ou.statusTime)
         self.ids['screenmanager'].current = "profilePage"
 
-    def editInfo(self):
-        self.ids['editName'].text =  globalV.ou.name
-        self.ids['editPhone'].text = globalV.ou.phone
-        self.ids['editEmail'].text = globalV.ou.email
-        self.ids['editCard'].text = globalV.ou.card
-        self.ids['editAddress'].text = globalV.ou.address
-        self.ids['editState'].text = globalV.ou.state
-        self.ids['screenmanager'].current = "editPage"
+
 
     ###################### Change Password and Ou Info ###################
     def getPassword(self):
@@ -200,11 +193,6 @@ class Manager(Screen):
         # Need Check inputs, add warning label
         globalV.ou.changePassword(newpassword)
         self.dismiss_popup()
-
-    def changeInfo(self,name, card, email, phone, address, state):
-        # Need Check....... inputs, add warning label
-        globalV.ou.updateOUInfo(name, card, email, phone, address, state)
-        self.toProfile()
 
     ###################### To Item Page from homepage ###################
     def checkDisable(self, itemID):
@@ -275,6 +263,11 @@ class Manager(Screen):
     def tosignup(self):
         self.ids['signup'].clearSignup()
         self.ids['screenmanager'].current = "signupPage"
+
+    def toEditProfile(self):
+        self.ids['editProfile'].editInfo()
+        self.ids['screenmanager'].current = "editPage"
+
     def toguApply(self):
         self.ids['guApply'].getApplications()
         self.ids['screenmanager'].current = "GUapplication"
