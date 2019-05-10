@@ -165,10 +165,14 @@ class General():
               "LEFT JOIN searchKeyword ON title LIKE CONCAT('%', keyword ,'%') "
               "WHERE saleStatus = TRUE ORDER BY searchKeyword.frequency DESC, ItemView.frequency DESC;")
         self.cursor.execute(qry)
+        itemIds =[]
         allItem = []
         allItems = self.cursor.fetchall()
         for info in allItems:
-            allItem.append(Item(cnx=self.cnx,cursor=self.cursor,itemID=info[0]))
+
+            if info[0] not in itemIds:
+                allItem.append(Item(cnx=self.cnx,cursor=self.cursor,itemID=info[0]))
+            itemIds.append(info[0])
         return allItem
 
     def searchItem(self,keywords):
@@ -193,7 +197,7 @@ class General():
         allItems = self.cursor.fetchall()
         if not allItems:
             self.cursor.execute("SELECT EXISTS(SELECT * FROM Notification WHERE keyword = '%s')"% keywords.lower())
-            if self.cursor.fetchone()[0]:
+            if not self.cursor.fetchone()[0]:
                 self.cursor.execute("INSERT INTO Notification VALUE ('%s');"% keywords.lower())
                 self.cnx.commit()
             return False

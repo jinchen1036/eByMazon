@@ -33,6 +33,7 @@ class Login(Screen):
     def clearLogin(self):
         self.ids['loginUsername'].text = ""
         self.ids['loginPassword'].text = ""
+        self.ids['loginCheck'].text = ""
         self.newUser = False
 
     def cancelLogin(self):
