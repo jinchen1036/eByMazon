@@ -12,7 +12,8 @@ INSERT INTO ItemView(itemID,frequency) VALUES
 INSERT INTO FixedPrice(itemID, price, availableNum) VALUES
 (1,15.99,10),(2,17.79,30),(3,7.99,5),(4,12.50,20),(7,213.22,5),(8,57.50,50),(10,78.99,20),(11,9.99,100),(12,17.77,30);
 
-INSERT INTO ItemBid(itemID, startPrice) VALUES (5,300),(6,800),(9,330);
+INSERT INTO ItemBid(itemID, startPrice,endDay) VALUES
+(5,300,'2019-05-15 13:00:00'),(6,800,'2019-05-14 11:00:00'),(9,330,'2019-05-15 15:00:00');
 
 INSERT INTO BidRecord (itemID,bidderID, bidPrice) VALUES
 (5,4,320),(5,5,330),(5,3,350),(6,7,850),(6,3,900),(9,3,340),(9,5,350),(9,4,360),(9,6,500);
@@ -45,10 +46,9 @@ INSERT INTO ItemRate(itemID,raterID, rating,description) VALUES
 -- INSERT INTO Category(category, itemID) VALUES
 -- ('Music',1),('Music',2),('Education',3),('Education',4),('Electronic',5),('Electronic',6);
 
-INSERT INTO Taboo(word) VALUES ('subway'),('CSC'),('TG'),('super'),('winner');
+INSERT INTO Taboo(word) VALUES ('xswl'),('CSC'),('nmsl'),('super'),('winner'),('OK'),('ccny');
 
 INSERT INTO ouBlacklist VALUES ('block123'),('test123');
-
 
 INSERT INTO Notification VALUES ('headphone'),('phone'),('ink');
 
