@@ -113,7 +113,7 @@
             padding: 20,20
             BoxLayout:
                 orientation: 'vertical'
-                size_hint:(0.3,1)
+                size_hint:(0.4,1)
                 LeftLabel:
                     size_hint_y: 0.2
                     text: "Ratings:"
@@ -123,13 +123,13 @@
                     size_hint_y: 0.1
                     cols: 3
                     CenterLabel:
-                        size_hint_x: 0.2
+                        size_hint_x: 0.15
                         text: "Rater"
                     CenterLabel:
-                        size_hint_x: 0.2
+                        size_hint_x: 0.15
                         text: "Rating"
                     CenterLabel:
-                        size_hint_x: 0.6
+                        size_hint_x: 0.7
                         text: "Comment"
                 RecycleView:
                     size_hint_y: 0.7
@@ -141,7 +141,7 @@
 
             BoxLayout:
                 orientation: "vertical"
-                size_hint: (0.7,1)
+                size_hint: (0.6,1)
                 FixedPurchase:
                     id: purchase
                     size_hint_y: 0.9
@@ -171,11 +171,20 @@
     comment: ""
     cols: 3
     CenterLabel:
-        size_hint_x: 0.2
+        size_hint_x: 0.15
         text: root.rater
     CenterLabel:
-        size_hint_x: 0.2
+        size_hint_x: 0.15
         text: str(root.rating)
     CenterLabel:
-        size_hint_x: 0.6
+        size_hint_x: 0.7
         text: root.comment
+        multiline: True
+    # ScrollView:
+    #     size_hint_x: 0.7
+        
+    #     CenterLabel:
+    #         text_size: None, self.height  # Set the text wrap box height
+    #         size_hint_x: None
+    #         text: root.comment
+    #         width: self.texture_size[0]

@@ -17,6 +17,7 @@
                 size: self.size
 
         Image:
+            size_hint_x:0.3
             texture: root.image
             y: self.parent.y
             x: self.parent.x
@@ -24,7 +25,7 @@
             allow_stretch: True
         BoxLayout:
             pos_hint: {'center_y': 0.5, 'center_x': 0.7}
-            size_hint_x:0.6
+            size_hint_x:0.5
             orientation: "vertical"
             BoldLabel:
                 size_hint_y: 0.2
@@ -48,14 +49,14 @@
                     font_size: 14
         BoxLayout:
             pos_hint: {'center_y': 0.5, 'center_x': 0.7}
-            size_hint_x:0.4
+            size_hint_x:0.5
             orientation: "vertical"
             Label:
                 size_hint_y: 0.2
             ProfileInput:
                 id: justification
                 multiline: True
-                size_hint: (0.7,0.5)
+                size_hint: (0.9,0.5)
                 pos_hint: {'center_y': 0.5, 'center_x': 0.5}
                 hint_text: "Enter Justification, if decline item."
             BoxLayout:

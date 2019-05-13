@@ -32,6 +32,7 @@
                 text: "Email:  " + root.ouEmail
             LeftLabel:
                 text: "Card Info:  " + root.ouCard
+                font_size: 29
             LeftLabel:
                 text: "Address:  " + root.ouAddress
             LeftLabel:
@@ -40,7 +41,7 @@
         BoxLayout:
             orientation: "vertical"
             padding: 150, 0, 400, 0
-            size_hint_x: (0.8)
+            # size_hint_x: (0.8)
             LeftLabel:
                 text: "Status: " + root.ouStatus
             LeftLabel:
@@ -80,11 +81,11 @@
                 size_hint: (0.3,0.6)
                 pos_hint:{'center_x':0.5,'center_y':0.5}
                 GreenButton:
-                    size_hint_x:0.3
+                    size_hint_x:0.5
                     text: 'Accept'
                     on_press: root.acceptAppeal()
                 LightRedButton:
-                    size_hint_x:0.3
+                    size_hint_x:0.5
                     text: 'Decline'
                     on_press: root.declineAppeal()
 
