@@ -64,7 +64,7 @@ class friendList(Screen):
         elif globalV.guest.checkUsername(username) != 1 or not globalV.guest.checkUsername(username):
             self.ids['warning'].text = 'Please enter valid username'
         else:
-            if float(discount) < 100:
+            if 0 < float(discount) < 100:
                 self.clearMsg()
                 friendID = globalV.general.getID(username)
                 globalV.ou.addFriend(friendID, round(float(discount)/100,2))
