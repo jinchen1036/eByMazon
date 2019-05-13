@@ -47,17 +47,20 @@ class blackTaboo(Screen):
     def addTabooWord(self):
         # check input is not empty
         if globalV.guest.checkInput(self.ids['tabooWord'].text):
-            self.warnShow = True
+            self.ids['warnShow'].text = "Invalid Input - cannot have empty taboo"
         else:
-            globalV.su.addTaboo(self.ids['tabooWord'].text)
-            self.ids['tabooWord'].text = ""
-            self.warnShow = False
-            globalV.root.ids['blackTaboo'].blackListData()
+            add = globalV.su.addTaboo(self.ids['tabooWord'].text)
+            if add:
+                globalV.root.ids['blackTaboo'].blackListData()
+            else:
+                self.ids['warnShow'].text = "Invalid Input - Already in the list"
 
     def blackListData(self):
         self.ids['tabooList'].data = globalV.su.getTabooList()
         self.ids['userBlackList'].data = globalV.su.getUserBlackList()
         self.ids['itemBlackList'].data = globalV.su.getItemBlackList()
+        self.ids['warnShow'].text = ""
+        self.ids['tabooWord'].text = ""
 
 
 

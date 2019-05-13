@@ -140,11 +140,14 @@ class ouItem(Screen):
 
         else:
             self.ids['bidItemWarning'].text = ""
-            globalV.ou.submitBiddingItem(image=self.image,title=title,description=description,
+            submitted = globalV.ou.submitBiddingItem(image=self.image,title=title,description=description,
                                  usedStatus=self.isUsed,startPrice=float(itemPrice),endDay=int(itemBidDay))
-            print("submitted")
-            self.clearBidItemInput()
-            self.backPostItemPage()
+            if submitted:
+                print("submitted")
+                self.clearBidItemInput()
+                self.backPostItemPage()
+            else:
+                self.ids['bidItemWarning'].text ="Fail to Submit!!!\nInvaild Image."
 
     def submitFixedItem(self, title, description, itemPrice, number_available):
         found1 = globalV.root.replaceTaboo(title)
@@ -180,9 +183,11 @@ class ouItem(Screen):
             \nNumber available should be integer."
         else:
             self.ids['fixedItemWarning'].text = ""
-            globalV.ou.submitFixedPriceItem(image=self.image, title=title, description=description,
+            submitted = globalV.ou.submitFixedPriceItem(image=self.image, title=title, description=description,
                                     price=float(itemPrice), available=int(number_available))
-
-            print("submitted")
-            self.clearFixedItemInput()
-            self.backPostItemPage()
+            if submitted:
+                print("submitted")
+                self.clearFixedItemInput()
+                self.backPostItemPage()
+            else:
+                self.ids['fixedItemWarning'].text = "Fail to Submit!!!\nInvaild Image."

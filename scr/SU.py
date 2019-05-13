@@ -257,16 +257,20 @@ class SU():
         # Return list of dict{'taboo'} in the taboo DB
         self.cursor.execute("SELECT * FROM Taboo;")
         self.tabooList = []
-
+        tabooDict = []
         for taboo in self.cursor:
-            self.tabooList.append({'taboo': taboo[0]})
-        return self.tabooList
+            self.tabooList.append(taboo[0].upper())
+            tabooDict.append({'taboo': taboo[0]})
+        return tabooDict
 
     def addTaboo(self, taboo):
         '''
         :param taboo: a string of taboo word
         :return: True if insert sucessfully, False if insert false
         '''
+        if taboo.upper() in self.tabooList:
+            return False
+
         qry = ("INSERT INTO Taboo(word) VALUES ('%s');" % taboo)
         try:
             self.cursor.execute(qry)

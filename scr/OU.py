@@ -244,7 +244,7 @@ class OU():
         self.cursor.execute(qry)
         for info in self.cursor:
             self.friendIDs.append(info[0])
-            self.friends.append({"friendID": info[0],"discount": round(info[1],2),"username": info[2]})
+            self.friends.append({"friendID": info[0],"discount": int(info[1]*100),"username": info[2]})
         return self.friends
 
     def getFriendMessage(self,friendID):
@@ -288,10 +288,18 @@ class OU():
     def addFriend(self,friendID,discount = 0.05):
         # add friend relation to DB,
         # each friend can have customer discount, if not provide, default is 5%
-        qry = "INSERT INTO FriendList(ownerID, friendID, discount) VALUES (%s,%s,%s);"
+
         try:
-            self.cursor.execute(qry, (self.ID, friendID,discount))
-            self.cnx.commit()
+            if friendID in self.friendIDs:  # check if already add friend
+                qry = "UPDATE FriendList SET discount = %s WHERE ownerID = %s AND friendID = %s;"
+                self.cursor.execute(qry, (discount, self.ID, friendID))
+                self.cnx.commit()
+
+
+            else:
+                qry = "INSERT INTO FriendList(ownerID, friendID, discount) VALUES (%s,%s,%s);"
+                self.cursor.execute(qry, (self.ID, friendID,discount))
+                self.cnx.commit()
             return True
         except mysql.connector.errors as ERR:
             print("Error in add Friend %s" % ERR)
@@ -346,7 +354,8 @@ class OU():
             qry = "INSERT INTO ItemBid(itemID, startPrice,usedStatus,endDay) VALUE (%s,%s,%s,%s);"
             self.cursor.execute(qry, (int(itemID), float(startPrice), usedStatus, endDay))
             self.cnx.commit()
-        except mysql.connector.errors as ERR:
+            return True
+        except Exception as ERR:
             print(ERR)
             return False
 
@@ -363,7 +372,8 @@ class OU():
             qry = "INSERT INTO FixedPrice(itemID, price,availableNum) VALUE (%s,%s,%s);"
             self.cursor.execute(qry , (int(itemID), float(price), int(available)))
             self.cnx.commit()
-        except mysql.connector.errors as ERR:
+            return True
+        except Exception as ERR:
             print(ERR)
             return False
 

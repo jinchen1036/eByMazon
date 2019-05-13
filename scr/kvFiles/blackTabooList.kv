@@ -28,7 +28,7 @@
 
 <blackTaboo>:
 #    name: "GUapplication"
-    warnShow: False
+#    warnShow: False
     BoxLayout:
         BoxLayout:
             orientation: "vertical"
@@ -65,7 +65,8 @@
                         orientation:"vertical"
                         padding: 0,0,0,30
                         CenterLabel:
-                            text: "Empty value invalid" if root.warnShow else ""
+                            id: warnShow
+#                            text: "Empty value invalid" if root.warnShow else ""
                         ProfileInput:
                             size_hint_x: 0.7
                             id: tabooWord
@@ -79,7 +80,7 @@
                     BoxLayout:
                         size_hint_y:0.2
                         BoldLabel:
-                            text: "User BlackList"
+                            text: "Username BlackList"
                             font_size: 50
                     RecycleView:
                         size_hint_y: 0.7

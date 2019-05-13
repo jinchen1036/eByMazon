@@ -73,18 +73,18 @@
                     size_hint_y: 0.7
                     text: root.message
                 CenterLabel:
-                    size_hint_y: 0.3
+                    size_hint_y: 0.4
                     text: "Appeal Time: "+ root.time
             BoxLayout:
                 orientation: "vertical"
                 size_hint: (0.3,0.6)
                 pos_hint:{'center_x':0.5,'center_y':0.5}
                 GreenButton:
-                    size_hint_x:0.3
+                    size_hint_x:0.4
                     text: 'Accept'
                     on_press: root.acceptAppeal()
                 LightRedButton:
-                    size_hint_x:0.3
+                    size_hint_x:0.4
                     text: 'Decline'
                     on_press: root.declineAppeal()
 
