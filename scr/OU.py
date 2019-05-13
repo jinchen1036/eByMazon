@@ -321,9 +321,11 @@ class OU():
             # itemID = self.cursor.fetclone()
 
             return iID
+
         except mysql.connector.errors as ERR:
             print(ERR)
             return False
+
 
     def insertView(self, itemID):
         qry = "INSERT INTO ItemView(itemID) VALUE (%s);" % int(itemID)
@@ -346,9 +348,13 @@ class OU():
             qry = "INSERT INTO ItemBid(itemID, startPrice,usedStatus,endDay) VALUE (%s,%s,%s,%s);"
             self.cursor.execute(qry, (int(itemID), float(startPrice), usedStatus, endDay))
             self.cnx.commit()
-        except mysql.connector.errors as ERR:
-            print(ERR)
+        except Exception:
+            print('submit failded')
             return False
+        # except mysql.connector.errors as ERR:
+        #     print(ERR)
+        #     return False
+
 
     def submitFixedPriceItem(self,image, title, description, price,available):
         try:
@@ -363,9 +369,13 @@ class OU():
             qry = "INSERT INTO FixedPrice(itemID, price,availableNum) VALUE (%s,%s,%s);"
             self.cursor.execute(qry , (int(itemID), float(price), int(available)))
             self.cnx.commit()
-        except mysql.connector.errors as ERR:
-            print(ERR)
+        except Exception:
+            print('submit failded')
             return False
+        # except mysql.connector.errors as ERR:
+        #     print(ERR)
+        #     return False
+
 
 
     ####################### Purchase Item #####################################
