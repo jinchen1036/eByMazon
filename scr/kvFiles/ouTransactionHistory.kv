@@ -10,7 +10,7 @@
     complained: False
     rated: False
 
-    cols: 8
+    cols: 7
     CenterLabel:
         text: root.itemTitle
     CenterLabel:
@@ -23,14 +23,14 @@
         text: root.time
 
     GreenButton:
-        size_hint:(0.5,0.5)
+        size_hint:(0.8,0.5)
         pos_hint: {'center_x':0.5,'center_y':0.5}
         disabled: 0 if root.ship else 1
         text: 'Already Rate' if root.rated else 'Rate'
         on_press: root.rate()
 
     LightRedButton:
-        size_hint:(0.5,0.5)
+        size_hint:(0.8,0.5)
         pos_hint: {'center_x':0.5,'center_y':0.5}
         disabled: 0 if root.ship else 1
         text: 'Already Complain' if root.complained else 'Complain'
@@ -231,8 +231,11 @@
                 text: 'Ship Status'
             BoldLabel:
                 text: 'Deal Date'
-            BoxLayout:
-            BoxLayout:
+            Label:
+                size_hint_x: 0.8
+            Label:
+                size_hint_x: 0.8
+
 
 
         RecycleView:

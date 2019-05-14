@@ -74,6 +74,10 @@
                 text: "Your bid is recorded.\nWith bid price %s\n estimate final price %s" %(str(root.bidPrice),str(root.finalPrice))
                 opacity: 1 if root.purchased else 0
         Screen:
+            name: "bidWarn"
+            BoldLabel:
+                text: "You already bid this item"
+        Screen:
             name: "cancel"
             BoldLabel:
                 text: "You have cancel the Bidding"

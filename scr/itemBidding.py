@@ -48,9 +48,12 @@ class biddingItem(Screen):
 
     def bidding(self):
         # purchase Item
-        globalV.ou.bidding(self.itemID,float(self.ids["purchaseInfo"].text) )
+        bid = globalV.ou.bidding(self.itemID,float(self.ids["purchaseInfo"].text) )
         self.bid = False
-        self.ids["purchase"].ids["purchaseManager"].current = "empty"
+        if bid:
+            self.ids["purchase"].ids["purchaseManager"].current = "empty"
+        else:
+            self.ids["purchase"].ids["purchaseManager"].current = "bidWarn"
 
     def cancelbid(self):
         self.bid = False

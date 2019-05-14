@@ -418,9 +418,14 @@ class OU():
     def bidding(self,itemID, price):
         # record bidding in BidRecord
         # bidderID = self.ID
-        qry = ("INSERT INTO BidRecord(itemID, bidderID, bidPrice) VALUES (%s,%s,%s);" %(itemID,self.ID,price))
+        qry = ("SELECT EXISTS(SELECT * FROM BidRecord WHERE itemID = %s AND bidderID = %s );" % (itemID, self.ID))
         self.cursor.execute(qry)
-        self.cnx.commit()
+        if not self.cursor.fetchone()[0]:
+            qry = ("INSERT INTO BidRecord(itemID, bidderID, bidPrice) VALUES (%s,%s,%s);" %(itemID,self.ID,price))
+            self.cursor.execute(qry)
+            self.cnx.commit()
+            return True
+        return False
 
 
     def purchaseFixedPrice(self, itemID, singlePrice, numBuy,numLeft):
