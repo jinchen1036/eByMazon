@@ -354,9 +354,8 @@ class OU():
             qry = "INSERT INTO ItemBid(itemID, startPrice,usedStatus,endDay) VALUE (%s,%s,%s,%s);"
             self.cursor.execute(qry, (int(itemID), float(startPrice), usedStatus, endDay))
             self.cnx.commit()
-            return True
         except Exception as ERR:
-            print(ERR)
+            print('submit failded by error : %s' %ERR)
             return False
 
     def submitFixedPriceItem(self,image, title, description, price,available):
@@ -374,7 +373,7 @@ class OU():
             self.cnx.commit()
             return True
         except Exception as ERR:
-            print(ERR)
+            print('submit failded by error : %s' % ERR)
             return False
 
 
