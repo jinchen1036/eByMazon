@@ -324,6 +324,7 @@ class Manager(Screen):
         '''
 
         taboos = globalV.general.findtaboo(word)
+        result = ""
         if not taboos:
             return False
       
