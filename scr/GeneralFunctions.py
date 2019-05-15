@@ -100,12 +100,12 @@ class General():
         #  check if warn not exist
         if count == 0:
             qry =("SELECT count(*) FROM Complaint NATURAL JOIN ItemOwner JOIN OUstatus ON ownerID = ouID "
-                  "WHERE justified = TRUE AND ownerID = %s AND compliantTime > statusTime;" % ID)
+                  "WHERE justified = TRUE AND ownerID = %s;" % ID)
             self.cursor.execute(qry)
             count = self.cursor.fetchone()[0]
-            des = "Received %d Complain" % count
+            des = 'Received %d Complain' % count
             if count >= 2:
-                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 1, '%s');" % (ID,des))
+                qry = ("INSERT INTO Warning(ouID, warningID, description) VALUES (%s, 1, '%s');" % (ID, des))
                 self.cursor.execute(qry)
                 self.cnx.commit()
 

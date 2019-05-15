@@ -22,9 +22,11 @@ import datetime
 try:
     from scr.OU import OU
     from scr.Item import Item
+    from scr.GlobalVariable import globalV
 except ModuleNotFoundError:
     from OU import OU
     from Item import Item
+    from GlobalVariable import globalV
 
 class SU():
     def __init__(self,cnx, cursor,suID):
@@ -83,6 +85,8 @@ class SU():
         self.ous =[]
         ids = self.cursor.fetchall()
         for id in ids:
+
+            globalV.general.compliantCheck(id[0])
             self.ous.append(OU(cnx=self.cnx, cursor=self.cursor, ouID=id[0]))
         return self.ous
 
@@ -167,7 +171,7 @@ class SU():
         self.cnx.commit()
 
 
-    def removeItem(self,itemID, justification='item removed By SU'):
+    def removeItem(self,itemID, justification=' removed By SU'):
         '''
         :param itemID: item to be remove
         :param justification: note from su reason, default: 'item removed By SU'
@@ -179,7 +183,7 @@ class SU():
         item = Item(self.cnx, self.cursor, itemID)
         # add warning
         self.cursor.execute("INSERT INTO Warning(ouID,warningID,description) VALUE (%s,3,'%s')"
-                            % (item.owner,str(itemID)+'_'+justification))
+                            % (item.owner,'Item ID '+str(itemID)+justification))
         # Blacklist Item
         self.cursor.execute("INSERT INTO itemBlackList(itemID,title) VALUE (%s,'%s');"
                             % (item.itemID,item.title))

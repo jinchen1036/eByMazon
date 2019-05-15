@@ -19,7 +19,7 @@ INSERT INTO BidRecord (itemID,bidderID, bidPrice) VALUES
 (5,4,320),(5,5,330),(5,3,350),(6,7,850),(6,3,900),(9,3,340),(9,5,350),(9,4,360),(9,6,500);
 
 INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal, numDeal, shippingStatus) VALUES
-(1,3,15.99,51.75,3,FALSE ),
+(1,3,15.99,51.75,3,TRUE ),
 (12,3,17.77,19.17,1,TRUE ),
 (10,3,78.99, 170.42,2,TRUE),
 (11,3, 9.99, 107.76,10,FALSE ),
@@ -35,7 +35,7 @@ INSERT INTO Transaction(itemID, buyerID, singlePrice, priceTotal, numDeal, shipp
 
 
 INSERT INTO Complaint(itemID, complainerID, description, justified) VALUES
-(1,6,'Arrive Too Late',TRUE),(2,5,'Broken Item',FALSE),(10,4,'Wrong Shipment',FALSE);
+(1,6,'Arrive Too Late',FALSE ),(2,5,'Broken Item',FALSE),(10,4,'Wrong Shipment',FALSE);
 
 
 INSERT INTO ItemRate(itemID,raterID, rating,description) VALUES
@@ -46,7 +46,7 @@ INSERT INTO ItemRate(itemID,raterID, rating,description) VALUES
 -- INSERT INTO Category(category, itemID) VALUES
 -- ('Music',1),('Music',2),('Education',3),('Education',4),('Electronic',5),('Electronic',6);
 
-INSERT INTO Taboo(word) VALUES ('xswl'),('CSC'),('nmsl'),('super'),('winner'),('OK'),('ccny');
+INSERT INTO Taboo(word) VALUES ('xswl'),('CSC'),('super'),('winner'),('OK'),('ccny');
 
 INSERT INTO ouBlacklist VALUES ('block123'),('test123');
 
