@@ -34,20 +34,55 @@ python3 scr/Manager.py
 
 ## Note
 For the users in our system -> Check the insertValues.sql in DB_Create folder 
-##### Added Features
+
+##### Required Features
+    1. Guest Users
+        - Search and browse through the items on sale.
+        - View the ordinary users comments for the fixed item
+        - Sign up to be the ordinary user
+    2. Ordinary Users
+        - Search, browse, and purchase the items on sale.
+        - Edit profile, password
+        - Post fixed price item or bidding item
+        - View transaction history
+        - View Complains and Warnings
+        - Edit friend list
+        - Communicate with friends
+        - Various condition on warning will be added by the system
+        - Automatically promote or depromote to VIP status with various constraints
+        - Suspend by system if receive two or more warnings, allow to appeal.
+        - Allow to give complain to the purchased item
+        - Allow to deal a sale
+    3. Super Users
+        - Manage GU Applications (approve or decline)
+        - View all the transaction
+        - Manage OU Appeals (approve or decline)
+        - View all the OU informations
+        - Remove OU based on judgement
+        - Manage the post items by OU (approve or decline)
+        - Process the complains by OU (justify or decline) 
+        - Remove the items that already been approved
+        - View OU Blacklist and Item Blacklist
+    4. Homepage
+        - For GU: Items list in the order by popularity (keyword search frequency by GU and OU) 
+        - For OU: Items list in the order by OU likeness (keyword search frequency of login OU)
+        
+##### Creative Features
     1.  Sort the items in the homepage by four features
         - user views
         - user ratings 
         - price low to high 
         - price high to low 
-    2. Like or dislike items on sale by ordinary users, except the owner
-    3. Users can buy more than one quantity of the fixed price item upto to the total number available.
-    4. Users able to see all the price details before they confirm the purchase 
-    5. Rating the item after transaction dealed with comments
-    6. Sellers can approve the deal (ship the item) or decline the deal, 
-       all money transactions make after the item being shipped by the seller. 
-    7. Super users are allow to edit the taboo list
-
-
+    2. Super Users allow to edit the taboo list
+    3. Ordinary Users
+        - Allow to buy more than one quantity of the fixed price item up to the total available amount.
+        - View all the price details before they confirm the purchase 
+        - Like or dislike products, can only choose to like or dislike once. 
+        - Owner cannot like his/her own product.
+        - Rate and comments the items they purchased successfully.
+        - Add friends with different discounts, delete friend, communicate with friends, and change friends' discount
+        - Bidding transaction will be handled automatically by the system when reach bidding end time, and the second higher bidder will automocally purchased the bidding item.
+        - All money transactions make after the item being shipped by the seller (approve the deal)  
+    
 
 
