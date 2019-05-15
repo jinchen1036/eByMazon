@@ -153,10 +153,12 @@
                     SkyBlueButton:
                         size_hint: (0.3,0.90)
                         text: "Confirm Purchase"
+                        disabled: 1 if root.disableAction else 0
                         on_press: root.purchasing()
                     OrangeButton:
                         size_hint: (0.3,0.90)
                         text: "Cancel Purchase"
+                        disabled: 1 if root.disableAction else 0
                         on_press: root.cancelPurchase()
 
         GrayButton:

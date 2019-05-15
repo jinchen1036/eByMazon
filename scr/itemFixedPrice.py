@@ -53,21 +53,23 @@ class fixedItem(Screen):
 
     def purchasing(self):
         # purchase Item
-        item = globalV.itemList[self.itemIndex]
-        numwant = int(self.ids['purchaseInfo'].text)
-        numLeft = self.numberAva - numwant
-        purchase = globalV.ou.purchaseFixedPrice(item.itemID, item.price,numwant,numLeft)
-        self.purchased = False
-        if purchase:
-            self.ids["purchase"].ids["purchaseManager"].current = "empty"
-            self.initInfo(self.itemIndex,refresh=True)
-        else:
-            self.ids["purchase"].ids["purchaseManager"].current = "duplicate"
+        if self.purchased:
+            item = globalV.itemList[self.itemIndex]
+            numwant = int(self.ids['purchaseInfo'].text)
+            numLeft = self.numberAva - numwant
+            purchase = globalV.ou.purchaseFixedPrice(item.itemID, item.price,numwant,numLeft)
+            self.purchased = False
+            if purchase:
+                self.ids["purchase"].ids["purchaseManager"].current = "empty"
+                self.initInfo(self.itemIndex,refresh=True)
+            else:
+                self.ids["purchase"].ids["purchaseManager"].current = "duplicate"
 
     def cancelPurchase(self):
-        self.purchased = False
-        self.ids["purchaseInfo"].text = ""
-        self.ids["purchase"].ids["purchaseManager"].current = "cancel"
+        if self.purchased:
+            self.purchased = False
+            self.ids["purchaseInfo"].text = ""
+            self.ids["purchase"].ids["purchaseManager"].current = "cancel"
 
 
     def checkNumwant(self,num):

@@ -48,17 +48,19 @@ class biddingItem(Screen):
 
     def bidding(self):
         # purchase Item
-        bid = globalV.ou.bidding(self.itemID,float(self.ids["purchaseInfo"].text) )
-        self.bid = False
-        if bid:
-            self.ids["purchase"].ids["purchaseManager"].current = "empty"
-        else:
-            self.ids["purchase"].ids["purchaseManager"].current = "bidWarn"
+        if self.bid:
+            bid = globalV.ou.bidding(self.itemID,float(self.ids["purchaseInfo"].text) )
+            self.bid = False
+            if bid:
+                self.ids["purchase"].ids["purchaseManager"].current = "empty"
+            else:
+                self.ids["purchase"].ids["purchaseManager"].current = "bidWarn"
 
     def cancelbid(self):
-        self.bid = False
-        self.ids["purchaseInfo"].text = ""
-        self.ids["purchase"].ids["purchaseManager"].current = "cancel"
+        if self.bid:
+            self.bid = False
+            self.ids["purchaseInfo"].text = ""
+            self.ids["purchase"].ids["purchaseManager"].current = "cancel"
 
     def checkNumwant(self,num):
         try:

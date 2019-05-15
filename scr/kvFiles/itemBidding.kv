@@ -123,10 +123,12 @@
                 SkyBlueButton:
                     size_hint: (0.3,0.90)
                     text: "Confirm Bidding"
+                    disabled: 1 if root.disableAction else 0
                     on_press: root.bidding()
                 OrangeButton:
                     size_hint: (0.3,0.90)
                     text: "Cancel Bidding"
+                    disabled: 1 if root.disableAction else 0
                     on_press: root.cancelbid()
 
         GrayButton:

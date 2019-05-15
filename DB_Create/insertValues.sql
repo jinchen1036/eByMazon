@@ -17,7 +17,7 @@ INSERT INTO OU(ouID, name, cardNumber,email,address,state,phone) VALUES
 (9, 'Du Aa', '2011092334905', 'aadu@yahoo.com','Dangchi 704','TN', 9177110701),
 (10,'Xu Chen', '201121334905', 'xuC@yahoo.com','DongGong 555','TN', 9177353701);
 
-INSERT INTO OUstatus(ouID, moneySpend, status) VALUES (2,10.31, 0),(3,0,0),(4,0,0),(5, 777, 1),(6,90, 2), (7,540,1),(8,44,3),(9, 59, 2),(10,45,3);
+INSERT INTO OUstatus(ouID, moneySpend, status) VALUES (2,10.31, 0),(3,189.59,0),(4,0,0),(5, 777, 1),(6,90, 2), (7,540,1),(8,44,3),(9, 59, 2),(10,45,3);
 
 INSERT INTO GUapplications(username,email,name,cardNumber,address,state,phone) VALUES
 ('bon18','bonbon@tian.com','Bon Tian','2001938436634','TaoYuan 1023','NJ',9175550330),
