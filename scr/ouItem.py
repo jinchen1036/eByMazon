@@ -42,7 +42,7 @@ class ouItem(Screen):
         self.ids['itemPrice1'].text = ""
         self.ids['itemNumbers1'].text = ""
         self.ids['fixedItemWarning'].text = ""
-        self.ids['image'].text = "Choose Image"
+        self.ids['image1'].text = "Choose Image"
         self.image = ""
         # self.isTitle, self.isDescription, self.isPrice, self.isNumber = True, True, True, True
 
@@ -120,8 +120,10 @@ class ouItem(Screen):
                 self.ids['itemDescription1'].text = ""
             globalV.root.toTaboo(replaceWord)
             globalV.ou.addWarning(warningID=4, description='Taboo word in submit item info')
-            
-        if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(itemBidDay))or tabooFound:
+
+        emptyString = not (globalV.general.checkEmpty(title) and globalV.general.checkEmpty(description))
+        numberInvalid = not (globalV.general.checkFloat(itemPrice) and globalV.general.checkInt(itemBidDay))
+        if emptyString or numberInvalid or tabooFound:
             condition = False
         else:
             try:
@@ -165,7 +167,10 @@ class ouItem(Screen):
             globalV.root.toTaboo(replaceWord)
             globalV.ou.addWarning(warningID=4, description='Taboo word in submit item info')
 
-        if not(globalV.general.checkEmpty(title) or globalV.general.checkEmpty(description) or globalV.general.checkFloat(itemPrice) or globalV.general.checkInt(number_available)) or tabooFound:
+
+        emptyString = not (globalV.general.checkEmpty(title) and globalV.general.checkEmpty(description))
+        numberInvalid = not (globalV.general.checkFloat(itemPrice) and globalV.general.checkInt(number_available))
+        if emptyString or numberInvalid or tabooFound:
             condition = False
         else:
             try:

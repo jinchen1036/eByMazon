@@ -3,12 +3,15 @@ from kivy.properties import BooleanProperty,NumericProperty
 
 try:
     from scr.GlobalVariable import globalV
+    from scr.Item import Item
 except ModuleNotFoundError:
     from GlobalVariable import globalV
+    from Item import Item
 
 class fixedItem(Screen):
     itemIndex = NumericProperty()
     user = BooleanProperty()
+    itemID = NumericProperty()
 
     def tohome(self):
         self.warn = False
@@ -17,10 +20,14 @@ class fixedItem(Screen):
         self.ids["purchase"].ids["purchaseManager"].current = "empty"
         globalV.root.tohome()
 
-    def initInfo(self,index):
-        item = globalV.itemList[index]
-        item.addView()
+    def initInfo(self,index, refresh = False):
+        if refresh:
+            item = Item(itemID=self.itemID, cursor=globalV.cursor,cnx= globalV.cnx)
+        else:
+            item = globalV.itemList[index]
+            item.addView()
         self.purchased = False
+        self.itemID = item.itemID
         self.itemIndex = index
         self.price= item.price
         self.numberAva = item.available
@@ -53,6 +60,7 @@ class fixedItem(Screen):
         self.purchased = False
         if purchase:
             self.ids["purchase"].ids["purchaseManager"].current = "empty"
+            self.initInfo(self.itemIndex,refresh=True)
         else:
             self.ids["purchase"].ids["purchaseManager"].current = "duplicate"
 

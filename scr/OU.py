@@ -354,6 +354,7 @@ class OU():
             qry = "INSERT INTO ItemBid(itemID, startPrice,usedStatus,endDay) VALUE (%s,%s,%s,%s);"
             self.cursor.execute(qry, (int(itemID), float(startPrice), usedStatus, endDay))
             self.cnx.commit()
+            return True
         except Exception as ERR:
             print('submit failded by error : %s' %ERR)
             return False
@@ -443,7 +444,7 @@ class OU():
                    "VALUES (%s,%s,%s,%s,%s)" % (itemID,self.ID, singlePrice,finalPrice,numBuy))
             self.cursor.execute(qry)
 
-            qry = ("UPDATE FixedPrice SET availableNum = availableNum - %s WHERE itemID = %s;"%(numBuy,itemID))
+            qry = ("UPDATE FixedPrice SET availableNum = %s WHERE itemID = %s;"%(numLeft,itemID))
             self.cursor.execute(qry)
 
             if numLeft == 0:
